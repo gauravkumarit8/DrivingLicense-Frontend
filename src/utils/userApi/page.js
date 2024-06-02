@@ -1,33 +1,50 @@
-export default async function loginUser(userData){
-    const response=await fetch("",{
-        method:'POST',
-        body:JSON.stringify(userData),
-        headers:{
-            'Context-Type':'application/json'
-        }
-    })
-    if(!response.ok){
-        throw new Error("No user found");
+export async function loginUser(userData) {
+    try {
+      const response = await fetch('https://example.com/api/register', { // Replace with your actual API endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+  
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("Failed to register user:", error);
+      return { success: false, message: error.message };
     }
+} 
 
-    const result = await response.json();
-    return { success: true, data: result };
-}
-
-export default async function registerUser(userData){
-    const response=await fetch("",{
-        method:"POST",
-        body:JSON.stringify(userData),
-    });
-    if(!response.ok){
-        throw new Error("No user found");
+export async function registerUser(userData) {
+    try {
+      const response = await fetch('https://example.com/api/register', { // Replace with your actual API endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+  
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("Failed to register user:", error);
+      return { success: false, message: error.message };
     }
+}  
 
-    const result = await response.json();
-    return { success: true, data: result };
-}
-
-export default async function updateUser(userData){
+export async function updateUser(userData){
     const response=await fetch("",{
         method:"PUT",
         body:JSON.stringify(userData),
@@ -40,7 +57,7 @@ export default async function updateUser(userData){
     return { success: true, data: result };
 }
 
-export default async function getUserByEmail(userEmail){
+export async function getUserByEmail(userEmail){
     const response=await fetch(`/${userEmail}`,{
         method:"GET",
         headers:{
@@ -55,7 +72,7 @@ export default async function getUserByEmail(userEmail){
     return { success: true, data: result };
 }
 
-export default async function deleteUser(userId){
+export async function deleteUser(userId){
     const response=await fetch(`/${userId}`,{
         method:"DELETE",
     });
