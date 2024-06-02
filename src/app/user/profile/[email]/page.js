@@ -1,29 +1,16 @@
 "use client"
 
-import { useState } from "react"
-
-
-const Profile = () => {
-
-    const [name,setName]=useState('');
-    const [email,setEmail]=useState('');
-    const [password,setPassword]=useState('');
-    const [adhar,setAdhar]=useState('');
-    const [message,setMessage]=useState('');
-
-    const handleSubmit=async (e)=>{
-        e.preventDefault();
-        const userDat={
-            name,
-            email,
-            password,
-            adhar
-        };
-        const result=await getUserByEmail(email);
-    }
+const Profile = async({params}) => {
+  const result=await getUserByEmail(params.email);
 
   return (
-    <div>Profile</div>
+    <div>
+      <h1>User Details</h1>
+      <h2>Name : {result.name}</h2>
+      <h2>Email : {result.email}</h2>
+      <h2>Adhar : {result.adhar}</h2>
+      <h2>Instructor : {result.instructor}</h2>
+    </div>
   )
 }
 
