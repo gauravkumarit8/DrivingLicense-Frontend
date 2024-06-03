@@ -1,18 +1,26 @@
-import { userSession } from '@/utils/userApi/page'
+import { userSession } from '@/utils/userApi/page';
+import styles from '../Session.module.css'
 
-const Session = async({params}) => {
-    const result=await userSession(params.id);
-    console.log(result);
-    const data=result.data.instructor;
-    console.log(data);
+const Session = async ({ params }) => {
+  const result = await userSession(params.id);
+  console.log(result);
+
+  const data = result.data.instructor || {};
+
   return (
-    <div>
-        <h1>Sessions</h1>
-        <h3>Instructor's Name :- {data.name}</h3>
-        <h3>Instructor's Email :- {data.email}</h3>
-        <h3>Instructor's Phone no :- {data.phone}</h3>
+    <div className={styles.container}>
+      <h1 className={styles.header}>Sessions</h1>
+      {data.name ? (
+        <>
+          <h3 className={styles.instructorDetail}>Instructor's Name: <span>{data.name}</span></h3>
+          <h3 className={styles.instructorDetail}>Instructor's Email: <span>{data.email}</span></h3>
+          <h3 className={styles.instructorDetail}>Instructor's Phone no: <span>{data.phone}</span></h3>
+        </>
+      ) : (
+        <p className={styles.noInstructor}>No instructor assigned or data unavailable.</p>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Session
+export default Session;
