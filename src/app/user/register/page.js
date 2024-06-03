@@ -30,7 +30,7 @@ const Register = () => {
       setMessage('User registered successfully!');
       console.log('User registered:', result.data);
 
-      router.push('/login');
+      router.push('/user/login');
     } else {
       setMessage(`Error: ${result.message}`);
     }
@@ -87,7 +87,7 @@ const Register = () => {
         <button type="submit" className={styles.submitButton}>Register</button>
       </form>
       {message && <p className={styles.message}>{message}</p>}<br/>
-      <Link href={'/user/login'} className={styles.submitButton}>Login</Link>
+      <Link href="/user/login" className={styles.submitButton}>Login</Link>
     </div>
   );
 };

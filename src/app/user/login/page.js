@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from '../register/Register.module.css';
-import { registerUser } from "@/utils/userApi/page";
+import { loginUser } from "@/utils/userApi/page";
 import Link from "next/link";
 
 const login = () => {
@@ -18,16 +18,15 @@ const login = () => {
 
     const userData = {
       email,
-      password,
-      adhar
+      password
     };
 
-    const result = await registerUser(userData);
+    const result = await loginUser(userData);
     if (result.success) {
       setMessage('User Logged in successfully!');
       console.log('User logged:', result.data);
 
-      router.push(`/profile/${email}`);
+      router.push(`/user/profile/${email}`);
     } else {
       setMessage(`Error: ${result.message}`);
     }
@@ -35,7 +34,7 @@ const login = () => {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.header}>Register</h1>
+      <h1 className={styles.header}>Login</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.formLabel}>Email:</label>
