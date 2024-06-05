@@ -28,11 +28,23 @@ const Profile =async ({ params }) => {
         </div>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Availability:</label>
-          {/* <ul className={styles.availabilityList}>
+          <ul className={styles.availabilityList}>
             {instructor.availability.map((day, index) => (
               <li key={index} className={styles.availabilityItem}>{day}</li>
             ))}
-          </ul> */}
+          </ul>
+        </div>
+        <div className={styles.profileGroup}>
+          <label className={styles.profileLabel}>Users:</label>
+          <ul className={styles.userList}>
+            {instructor.users.map((user) => (
+              <li key={user.id} className={styles.userItem}>
+                <span className={styles.userName}>{user.name}</span> - 
+                <span className={styles.userEmail}>{user.email}</span> - 
+                <span className={styles.userStatus}>{user.status}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>
