@@ -23,6 +23,9 @@ const Profile = async ({ params }) => {
       <h4 className={styles.sessionsLink}>
         Get user sessions: <Link href={`/user/session/${userData.id}`}>My Sessions</Link>
       </h4>
+      <h4 className={styles.sessionsLink}>
+        Update : <Link href={`/user/update/${userData.id}`}>Update</Link>
+      </h4>
     </div>
   );
 };
