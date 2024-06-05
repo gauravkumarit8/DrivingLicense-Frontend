@@ -4,37 +4,47 @@ import { registerInstructor } from "@/utils/instructorApi/page";
 import { useState } from "react";
 import styles from '../login/Login.module.css'
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Register = () => {
+  const router = useRouter();
 
-  const [name,setName]=useState('');
-  const [email,setEmail]=useState('');
-  const [password,setPassword]=useState('');
-  const [phone,setPhone]=useState('');
-  const [drivingLicense,setDrivingLicense]=useState('');
-  const [availability,setAvailability]=useState([]);
-  const [message,setMessage]=useState('');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [drivingLicense, setDrivingLicense] = useState('');
+  const [availability, setAvailability] = useState([]);
+  const [message, setMessage] = useState('');
 
-  const handleSubmit=async(e)=>{
+  const handleAvailabilityChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setAvailability([...availability, value]);
+    } else {
+      setAvailability(availability.filter(day => day !== value));
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const instructorData={
+    const instructorData = {
       name,
       email,
       password,
       phone,
       drivingLicense,
       availability
-    }
-    const result=await registerInstructor(instructorData);
+    };
+    const result = await registerInstructor(instructorData);
     if (result.success) {
-      setMessage('Instructor Logged in successfully!');
-      console.log('Instructor logged:', result.data);
-
+      setMessage('Instructor registered successfully!');
+      console.log('Instructor registered:', result.data);
       router.push(`/instructors`);
     } else {
       setMessage(`Error: ${result.message}`);
     }
-  }
+  };
 
   return (
     <div className={styles.container}>
@@ -95,12 +105,30 @@ const Register = () => {
             required
           />
         </div>
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel}>Availability:</label>
+          <div className={styles.checkboxGroup}>
+            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+              <label key={day} className={styles.checkboxLabel}>
+                <input
+                  type="checkbox"
+                  value={day}
+                  checked={availability.includes(day)}
+                  onChange={handleAvailabilityChange}
+                  className={styles.checkboxInput}
+                />
+                {day}
+              </label>
+            ))}
+          </div>
+        </div>
         <button type="submit" className={styles.submitButton}>Register</button>
       </form>
-      {message && <p className={styles.message}>{message}</p>}<br/>
+      {message && <p className={styles.message}>{message}</p>}
+      <br />
       <Link href="/instructors/login" className={styles.submitButton}>Login</Link>
     </div>
   )
 }
 
-export default Register
+export default Register;

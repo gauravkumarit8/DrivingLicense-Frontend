@@ -1,57 +1,82 @@
 .container {
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.header {
-text-align: center;
-margin-bottom: 20px;
-}
-
-.form {
-display: flex;
-flex-direction: column;
-}
-
-.formGroup {
-margin-bottom: 15px;
-}
-
-.formLabel {
-font-weight: bold;
-margin-bottom: 5px;
-display: block;
-}
-
-.formInput {
-width: 100%;
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 5px;
-box-sizing: border-box;
-}
-
-.submitButton {
-width: 100%;
-padding: 10px;
-background-color: #0070f3;
-color: white;
-border: none;
-border-radius: 5px;
-font-size: 16px;
-cursor: pointer;
-}
-
-.submitButton:hover {
-background-color: #005bb5;
-}
-
-.message {
-text-align: center;
-color: green;
-}
+    border-radius: 10px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .formGroup {
+    margin-bottom: 15px;
+  }
+  
+  .formLabel {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .formInput {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .formInput:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  
+  .checkboxGroup {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .checkboxLabel {
+    margin-right: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .checkboxInput {
+    margin-right: 5px;
+  }
+  
+  .submitButton {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: red;
+  }
   
