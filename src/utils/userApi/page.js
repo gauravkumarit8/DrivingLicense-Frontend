@@ -44,18 +44,28 @@ export async function registerUser(userData) {
     }
 }  
 
-export async function updateUser(userData){
-    const response=await fetch("",{
-        method:"PUT",
-        body:JSON.stringify(userData),
+export async function updateUser(userData) {
+  try {
+    const response = await fetch("http://localhost:8080/api/users/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
     });
+
     if (!response.ok) {
       const errorText = await response.text();
+      console.error("Server Response:", errorText);
       throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
     }
 
     const result = await response.json();
     return { success: true, data: result };
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    throw error;
+  }
 }
 
 export async function getUserByEmail(userEmail){
@@ -71,6 +81,21 @@ export async function getUserByEmail(userEmail){
 
     const result = await response.json();
     return { success: true, data: result };
+}
+
+export async function getUserById(userId){
+  const response=await fetch(`http://localhost:8080/api/users/profile/${userId}`,{
+      method:"GET",
+      headers:{
+          'Context-Type':'application/json',
+      }
+  });
+  if(!response.ok){
+      throw new Error("No user found");
+  }
+
+  const result = await response.json();
+  return { success: true, data: result };
 }
 
 export async function deleteUser(userId){
