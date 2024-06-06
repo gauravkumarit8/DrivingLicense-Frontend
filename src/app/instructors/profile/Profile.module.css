@@ -1,0 +1,53 @@
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #e7d7a1;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+  }
+  
+  .profileGroup {
+    margin-bottom: 15px;
+  }
+  
+  .profileLabel {
+    display: block;
+    font-weight: bold;
+    color: #555;
+  }
+  
+  .profileValue {
+    display: block;
+    padding: 10px;
+    border: 1px solid #ec9191;
+    border-radius: 5px;
+    background-color: #9fcce0;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  .availabilityList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .availabilityItem {
+    padding: 5px 0;
+    border-bottom: 1px solid #b99622;
+  }
+  
+  .message {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: red;
+  }
+  
