@@ -15,7 +15,7 @@ export default function Home() {
             <div className={styles.dropdownContent}>
               <Link href="/admin">Admin</Link>
               <Link href="/instructors">Instructor</Link>
-              <Link href="/user">User Login</Link>
+              <Link href="/user">User</Link>
             </div>
           </div>
         </div>

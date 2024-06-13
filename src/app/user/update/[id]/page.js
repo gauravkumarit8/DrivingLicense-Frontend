@@ -14,26 +14,6 @@ const Edit = ({ params }) => {
     // Add more fields as needed
   });
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const result = await getUserById(params.id);
-        setUser(result.data);
-        setFormData({
-          name: result.data.name,
-          password: result.data.password,
-          // Initialize more fields as needed
-        });
-        setLoading(false);
-      } catch (error) {
-        setError(error.message);
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, [params.id]);
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({
