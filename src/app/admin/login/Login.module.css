@@ -1,0 +1,98 @@
+/* styles.module.css */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: #fff;
+    padding: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.header {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    animation: slideDown 1s ease-in-out;
+}
+
+.form {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    animation: popIn 1s ease-in-out;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.formLabel {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.formInput {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 1rem;
+}
+
+.submitButton {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #6e8efb;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.submitButton:hover {
+    background: #a777e3;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}

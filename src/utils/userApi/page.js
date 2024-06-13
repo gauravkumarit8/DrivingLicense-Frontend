@@ -44,9 +44,9 @@ export async function registerUser(userData) {
     }
 }  
 
-export async function updateUser(userData) {
+export async function updateUser(userId,userData) {
   try {
-    const response = await fetch("http://localhost:8080/api/users/update", {
+    const response = await fetch(`http://localhost:8080/api/users/update/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
