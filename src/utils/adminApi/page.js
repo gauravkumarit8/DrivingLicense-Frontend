@@ -80,3 +80,23 @@ export async function updateAdmin(adminData){
     }
 }
 
+export async function getUsers(){
+    try{
+        const response=await fetch("http://localhost:8080/api/admins/users",{
+            method:"GET",
+            headers:{
+                'Content-Type':'application/text'
+            }
+        })
+        if(!response.ok){
+            const errorText=await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        }
+        const result=await response.json();
+        return {success:true,data:result};
+    }catch(err){
+        console.error("Failed to fetch user",err);
+        return {success:false,data:err.message};
+    }
+}
+

@@ -19,6 +19,8 @@ const Login = () => {
             password
         };
         const result = await loginAdmin(adminData);
+        console.log(result.success)
+        console.log(result.data.id);
         if (result.success) {
             setMessage('Admin Logged in successfully!');
             console.log('Admin logged:', result.data);
