@@ -7,11 +7,12 @@ const Profile = async ({ params }) => {
   const { id } = params;
   const result = await getAdminById(id);
   const resultUser = await getUsers();
+  console.log(resultUser.data);
   const { data } = resultUser;
 
   return (
     <div className={styles.container}>
-    {/* this is admin data */}
+      {/* this is admin data */}
       <div className={styles.card}>
         <div className={styles.adminDetails}>
           <div>Profile Photo</div>
@@ -38,12 +39,16 @@ const Profile = async ({ params }) => {
                     <div>Phone: {user.instructor.phone}</div>
                     <div>Driving License Number: {user.instructor.drivingLicenseNumber}</div>
                     {/* Add more details about the instructor as needed */}
-                    
                   </div>
                 ) : (
-                  <Link href={`/admin/assignInstructor/${user.id}`} className={styles.linkButton}>
-                      Assign Instructor
-                    </Link>
+                  <Link 
+                    href={{
+                      pathname: `/admin/assignInstructor/${id}/${user.id}`,
+                    }}
+                    className={styles.linkButton}
+                  >
+                    Assign Instructor
+                  </Link>
                 )}
               </div>
             </div>
