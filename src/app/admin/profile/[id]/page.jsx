@@ -41,7 +41,7 @@ const Profile = async ({ params }) => {
                     
                   </div>
                 ) : (
-                  <Link href={`/admin/update/${id}`} className={styles.linkButton}>
+                  <Link href={`/admin/assignInstructor/${user.id}`} className={styles.linkButton}>
                       Assign Instructor
                     </Link>
                 )}
