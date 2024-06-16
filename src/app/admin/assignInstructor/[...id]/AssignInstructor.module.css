@@ -1,0 +1,46 @@
+/* AssignInstructor.module.css */
+
+.container {
+    padding: 20px;
+  }
+  
+  .instructorGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  
+  .instructorCard {
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  
+  .instructorCard:hover {
+    transform: scale(1.05);
+    border-color: #007bff;
+  }
+  
+  .instructorCard.selected {
+    border-color: #007bff;
+    background-color: #e6f7ff;
+  }
+  
+  .submitButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .submitButton:hover {
+    background-color: #0056b3;
+  }
+  

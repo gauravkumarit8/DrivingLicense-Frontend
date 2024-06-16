@@ -1,79 +1,93 @@
-/* profile.module.css */
-
 .container {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0; /* Light gray background */
-    padding: 20px;
-  }
-  
-  .card {
-    background-color: #6e666633; /* White background for admin card */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for card */
-    margin-bottom: 20px;
-    width: 100%;
-  }
-  
-  .userContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px; /* Gap between cards */
-    justify-content: center;
-  }
-  
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0; /* Light gray background */
+  padding: 20px;
+}
+
+.card {
+  background-color: #6e666633; /* White background for admin card */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for card */
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.userContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Gap between cards */
+  justify-content: center;
+}
+
+.userCard {
+  position: relative; /* Add position relative to position the delete button */
+  flex: 1 1 calc(25% - 20px); /* Adjust width for 4 cards per row */
+  background-color: #f2f39b; /* Background color for user card */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for card */
+  transition: box-shadow 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.userCard:hover {
+  box-shadow: 0 0 25px rgba(250, 1, 1, 0.733); /* Highlight on hover */
+}
+
+.userDetails {
+  margin-bottom: 10px;
+}
+
+.instructor {
+  background-color: #d7ec5e; /* Background color for instructor details */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.linkButton {
+  display: block;
+  width: fit-content;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #0070f3;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}
+
+/* Positioning the delete button at the top-right corner */
+.deleteButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none; /* No background */
+  border: none; /* No border */
+  cursor: pointer; /* Pointer cursor */
+  font-size: 1.2em; /* Increase the size of the icon */
+  color: #ff0000; /* Red color for delete icon */
+}
+
+.deleteButton:hover {
+  color: #cc0000; /* Darker red on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
   .userCard {
-    flex: 1 1 calc(25% - 20px); /* Adjust width for 4 cards per row */
-    background-color: #f2f39b; /* White background for user card */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Shadow for card */
-    transition: box-shadow 0.3s ease; /* Smooth transition for hover effect */
+    flex: 1 1 calc(33.33% - 20px); /* 3 cards per row on smaller screens */
   }
-  
-  .userCard:hover {
-    box-shadow: 0 0 25px rgba(250, 1, 1, 0.733); /* Highlight on hover */
+}
+
+@media (max-width: 800px) {
+  .userCard {
+    flex: 1 1 calc(50% - 20px); /* 2 cards per row on mobile screens */
   }
-  
-  .userDetails {
-    margin-bottom: 10px;
+}
+
+@media (max-width: 500px) {
+  .userCard {
+    flex: 1 1 100%; /* 1 card per row on very small screens */
   }
-  
-  .instructor {
-    background-color: #d7ec5e; /* Light blue background for instructor details */
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-  
-  .linkButton {
-    display: block;
-    width: fit-content;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #0070f3;
-  }
-  
-  .linkButton:hover {
-    text-decoration: underline;
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 1200px) {
-    .userCard {
-      flex: 1 1 calc(33.33% - 20px); /* 3 cards per row on smaller screens */
-    }
-  }
-  
-  @media (max-width: 800px) {
-    .userCard {
-      flex: 1 1 calc(50% - 20px); /* 2 cards per row on mobile screens */
-    }
-  }
-  
-  @media (max-width: 500px) {
-    .userCard {
-      flex: 1 1 100%; /* 1 card per row on very small screens */
-    }
-  }
-  
+}

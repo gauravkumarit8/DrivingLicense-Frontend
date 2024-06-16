@@ -1,11 +1,30 @@
+"use client"
 
+import { useEffect, useState } from 'react';
 import styles from '../Profile.module.css'
 import { getInstructorById } from "@/utils/instructorApi/page";
 
-const Profile =async ({ params }) => {
-  const result = await getInstructorById(params.id);
-  const instructor=result.data;
-  console.log(instructor)
+const Profile =({ params }) => {
+
+  const {id}=params;
+  const [instructor,setInstructor]=useState(null);
+
+  useEffect(()=>{
+    const fetchData=async()=>{
+      try{
+        const result = await getInstructorById(id);
+        setInstructor(result.data);
+      }catch(err){
+        console.error('Failed to fetch data:', err);
+      }
+    }
+    fetchData();
+  },[id])
+
+  if (!instructor) {
+    return <div>Loading...</div>; // or a loading spinner
+  }
+
   return (
     <div className={styles.container}>
       <h1 className={styles.header}>Instructor Profile</h1>
