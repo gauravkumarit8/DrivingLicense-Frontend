@@ -139,3 +139,57 @@ export async function assignInstructorToUser(userId,instructorId){
         return {success:false,data:err.message};
     }
 }
+
+export async function reAssignInstructor(userId,instructorId){
+    try{
+        const response = await fetch(`http://localhost:8080/api/admins/${userId}/update-instructor/{newInstructorId}`,{
+            method:"PUT",
+            headers:{
+                'Content-Type':'application/text'
+            }
+        })
+        if(!response.ok){
+            const errorText=await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        }
+        const result=await response.json();
+        return {success:true,data:result};
+    }catch(err){
+        console.error("Failed to fetch user",err);
+        return {success:false,data:err.message};
+    }
+}
+
+export async function deleteUser(userId){
+    try{
+        const response= await fetch(`http://localhost:8080/api/admins/delete/${userId}`,{
+            method:"DELETE"
+        })
+        if(!response.ok){
+            const errorText=await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        }
+        const result=await response.json();
+        return {success:true,data:result};
+    }catch(err){
+        console.error("Failed to fetch user",err);
+        return {success:false,data:err.message};
+    }
+}
+
+export async function deleteInstructor(instructorId){
+    try{
+        const response= await fetch(`http://localhost:8080/api/admins/delete/instructor/${instructorId}`,{
+            method:"DELETE"
+        })
+        if(!response.ok){
+            const errorText=await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        }
+        const result=await response.json();
+        return {success:true,data:result};
+    }catch(err){
+        console.error("Failed to fetch user",err);
+        return {success:false,data:err.message};
+    }
+}
