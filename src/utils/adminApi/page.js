@@ -142,7 +142,7 @@ export async function assignInstructorToUser(userId,instructorId){
 
 export async function reAssignInstructor(userId,instructorId){
     try{
-        const response = await fetch(`http://localhost:8080/api/admins/${userId}/update-instructor/{newInstructorId}`,{
+        const response = await fetch(`http://localhost:8080/api/admins/${userId}/update-instructor/${instructorId}`,{
             method:"PUT",
             headers:{
                 'Content-Type':'application/text'
@@ -153,7 +153,7 @@ export async function reAssignInstructor(userId,instructorId){
             throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
         }
         const result=await response.json();
-        return {success:true,data:result};
+        return {success:true};
     }catch(err){
         console.error("Failed to fetch user",err);
         return {success:false,data:err.message};

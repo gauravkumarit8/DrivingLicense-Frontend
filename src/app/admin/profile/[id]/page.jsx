@@ -98,6 +98,7 @@ const Profile = ({ params }) => {
         <Link href={`/admin/update/${id}`} className={styles.linkButton}>
           Update
         </Link>
+      <Link href={`/admin/instructors/${id}`} className={styles.linkButton}>Instructor</Link>
       </div>
     </div>
   );
