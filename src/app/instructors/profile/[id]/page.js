@@ -1,28 +1,63 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import styles from '../Profile.module.css'
-import { getInstructorById } from "@/utils/instructorApi/page";
+import styles from '../Profile.module.css';
+import { getInstructorById, updateAvailability } from "@/utils/instructorApi/page";
 
-const Profile =({ params }) => {
+const Profile = ({ params }) => {
+  const { id } = params;
+  const [instructor, setInstructor] = useState(null);
+  const [availability, setAvailability] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const {id}=params;
-  const [instructor,setInstructor]=useState(null);
+  const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
-  useEffect(()=>{
-    const fetchData=async()=>{
-      try{
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         const result = await getInstructorById(id);
         setInstructor(result.data);
-      }catch(err){
+        setAvailability(result.data.availability);
+      } catch (err) {
         console.error('Failed to fetch data:', err);
+        setError('Failed to fetch data');
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();
-  },[id])
+  }, [id]);
 
-  if (!instructor) {
+  const handleCheckboxChange = (day) => {
+    setAvailability((prevAvailability) =>
+      prevAvailability.includes(day)
+        ? prevAvailability.filter(d => d !== day)
+        : [...prevAvailability, day]
+    );
+  };
+
+  const handleUpdateAvailability = async () => {
+    try {
+      const result = await updateAvailability(id, availability);
+      if (result.success) {
+        alert('Availability updated successfully');
+      } else {
+        console.error('Failed to update availability:', result.message);
+        setError('Failed to update availability');
+      }
+    } catch (err) {
+      console.error('Failed to update availability:', err);
+      setError('Failed to update availability');
+    }
+  };
+
+  if (loading) {
     return <div>Loading...</div>; // or a loading spinner
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
@@ -48,10 +83,26 @@ const Profile =({ params }) => {
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Availability:</label>
           <ul className={styles.availabilityList}>
-            {instructor.availability.map((day, index) => (
-              <li key={index} className={styles.availabilityItem}>{day}</li>
+            {daysOfWeek.map((day) => (
+              <li key={day} className={styles.availabilityItem}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={availability.includes(day)}
+                    onChange={() => handleCheckboxChange(day)}
+                  />
+                  {day}
+                </label>
+              </li>
             ))}
           </ul>
+          <button
+            type="button"
+            className={styles.updateButton}
+            onClick={handleUpdateAvailability}
+          >
+            Update Availability
+          </button>
         </div>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Users:</label>
