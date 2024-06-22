@@ -6,20 +6,32 @@ import styles from './Instructor.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
+import { getSessionByInstructor } from '@/utils/sessionApi/drivingSessionApi';
 
-const Instructor = ({params}) => {
+const Instructor = ({ params }) => {
 
-  const {id}=params;
+  const { id } = params;
 
   const [instructors, setInstructors] = useState([]);
+  const [instructorSessions, setInstructorSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch instructors
         const response = await getInstructors();
         setInstructors(response.data);
+
+        // Fetch sessions for each instructor
+        const sessionsPromises = response.data.map(async (instructor) => {
+          const sessionResponse = await getSessionByInstructor(instructor.id);
+          return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
+        });
+        
+        const sessions = await Promise.all(sessionsPromises);
+        setInstructorSessions(sessions);
       } catch (err) {
         setError('Failed to fetch data');
       } finally {
@@ -40,19 +52,31 @@ const Instructor = ({params}) => {
 
   return (
     <div className={styles.container}>
-        <Link href={`/admin/profile/${id}`} className={styles.deleteButton}>Back</Link>
+      <Link href={`/admin/profile/${id}`} className={styles.backButton}>Back</Link>
       {loading ? (
         <div>Loading...</div>
       ) : error ? (
         <div>{error}</div>
       ) : (
         <div className={styles.instructorList}>
-          {instructors.map((instructor) => (
+          {instructors.map((instructor, index) => (
             <div key={instructor.id} className={styles.instructorCard}>
               <h3>{instructor.name}</h3>
               <p>Email: {instructor.email}</p>
               <p>Phone: {instructor.phone}</p>
               <p>Availability: {instructor.availability.join(', ')}</p>
+              <p>
+                Instructor Session:
+                {instructorSessions[index] ? (
+                  <>
+                    <br />
+                    Matching Day: {instructorSessions[index].matchingDay}<br />
+                    Session Date: {new Date(instructorSessions[index].sessionDate).toLocaleString()}<br />
+                    Schedule Date: {new Date(instructorSessions[index].scheduleDate).toLocaleString()}<br />
+                    User Name: {instructorSessions[index].userName}<br />
+                  </>
+                ) : "No Session"}
+              </p>
               <button
                 type="button"
                 className={styles.deleteButton}
@@ -67,7 +91,6 @@ const Instructor = ({params}) => {
           ))}
         </div>
       )}
-      
     </div>
   )
 }
