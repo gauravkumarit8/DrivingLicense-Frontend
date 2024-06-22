@@ -120,25 +120,50 @@ export async function getInstructors(){
     }
 }
 
-export async function assignInstructorToUser(userId,instructorId){
-    try{
-        const response=await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructor/${instructorId}`,{
-            method:"PUT",
-            headers:{
-                'Content-Type':'application/text'
-            }
-        })
-        if(!response.ok){
-            const errorText=await response.json();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
-        }
-        const result=await response.json();
-        return {success:true,data:result};
-    }catch(err){
-        console.error("Failed to fetch user",err);
-        return {success:false,data:err.message};
+// export async function assignInstructorToUser(userId,instructorId){
+//     try{
+//         const response=await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructor/${instructorId}`,{
+//             method:"PUT",
+//             headers:{
+//                 'Content-Type':'application/text'
+//             }
+//         })
+//         if(!response.ok){
+//             const errorText=await response.json();
+//             throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+//         }
+//         const result=await response.json();
+//         return {success:true,data:result};
+//     }catch(err){
+//         console.error("Failed to fetch user",err);
+//         return {success:false,data:err.message};
+//     }
+// }
+
+export async function assignInstructorToUser(userId, instructorIds) {
+    try {
+      const response = await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructors`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(instructorIds) // Corrected body to be a JSON array
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text(); // Changed to text to handle non-JSON responses
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+  
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (err) {
+      console.error('Failed to assign instructors', err);
+      return { success: false, data: err.message };
     }
-}
+  }
+  
+  
 
 export async function reAssignInstructor(userId,instructorId){
     try{
@@ -193,3 +218,22 @@ export async function deleteInstructor(instructorId){
         return {success:false,data:err.message};
     }
 }
+
+export async function getInstructorsByUserAvailability(userId) {
+    try {
+      const response = await fetch(`http://localhost:8080/api/admins/${userId}/instructors`,{
+        method:"GET"
+      });
+      if (!response.ok) {
+        const errorText = await response.text(); // Get error text for better logging
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (err) {
+      console.error("Failed to fetch instructors by user availability:", err);
+      return { success: false, data: err.message };
+    }
+  }
+  
+  

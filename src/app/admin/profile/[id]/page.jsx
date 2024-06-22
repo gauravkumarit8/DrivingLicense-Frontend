@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { deleteUser, getAdminById, getUsers } from '@/utils/adminApi/page';
 import Link from 'next/link';
@@ -12,28 +12,26 @@ const Profile = ({ params }) => {
   const { id } = params;
   const [admin, setAdmin] = useState(null);
   const [users, setUsers] = useState([]);
-
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const adminResult = await getAdminById(id);
-        const usersResult = await getUsers();
-        setAdmin(adminResult.data);
-        setUsers(usersResult.data);
-      } catch (err) {
-        console.error('Failed to fetch data:', err);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const adminResult = await getAdminById(id);
+      const usersResult = await getUsers();
+      setAdmin(adminResult.data);
+      setUsers(usersResult.data);
+    } catch (err) {
+      console.error('Failed to fetch data:', err);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [id]);
 
   const handleClick = async (userId) => {
     try {
       await deleteUser(userId);
-      // Optionally, update the users state after deletion
       setUsers(users.filter(user => user.id !== userId));
     } catch (err) {
       console.error('Failed to delete user:', err);
@@ -73,13 +71,17 @@ const Profile = ({ params }) => {
                 <span>Aadhar: {user.aadhaarNumber}</span><br />
                 <span>Status: {user.status}</span><br />
                 {/* Instructor details */}
-                {user.instructor ? (
+                {user.instructors && user.instructors.length > 0 ? (
                   <div className={styles.instructor}>
                     <h2>Instructor Details:</h2>
-                    <div>Name: {user.instructor.name}</div>
-                    <div>Email: {user.instructor.email}</div>
-                    <div>Phone: {user.instructor.phone}</div>
-                    <div>Driving License Number: {user.instructor.drivingLicenseNumber}</div>
+                    {user.instructors.map((instructor) => (
+                      <div key={instructor.id}>
+                        <div>Name: {instructor.name}</div>
+                        <div>Email: {instructor.email}</div>
+                        <div>Phone: {instructor.phone}</div>
+                        <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
+                      </div>
+                    ))}
                     <Link href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
                       Change Instructor
                     </Link>
@@ -98,7 +100,9 @@ const Profile = ({ params }) => {
         <Link href={`/admin/update/${id}`} className={styles.linkButton}>
           Update
         </Link>
-      <Link href={`/admin/instructors/${id}`} className={styles.linkButton}>Instructor</Link>
+        <Link href={`/admin/instructors/${id}`} className={styles.linkButton}>
+          Instructor
+        </Link>
       </div>
     </div>
   );

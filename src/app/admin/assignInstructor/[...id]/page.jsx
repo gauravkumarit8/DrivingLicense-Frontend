@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { assignInstructorToUser, getInstructors } from '@/utils/adminApi/page';
-import { getUserById } from '@/utils/userApi/page';
 import React, { useEffect, useState } from 'react';
 import styles from './AssignInstructor.module.css';
 import { useRouter } from 'next/navigation';
+import { getUserById } from '@/utils/userApi/page';
+import { getInstructorsByUserAvailability, assignInstructorToUser } from '@/utils/adminApi/page';
 
 const AssignInstructor = ({ params }) => {
   const router = useRouter();
@@ -12,7 +12,7 @@ const AssignInstructor = ({ params }) => {
   const [adminId, userId] = id;
   const [user, setUser] = useState(null);
   const [instructors, setInstructors] = useState([]);
-  const [selectedInstructorId, setSelectedInstructorId] = useState('');
+  const [selectedInstructorIds, setSelectedInstructorIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -20,11 +20,22 @@ const AssignInstructor = ({ params }) => {
     const fetchData = async () => {
       try {
         const responseUser = await getUserById(userId);
-        const responseInstructor = await getInstructors();
+        const responseInstructor = await getInstructorsByUserAvailability(userId);
+        
+        console.log('User Data:', responseUser.data); // Log user data
+        console.log('Instructor Data:', responseInstructor.data); // Log instructor data
+
         setUser(responseUser.data);
-        setInstructors(responseInstructor.data);
+
+        if (Array.isArray(responseInstructor.data)) {
+          setInstructors(responseInstructor.data);
+        } else {
+          console.error('Expected array but got:', responseInstructor.data);
+          setInstructors([]);
+        }
       } catch (err) {
         setError('Failed to fetch data');
+        console.error('Error fetching data:', err); // Log detailed error
       } finally {
         setLoading(false);
       }
@@ -34,26 +45,32 @@ const AssignInstructor = ({ params }) => {
   }, [userId]);
 
   const handleInstructorSelect = (instructorId) => {
-    setSelectedInstructorId(instructorId);
+    setSelectedInstructorIds((prevSelected) => {
+      if (prevSelected.includes(instructorId)) {
+        return prevSelected.filter(id => id !== instructorId);
+      } else {
+        return [...prevSelected, instructorId];
+      }
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selectedInstructorId) {
+    if (selectedInstructorIds.length > 0) {
       try {
-        const assign = await assignInstructorToUser(userId, selectedInstructorId);
-        if (assign) {
-          alert('Instructor assigned successfully!');
-          // Navigate back to profile page with the adminId
+        const assign = await assignInstructorToUser(userId, selectedInstructorIds);
+        if (assign.success) {
+          alert('Instructors assigned successfully!');
           router.push(`/admin/profile/${adminId}`);
         } else {
-          alert('Failed to assign instructor.');
+          alert('Failed to assign instructors.');
         }
       } catch (err) {
-        alert('An error occurred while assigning the instructor.');
+        console.error('Failed to assign instructors:', err);
+        alert('An error occurred while assigning the instructors.');
       }
     } else {
-      alert('Please select an instructor.');
+      alert('Please select at least one instructor.');
     }
   };
 
@@ -69,30 +86,43 @@ const AssignInstructor = ({ params }) => {
     <div className={styles.container}>
       <div className={styles.userDetails}>
         <h2>User Details:</h2>
-        <div>Name: {user.name}</div>
-        <div>Email: {user.email}</div>
-        <div>Aadhar: {user.aadhaarNumber}</div>
-        <div>Status: {user.status}</div>
+        {user ? (
+          <>
+            <div>Name: {user.name}</div>
+            <div>Email: {user.email}</div>
+            <div>Aadhaar: {user.aadhaarNumber}</div>
+            <div>Status: {user.status}</div>
+            <div>Availability: {user.availability.join(', ')}</div>
+          </>
+        ) : (
+          <div>No user details available</div>
+        )}
       </div>
       
       <div className={styles.instructorSelection}>
-        <h2>Select an Instructor:</h2>
-        <form onSubmit={handleSubmit}>
-          <div className={styles.instructorGrid}>
-            {instructors.map((instructor) => (
-              <div
-                key={instructor.id}
-                className={`${styles.instructorCard} ${selectedInstructorId === instructor.id ? styles.selected : ''}`}
-                onClick={() => handleInstructorSelect(instructor.id)}
-              >
-                <div>Name: {instructor.name}</div>
-                <div>Email: {instructor.email}</div>
-              </div>
-            ))}
-          </div>
-          <br />
-          <button type="submit" className={styles.submitButton}>Assign Instructor</button>
-        </form>
+        <h2>Select Instructors:</h2>
+        {instructors.length === 0 ? (
+          <div>No matching instructors available</div>
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <div className={styles.instructorGrid}>
+              {instructors.map((instructor) => (
+                <div
+                  key={instructor.id}
+                  className={`${styles.instructorCard} ${selectedInstructorIds.includes(instructor.id) ? styles.selected : ''}`}
+                  onClick={() => handleInstructorSelect(instructor.id)}
+                >
+                  <div>Name: {instructor.name}</div>
+                  <div>Email: {instructor.email}</div>
+                  <div>Phone: {instructor.phone}</div>
+                  <div>Availability: {instructor.availability.join(', ')}</div>
+                </div>
+              ))}
+            </div>
+            <br />
+            <button type="submit" className={styles.submitButton}>Assign Instructors</button>
+          </form>
+        )}
       </div>
     </div>
   );

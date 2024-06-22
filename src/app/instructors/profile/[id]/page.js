@@ -109,9 +109,11 @@ const Profile = ({ params }) => {
           <ul className={styles.userList}>
             {instructor.users.map((user) => (
               <li key={user.id} className={styles.userItem}>
-                <span className={styles.userName}>{user.name}</span> - 
-                <span className={styles.userEmail}>{user.email}</span> - 
+                <span className={styles.userName}>{user.name}</span> 
+                <span className={styles.userEmail}>{user.email}</span> 
                 <span className={styles.userStatus}>{user.status}</span>
+                <span className={styles.userStatus}>{user.sessionDate}</span>
+                <span className={styles.userStatus}>{user.scheduleDate}</span>
               </li>
             ))}
           </ul>
