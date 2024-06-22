@@ -7,7 +7,6 @@ import { getSessionByUser } from "@/utils/sessionApi/drivingSessionApi";
 import { useEffect, useState } from "react";
 
 const Profile = ({ params }) => {
-  
   const [userData, setUserData] = useState(null);
   const [userSession, setUserSession] = useState(null);
 
@@ -17,7 +16,7 @@ const Profile = ({ params }) => {
         const result = await getUserByEmail(params.email);
         const dataUser = result.data;
         setUserData(dataUser);
-        
+
         const userSessionResult = await getSessionByUser(dataUser.id);
         const session = userSessionResult.data.length > 0 ? userSessionResult.data[0] : null;
         setUserSession(session);
@@ -44,12 +43,24 @@ const Profile = ({ params }) => {
         <h2>Aadhaar Number: <span>{userData.aadhaarNumber}</span></h2>
         <h2>Role: <span>{userData.role}</span></h2>
         <h2>Status: <span>{userData.status}</span></h2>
-        <h2>Instructor: <span>{userData.instructor ? userData.instructor.name : "No Instructor"}</span></h2>
+        <h2>Instructors:</h2>
+        <ul>
+          {userData.instructors && userData.instructors.length > 0 ? (
+            userData.instructors.map((instructor) => (
+              <li key={instructor.id}>
+                {instructor.name} ({instructor.email})
+              </li>
+            ))
+          ) : (
+            <li>No Instructor Assigned</li>
+          )}
+        </ul>
       </div>
       {userSession && (
         <div className={styles.sessionDetails}>
           <h2>Session Details</h2>
           <h3>Instructor Name: <span>{userSession.instructor?.name || "Not Assigned"}</span></h3>
+          <h3>Instructor Email: <span>{userSession.instructor?.email || "Not Assigned"}</span></h3>
           <h3>Session Date: <span>{new Date(userSession.sessionDate).toLocaleString()}</span></h3>
           <h3>Schedule Date: <span>{new Date(userSession.scheduleDate).toLocaleString()}</span></h3>
           <h3>Availability: <span>{userSession.availability.join(", ")}</span></h3>

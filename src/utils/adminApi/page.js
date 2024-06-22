@@ -221,15 +221,19 @@ export async function deleteInstructor(instructorId){
 
 export async function getInstructorsByUserAvailability(userId) {
     try {
-      const response = await fetch(`http://localhost:8080/api/users/${userId}/instructors`);
+      const response = await fetch(`http://localhost:8080/api/admins/${userId}/instructors`,{
+        method:"GET"
+      });
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text(); // Get error text for better logging
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
       const result = await response.json();
       return { success: true, data: result };
     } catch (err) {
-      console.error('Failed to fetch instructors by user availability:', err);
+      console.error("Failed to fetch instructors by user availability:", err);
       return { success: false, data: err.message };
     }
   }
+  
   

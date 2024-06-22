@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useEffect, useState } from 'react';
 import styles from './AssignInstructor.module.css';
@@ -21,9 +21,18 @@ const AssignInstructor = ({ params }) => {
       try {
         const responseUser = await getUserById(userId);
         const responseInstructor = await getInstructorsByUserAvailability(userId);
-        console.log(responseUser, responseInstructor); // Log to check responses
+        
+        console.log('User Data:', responseUser.data); // Log user data
+        console.log('Instructor Data:', responseInstructor.data); // Log instructor data
+
         setUser(responseUser.data);
-        setInstructors(Array.isArray(responseInstructor.data) ? responseInstructor.data : []);
+
+        if (Array.isArray(responseInstructor.data)) {
+          setInstructors(responseInstructor.data);
+        } else {
+          console.error('Expected array but got:', responseInstructor.data);
+          setInstructors([]);
+        }
       } catch (err) {
         setError('Failed to fetch data');
         console.error('Error fetching data:', err); // Log detailed error
@@ -77,11 +86,17 @@ const AssignInstructor = ({ params }) => {
     <div className={styles.container}>
       <div className={styles.userDetails}>
         <h2>User Details:</h2>
-        <div>Name: {user.name}</div>
-        <div>Email: {user.email}</div>
-        <div>Aadhaar: {user.aadhaarNumber}</div>
-        <div>Status: {user.status}</div>
-        <div>Availability: {user.availability.join(', ')}</div>
+        {user ? (
+          <>
+            <div>Name: {user.name}</div>
+            <div>Email: {user.email}</div>
+            <div>Aadhaar: {user.aadhaarNumber}</div>
+            <div>Status: {user.status}</div>
+            <div>Availability: {user.availability.join(', ')}</div>
+          </>
+        ) : (
+          <div>No user details available</div>
+        )}
       </div>
       
       <div className={styles.instructorSelection}>
@@ -99,6 +114,7 @@ const AssignInstructor = ({ params }) => {
                 >
                   <div>Name: {instructor.name}</div>
                   <div>Email: {instructor.email}</div>
+                  <div>Phone: {instructor.phone}</div>
                   <div>Availability: {instructor.availability.join(', ')}</div>
                 </div>
               ))}
