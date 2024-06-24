@@ -14,17 +14,17 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [drivingLicense, setDrivingLicense] = useState('');
-  const [availability, setAvailability] = useState([]);
+  // const [availability, setAvailability] = useState([]);
   const [message, setMessage] = useState('');
 
-  const handleAvailabilityChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setAvailability([...availability, value]);
-    } else {
-      setAvailability(availability.filter(day => day !== value));
-    }
-  };
+  // const handleAvailabilityChange = (e) => {
+  //   const { value, checked } = e.target;
+  //   if (checked) {
+  //     setAvailability([...availability, value]);
+  //   } else {
+  //     setAvailability(availability.filter(day => day !== value));
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +34,7 @@ const Register = () => {
       password,
       phone,
       drivingLicense,
-      availability
+      // availability
     };
     const result = await registerInstructor(instructorData);
     if (result.success) {
@@ -105,7 +105,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className={styles.formGroup}>
+        {/* <div className={styles.formGroup}>
           <label className={styles.formLabel}>Availability:</label>
           <div className={styles.checkboxGroup}>
             {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
@@ -119,9 +119,9 @@ const Register = () => {
                 />
                 {day}
               </label>
-            ))}
-          </div>
-        </div>
+            ))} 
+          </div> 
+        </div> */}
         <button type="submit" className={styles.submitButton}>Register</button>
       </form>
       {message && <p className={styles.message}>{message}</p>}

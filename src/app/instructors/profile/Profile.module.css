@@ -1,56 +1,82 @@
+/* Profile.module.css */
+
 .container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #e7d7a1;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-  }
-  
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2rem;
-    color: #333;
-  }
-  
-  .profileGroup {
-    margin-bottom: 15px;
-  }
-  
-  .profileLabel {
-    display: block;
-    font-weight: bold;
-    color: #555;
-  }
-  
-  .profileValue {
-    display: block;
-    padding: 10px;
-    border: 1px solid #ec9191;
-    border-radius: 5px;
-    background-color: #9fcce0;
-    font-size: 1rem;
-    color: #333;
-  }
-  
-  .availabilityList {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .availabilityItem {
-    padding: 5px 0;
-    border-bottom: 1px solid #b99622;
-  }
-  
-  .message {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 1.1rem;
-    color: red;
-  }
-  /* Profile.module.css */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh; /* Full viewport height */
+  padding: 20px;
+}
+
+.profileCard {
+  width: 100%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.profileGroup {
+  margin-bottom: 10px;
+}
+
+.profileLabel {
+  font-weight: bold;
+}
+
+.profileValue {
+  margin-left: 10px;
+}
+
+.availabilitySection {
+  margin-top: 20px;
+}
+
+.sectionHeader {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.availabilityList {
+  list-style-type: none;
+  padding: 0;
+}
+
+.availabilityItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.deleteButton {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  margin-left: 10px;
+}
+
+.addAvailabilitySection {
+  margin-top: 20px;
+}
+
+.updateButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.usersSection {
+  margin-top: 20px;
+}
 
 .userList {
   list-style-type: none;
@@ -59,33 +85,73 @@
 
 .userItem {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 16px;
-  margin: 8px 0;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.userItem:hover {
-  transform: translateY(-4px);
+.userNumber {
+  font-weight: bold;
+  margin-right: 10px;
 }
 
 .userName {
   font-weight: bold;
-  margin-bottom: 4px;
+  margin-right: 10px;
 }
 
 .userEmail {
-  color: #555;
-  margin-bottom: 4px;
+  color: #777;
+  margin-right: 10px;
 }
 
 .userStatus {
-  color: #007BFF;
+  color: #777;
+  margin-right: 10px;
 }
 
-  
+.loading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.error {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: red;
+}
+
+.availabilityForm {
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.submitButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.cancelButton {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}

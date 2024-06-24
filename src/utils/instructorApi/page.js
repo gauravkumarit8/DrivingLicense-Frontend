@@ -134,9 +134,49 @@ export async function userSession(instructorId) {
 
 export async function updateAvailability(instructorId,availabilityDay){
   try{
-    const response=await setAvailabilityOfInstructor(`http://localhost:8080/api/instructor/${instructorId}/availability`,{
+    const response=await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability`,{
       method:"PUT",
       body:JSON.stringify(availabilityDay)
+    })
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    }
+    const result = await response.json();
+    return { success: true, data: result };
+  }catch (error) {
+    console.error("Failed to login user:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function addAvailability(instructorId, availabilityDay) {
+  try {
+      const response = await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(availabilityDay)
+      });
+
+      if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+
+      const result = await response.json();
+      return { success: true, data: result };
+  } catch (error) {
+      console.error("Failed to add availability:", error);
+      return { success: false, message: error.message };
+  }
+}
+
+export async function deleteAvailability(instructorId,day){
+  try{
+    const response=await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability/${day}`,{
+      method:"DELETE"
     })
     if (!response.ok) {
       const errorText = await response.text();
