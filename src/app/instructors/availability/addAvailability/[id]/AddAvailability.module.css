@@ -1,0 +1,21 @@
+/* styles/AddAvailability.css */
+.container {
+    @apply flex flex-col items-center justify-center min-h-screen bg-gray-100 py-10;
+  }
+  
+  .form-container {
+    @apply bg-white p-6 rounded-lg shadow-lg w-full max-w-xl;
+  }
+  
+  .title {
+    @apply text-2xl font-bold mb-4 text-center;
+  }
+  
+  .availability-list {
+    @apply list-none p-0 mt-4;
+  }
+  
+  .availability-list li {
+    @apply mb-2;
+  }
+  
