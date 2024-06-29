@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteUser, getAdminById, getUsers } from '@/utils/adminApi/page';
+import { deleteUser, getAdminById, getUsersWithAvailability } from '@/utils/adminApi/page';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import styles from './profile.module.css';
@@ -12,16 +12,24 @@ const Profile = ({ params }) => {
   const { id } = params;
   const [admin, setAdmin] = useState(null);
   const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const fetchData = async () => {
     try {
       const adminResult = await getAdminById(id);
-      const usersResult = await getUsers();
+      const usersResult = await getUsersWithAvailability();
       setAdmin(adminResult.data);
-      setUsers(usersResult.data);
+      if (Array.isArray(usersResult.data)) {
+        setUsers(usersResult.data);
+      } else {
+        setErrorMessage(usersResult.data.message);
+      }
     } catch (err) {
       console.error('Failed to fetch data:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -38,7 +46,7 @@ const Profile = ({ params }) => {
     }
   };
 
-  if (!admin || users.length === 0) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 
@@ -55,45 +63,64 @@ const Profile = ({ params }) => {
         
         {/* Users details */}
         <div className={styles.userContainer}>
-          {users.map((user, index) => (
-            <div key={user.id} className={styles.userCard}>
-              <div className={styles.userDetails}>
-                <button 
-                  onClick={() => handleClick(user.id)} 
-                  type='submit' 
-                  className={styles.deleteButton}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-                <span>{index + 1}. </span>
-                <span>Name: {user.name}</span><br />
-                <span>Email: {user.email}</span><br />
-                <span>Aadhar: {user.aadhaarNumber}</span><br />
-                <span>Status: {user.status}</span><br />
-                {/* Instructor details */}
-                {user.instructors && user.instructors.length > 0 ? (
-                  <div className={styles.instructor}>
-                    <h2>Instructor Details:</h2>
-                    {user.instructors.map((instructor) => (
-                      <div key={instructor.id}>
-                        <div>Name: {instructor.name}</div>
-                        <div>Email: {instructor.email}</div>
-                        <div>Phone: {instructor.phone}</div>
-                        <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
-                      </div>
-                    ))}
-                    <Link href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
-                      Change Instructor
+          {errorMessage ? (
+            <div>{errorMessage}</div>
+          ) : (
+            users.map((user, index) => (
+              <div key={user.id} className={styles.userCard}>
+                <div className={styles.userDetails}>
+                  <button 
+                    onClick={() => handleClick(user.id)} 
+                    type='submit' 
+                    className={styles.deleteButton}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                  <span>{index + 1}. </span>
+                  <span>Name: {user.name}</span><br />
+                  <span>Email: {user.email}</span><br />
+                  <span>Aadhar: {user.aadhaarNumber}</span><br />
+                  <span>Status: {user.status}</span><br />
+                  {/* Availability details */}
+                  {user.availability && user.availability.length > 0 && (
+                    <div className={styles.availability}>
+                      <h2>Availability:</h2>
+                      {user.availability.map((availability, index) => (
+                        <div key={index}>
+                          <div>Day: {availability.day}</div>
+                          <div>Start Time: {availability.startTime}</div>
+                          <div>End Time: {availability.endTime}</div>
+                          <div>Session Date: {new Date(availability.sessionDate).toLocaleDateString()}</div>
+                          <div>Schedule Date: {new Date(availability.scheduleDate).toLocaleDateString()}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* Instructor details */}
+                  {user.instructors && user.instructors.length > 0 ? (
+                    <div className={styles.instructor}>
+                      <h2>Instructor Details:</h2>
+                      {user.instructors.map((instructor) => (
+                        <div key={instructor.id}>
+                          <div>Name: {instructor.name}</div>
+                          <div>Email: {instructor.email}</div>
+                          <div>Phone: {instructor.phone}</div>
+                          <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
+                        </div>
+                      ))}
+                      <Link href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
+                        Change Instructor
+                      </Link>
+                    </div>
+                  ) : (
+                    <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
+                      Assign Instructor
                     </Link>
-                  </div>
-                ) : (
-                  <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
-                    Assign Instructor
-                  </Link>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </div>
         
         {/* Update admin link */}

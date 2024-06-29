@@ -31,6 +31,11 @@ const Profile = ({ params }) => {
     return <div className={styles.container}>Loading...</div>;
   }
 
+  const formatSessionDate = (dateString) => {
+    const date = new Date(dateString);
+    return isNaN(date) ? "Invalid Date" : date.toLocaleString();
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.topRight}>
@@ -61,9 +66,9 @@ const Profile = ({ params }) => {
           <h2>Session Details</h2>
           <h3>Instructor Name: <span>{userSession.instructor?.name || "Not Assigned"}</span></h3>
           <h3>Instructor Email: <span>{userSession.instructor?.email || "Not Assigned"}</span></h3>
-          <h3>Session Date: <span>{new Date(userSession.sessionDate).toLocaleString()}</span></h3>
-          <h3>Schedule Date: <span>{new Date(userSession.scheduleDate).toLocaleString()}</span></h3>
-          <h3>Availability: <span>{userSession.availability.join(", ")}</span></h3>
+          <h3>Session Date: <span>{formatSessionDate(userSession.sessionDate)}</span></h3>
+          <h3>Schedule Date: <span>{formatSessionDate(userSession.scheduleDate)}</span></h3>
+          <h3>Availability: <span>{userSession.availability.map(avail => `${avail.day} (${formatSessionDate(avail.sessionDate)})`).join(", ")}</span></h3>
         </div>
       )}
       {!userSession && (

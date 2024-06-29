@@ -6,15 +6,14 @@ import styles from './Users.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import Link from 'next/link';
-import { getSessionByUser } from '@/utils/sessionApi/drivingSessionApi';
+// import { getSessionByUser } from '@/utils/sessionApi/drivingSessionApi';
 
 
-const user = ({ params }) => {
+const User = ({ params }) => {
 
   const { id } = params;
 
-  const [users, setusers] = useState([]);
-  // const [userSessions, setuserSessions] = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -24,33 +23,37 @@ const user = ({ params }) => {
         // Fetch users
         const response = await getUsers();
         console.log(response.data);
-        setusers(response.data);
+        if (response.data.message === "Users not present") {
+          setError(response.data.message);
+        } else {
+          setUsers(response.data);
 
-        // Fetch sessions for each user
-        // const sessionsPromises = response.data.map(async (user) => {
-        //   const sessionResponse = await getSessionByUser(user.id);
-        //   return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
-        // });
-        
-        // const sessions = await Promise.all(sessionsPromises);
-        // setuserSessions(sessions);
+          // Fetch sessions for each user (if needed)
+          // const sessionsPromises = response.data.map(async (user) => {
+          //   const sessionResponse = await getSessionByUser(user.id);
+          //   return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
+          // });
+          
+          // const sessions = await Promise.all(sessionsPromises);
+          // setUserSessions(sessions);
+        }
       } catch (err) {
         setError('Failed to fetch data');
       } finally {
         setLoading(false);
       }
-    }
+    };
     fetchData();
   }, []);
 
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
-      setusers(users.filter(user => user.id !== userId));
+      setUsers(users.filter(user => user.id !== userId));
     } catch (err) {
       console.error('Failed to delete user:', err);
     }
-  }
+  };
 
   const formatAvailability = (availability) => {
     return availability.map(slot => {
@@ -73,18 +76,6 @@ const user = ({ params }) => {
               <p>Email: {user.email}</p>
               <p>Phone: {user.phone}</p>
               <p>Availability: {formatAvailability(user.availability)}</p>
-              {/* <p>
-                user Session:
-                {userSessions[index] ? (
-                  <>
-                    <br />
-                    Matching Day: {userSessions[index].matchingDay}<br />
-                    Session Date: {new Date(userSessions[index].sessionDate).toLocaleString()}<br />
-                    Schedule Date: {new Date(userSessions[index].scheduleDate).toLocaleString()}<br />
-                    User Name: {userSessions[index].userName}<br />
-                  </>
-                ) : "No Session"}
-              </p> */}
               <button
                 type="button"
                 className={styles.deleteButton}
@@ -100,7 +91,7 @@ const user = ({ params }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default user;
+export default User;
