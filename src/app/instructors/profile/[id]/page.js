@@ -5,7 +5,8 @@ import { deleteAvailability, getInstructorById, updateAvailability } from "@/uti
 import Link from 'next/link';
 import styles from '../Profile.module.css'; 
 import AvailabilityForm from '../../availability/AvailabilityForm/page';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Profile = ({ params }) => {
   const { id } = params;
@@ -13,7 +14,7 @@ const Profile = ({ params }) => {
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [updatingAvailability, setUpdatingAvailability] = useState(false); // State to control update availability form display
+  const [updatingAvailability, setUpdatingAvailability] = useState(false); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,11 +63,11 @@ const Profile = ({ params }) => {
   };
 
   if (loading) {
-    return <div className={styles.loading}>Loading...</div>; // Use CSS class for loading state
+    return <div className={styles.loading}>Loading...</div>; 
   }
 
   if (error) {
-    return <div className={styles.error}>{error}</div>; // Use CSS class for error state
+    return <div className={styles.error}>{error}</div>; 
   }
 
   return (
@@ -109,7 +110,7 @@ const Profile = ({ params }) => {
                         className={styles.deleteButton}
                         onClick={() => handleDeleteAvailability(avail.day)}
                       >
-                        &#x2715;
+                        <FontAwesomeIcon icon={faTrash} />
                       </button>
                     </li>
                   ))}

@@ -136,6 +136,9 @@ export async function updateAvailability(instructorId,availabilityDay){
   try{
     const response=await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability`,{
       method:"PUT",
+      headers: {
+              "Content-Type": "application/json"
+          },
       body:JSON.stringify(availabilityDay)
     })
     if (!response.ok) {

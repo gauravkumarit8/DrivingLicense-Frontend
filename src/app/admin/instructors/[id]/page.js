@@ -22,6 +22,7 @@ const Instructor = ({ params }) => {
       try {
         // Fetch instructors
         const response = await getInstructors();
+        console.log(response.data);
         setInstructors(response.data);
 
         // Fetch sessions for each instructor
@@ -50,6 +51,12 @@ const Instructor = ({ params }) => {
     }
   }
 
+  const formatAvailability = (availability) => {
+    return availability.map(slot => {
+      return `${slot.day}: ${slot.startTime} - ${slot.endTime}`;
+    }).join(', ');
+  };
+
   return (
     <div className={styles.container}>
       <Link href={`/admin/profile/${id}`} className={styles.backButton}>Back</Link>
@@ -64,7 +71,7 @@ const Instructor = ({ params }) => {
               <h3>{instructor.name}</h3>
               <p>Email: {instructor.email}</p>
               <p>Phone: {instructor.phone}</p>
-              <p>Availability: {instructor.availability.join(', ')}</p>
+              <p>Availability: {formatAvailability(instructor.availability)}</p>
               <p>
                 Instructor Session:
                 {instructorSessions[index] ? (
