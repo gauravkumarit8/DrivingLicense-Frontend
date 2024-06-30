@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { getSessionByInstructor } from '@/utils/sessionApi/drivingSessionApi';
 
 const Instructor = ({ params }) => {
-
   const { id } = params;
 
   const [instructors, setInstructors] = useState([]);
@@ -22,22 +21,26 @@ const Instructor = ({ params }) => {
       try {
         // Fetch instructors
         const response = await getInstructors();
-        setInstructors(response.data);
+        if (response.data.message === "Instructor not present") {
+          setError(response.data.message);
+        } else {
+          setInstructors(response.data);
 
-        // Fetch sessions for each instructor
-        const sessionsPromises = response.data.map(async (instructor) => {
-          const sessionResponse = await getSessionByInstructor(instructor.id);
-          return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
-        });
-        
-        const sessions = await Promise.all(sessionsPromises);
-        setInstructorSessions(sessions);
+          // Fetch sessions for each instructor
+          const sessionsPromises = response.data.map(async (instructor) => {
+            const sessionResponse = await getSessionByInstructor(instructor.id);
+            return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
+          });
+
+          const sessions = await Promise.all(sessionsPromises);
+          setInstructorSessions(sessions);
+        }
       } catch (err) {
         setError('Failed to fetch data');
       } finally {
         setLoading(false);
       }
-    }
+    };
     fetchData();
   }, []);
 
@@ -48,7 +51,13 @@ const Instructor = ({ params }) => {
     } catch (err) {
       console.error('Failed to delete instructor:', err);
     }
-  }
+  };
+
+  const formatAvailability = (availability) => {
+    return availability.map(slot => {
+      return `${slot.day}: ${slot.startTime} - ${slot.endTime}`;
+    }).join(', ');
+  };
 
   return (
     <div className={styles.container}>
@@ -64,7 +73,7 @@ const Instructor = ({ params }) => {
               <h3>{instructor.name}</h3>
               <p>Email: {instructor.email}</p>
               <p>Phone: {instructor.phone}</p>
-              <p>Availability: {instructor.availability.join(', ')}</p>
+              <p>Availability: {formatAvailability(instructor.availability)}</p>
               <p>
                 Instructor Session:
                 {instructorSessions[index] ? (
@@ -92,7 +101,7 @@ const Instructor = ({ params }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
 export default Instructor;

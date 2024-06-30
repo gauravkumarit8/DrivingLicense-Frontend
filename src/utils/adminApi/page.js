@@ -235,5 +235,22 @@ export async function getInstructorsByUserAvailability(userId) {
       return { success: false, data: err.message };
     }
   }
+
+  export async function getUsersWithAvailability(){
+    try{
+        const response=await fetch("http://localhost:8080/api/admins/usersWithAvailability",{
+            method:"GET"
+        });
+        if (!response.ok) {
+            const errorText = await response.text(); // Get error text for better logging
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (err) {
+        console.error("Failed to fetch instructors by user availability:", err);
+        return { success: false, data: err.message };
+    }
+  }
   
   
