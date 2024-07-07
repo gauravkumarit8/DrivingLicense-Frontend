@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const Profile = ({ params }) => {
   const [userData, setUserData] = useState(null);
-  const [userSession, setUserSession] = useState(null);
+  const [userSessions, setUserSessions] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,8 +18,8 @@ const Profile = ({ params }) => {
         setUserData(dataUser);
 
         const userSessionResult = await getSessionByUser(dataUser.id);
-        const session = userSessionResult.data.length > 0 ? userSessionResult.data[0] : null;
-        setUserSession(session);
+        const sessions = userSessionResult.data.length > 0 ? userSessionResult.data : [];
+        setUserSessions(sessions);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -31,9 +31,14 @@ const Profile = ({ params }) => {
     return <div className={styles.container}>Loading...</div>;
   }
 
-  const formatSessionDate = (dateString) => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return isNaN(date) ? "Invalid Date" : date.toLocaleString();
+    return !isNaN(date) ? date.toLocaleDateString() : "Invalid Date";
+  };
+
+  const formatTime = (timeString) => {
+    const date = new Date(`1970-01-01T${timeString}Z`);
+    return !isNaN(date) ? date.toLocaleTimeString() : "Invalid Time";
   };
 
   return (
@@ -61,17 +66,33 @@ const Profile = ({ params }) => {
           )}
         </ul>
       </div>
-      {userSession && (
+      {userSessions.length > 0 && (
         <div className={styles.sessionDetails}>
           <h2>Session Details</h2>
-          <h3>Instructor Name: <span>{userSession.instructor?.name || "Not Assigned"}</span></h3>
-          <h3>Instructor Email: <span>{userSession.instructor?.email || "Not Assigned"}</span></h3>
-          <h3>Session Date: <span>{formatSessionDate(userSession.sessionDate)}</span></h3>
-          <h3>Schedule Date: <span>{formatSessionDate(userSession.scheduleDate)}</span></h3>
-          <h3>Availability: <span>{userSession.availability.map(avail => `${avail.day} (${formatSessionDate(avail.sessionDate)})`).join(", ")}</span></h3>
+          {userSessions.map((session) => (
+            <div key={session.id} className={styles.singleSession}>
+              {session.instructor && (
+                <>
+                  <h3>Instructor Name: <span>{session.instructor?.name || "Not Assigned"}</span></h3>
+                  <h3>Instructor Email: <span>{session.instructor?.email || "Not Assigned"}</span></h3>
+                </>
+              )}
+              <h3>Session Date: <span>{formatDate(session.availability[0].sessionDate)}</span></h3>
+              <h3>Schedule Date: <span>{formatDate(session.availability[0].scheduleDate)}</span></h3>
+              <h3>Availability:</h3>
+              <ul>
+                {session.availability.map(avail => (
+                  <li key={avail.sessionDate}>
+                    {avail.day} ({formatDate(avail.sessionDate)} {formatTime(avail.startTime)} - {formatTime(avail.endTime)})
+                  </li>
+                ))}
+              </ul>
+              <h3>Status: <span>{session.status}</span></h3>
+            </div>
+          ))}
         </div>
       )}
-      {!userSession && (
+      {userSessions.length === 0 && (
         <h4 className={styles.sessionsLink}>
           Get user sessions: <Link href={`/user/session/${userData.id}`}>My Sessions</Link>
         </h4>
