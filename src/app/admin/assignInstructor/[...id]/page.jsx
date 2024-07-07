@@ -74,6 +74,10 @@ const AssignInstructor = ({ params }) => {
     }
   };
 
+  const formatAvailability = (availability) => {
+    return availability.map(avail => `${avail.day} (${avail.startTime} - ${avail.endTime})`).join(', ');
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -92,7 +96,7 @@ const AssignInstructor = ({ params }) => {
             <div>Email: {user.email}</div>
             <div>Aadhaar: {user.aadhaarNumber}</div>
             <div>Status: {user.status}</div>
-            <div>Availability: {user.availability.join(', ')}</div>
+            <div>Availability: {formatAvailability(user.availability)}</div>
           </>
         ) : (
           <div>No user details available</div>
@@ -115,7 +119,7 @@ const AssignInstructor = ({ params }) => {
                   <div>Name: {instructor.name}</div>
                   <div>Email: {instructor.email}</div>
                   <div>Phone: {instructor.phone}</div>
-                  <div>Availability: {instructor.availability.join(', ')}</div>
+                  <div>Availability: {formatAvailability(instructor.availability)}</div>
                 </div>
               ))}
             </div>
