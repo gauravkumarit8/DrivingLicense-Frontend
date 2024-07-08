@@ -76,19 +76,19 @@ const Profile = ({ params }) => {
       <div className={styles.profileCard}>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Name:</label>
-          <span className={styles.profileValue}>{instructor.name}</span>
+          <span className={styles.profileValue}>{instructor?.name}</span>
         </div>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Email:</label>
-          <span className={styles.profileValue}>{instructor.email}</span>
+          <span className={styles.profileValue}>{instructor?.email}</span>
         </div>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Phone Number:</label>
-          <span className={styles.profileValue}>{instructor.phone}</span>
+          <span className={styles.profileValue}>{instructor?.phone}</span>
         </div>
         <div className={styles.profileGroup}>
           <label className={styles.profileLabel}>Driving License:</label>
-          <span className={styles.profileValue}>{instructor.drivingLicenseNumber || 'Not available'}</span>
+          <span className={styles.profileValue}>{instructor?.drivingLicenseNumber || 'Not available'}</span>
         </div>
 
         {updatingAvailability ? (
@@ -135,7 +135,7 @@ const Profile = ({ params }) => {
         <div className={styles.usersSection}>
           <h2 className={styles.sectionHeader}>Users</h2>
           <ul className={styles.userList}>
-            {instructor.users.length > 0 ? (
+            {instructor?.users?.length > 0 ? (
               instructor.users.map((user, index) => (
                 <li key={user.id} className={styles.userItem}>
                   <span className={styles.userNumber}>{index + 1}.</span>
