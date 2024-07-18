@@ -12,7 +12,7 @@ const AssignInstructor = ({ params }) => {
   const [adminId, userId] = id;
   const [user, setUser] = useState(null);
   const [instructors, setInstructors] = useState([]);
-  const [selectedInstructorIds, setSelectedInstructorIds] = useState([]);
+  const [selectedInstructors, setSelectedInstructors] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,9 +21,9 @@ const AssignInstructor = ({ params }) => {
       try {
         const responseUser = await getUserById(userId);
         const responseInstructor = await getInstructorsByUserAvailability(userId);
-        
-        console.log('User Data:', responseUser.data); // Log user data
-        console.log('Instructor Data:', responseInstructor.data); // Log instructor data
+
+        console.log('User Data:', responseUser.data);
+        console.log('Instructor Data:', responseInstructor.data);
 
         setUser(responseUser.data);
 
@@ -35,7 +35,7 @@ const AssignInstructor = ({ params }) => {
         }
       } catch (err) {
         setError('Failed to fetch data');
-        console.error('Error fetching data:', err); // Log detailed error
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
@@ -44,21 +44,19 @@ const AssignInstructor = ({ params }) => {
     fetchData();
   }, [userId]);
 
-  const handleInstructorSelect = (instructorId) => {
-    setSelectedInstructorIds((prevSelected) => {
-      if (prevSelected.includes(instructorId)) {
-        return prevSelected.filter(id => id !== instructorId);
-      } else {
-        return [...prevSelected, instructorId];
-      }
-    });
+  const handleInstructorSelect = (day, instructorId) => {
+    setSelectedInstructors((prevSelected) => ({
+      ...prevSelected,
+      [day]: instructorId,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (selectedInstructorIds.length > 0) {
+    const assignments = Object.entries(selectedInstructors).map(([day, instructorId]) => ({ day, instructorId }));
+    if (assignments.length > 0) {
       try {
-        const assign = await assignInstructorToUser(userId, selectedInstructorIds);
+        const assign = await assignInstructorToUser(userId, assignments);
         if (assign.success) {
           alert('Instructors assigned successfully!');
           router.push(`/admin/profile/${adminId}`);
@@ -76,6 +74,12 @@ const AssignInstructor = ({ params }) => {
 
   const formatAvailability = (availability) => {
     return availability.map(avail => `${avail.day} (${avail.startTime} - ${avail.endTime})`).join(', ');
+  };
+
+  const getAvailableInstructorsForDay = (day) => {
+    return instructors.filter(instructor => 
+      instructor.availability.some(avail => avail.day === day)
+    );
   };
 
   if (loading) {
@@ -105,28 +109,31 @@ const AssignInstructor = ({ params }) => {
       
       <div className={styles.instructorSelection}>
         <h2>Select Instructors:</h2>
-        {instructors.length === 0 ? (
-          <div>No matching instructors available</div>
-        ) : (
-          <form onSubmit={handleSubmit}>
+        {user?.availability.map(({ day }) => (
+          <div key={day}>
+            <h3>{day}</h3>
             <div className={styles.instructorGrid}>
-              {instructors.map((instructor) => (
-                <div
-                  key={instructor.id}
-                  className={`${styles.instructorCard} ${selectedInstructorIds.includes(instructor.id) ? styles.selected : ''}`}
-                  onClick={() => handleInstructorSelect(instructor.id)}
-                >
-                  <div>Name: {instructor.name}</div>
-                  <div>Email: {instructor.email}</div>
-                  <div>Phone: {instructor.phone}</div>
-                  <div>Availability: {formatAvailability(instructor.availability)}</div>
-                </div>
-              ))}
+              {getAvailableInstructorsForDay(day).length === 0 ? (
+                <div>No matching instructors available</div>
+              ) : (
+                getAvailableInstructorsForDay(day).map(instructor => (
+                  <div
+                    key={instructor.id}
+                    className={`${styles.instructorCard} ${selectedInstructors[day] === instructor.id ? styles.selected : ''}`}
+                    onClick={() => handleInstructorSelect(day, instructor.id)}
+                  >
+                    <div>Name: {instructor.name}</div>
+                    <div>Email: {instructor.email}</div>
+                    <div>Phone: {instructor.phone}</div>
+                    <div>Availability: {formatAvailability(instructor.availability)}</div>
+                  </div>
+                ))
+              )}
             </div>
-            <br />
-            <button type="submit" className={styles.submitButton}>Assign Instructors</button>
-          </form>
-        )}
+          </div>
+        ))}
+        <br />
+        <button onClick={handleSubmit} className={styles.submitButton}>Assign Instructors</button>
       </div>
     </div>
   );

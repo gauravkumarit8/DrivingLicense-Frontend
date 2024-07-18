@@ -140,18 +140,18 @@ export async function getInstructors(){
 //     }
 // }
 
-export async function assignInstructorToUser(userId, instructorIds) {
+export async function assignInstructorToUser(userId, assignments) {
     try {
-      const response = await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructors`, {
+      const response = await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructors-to-days`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(instructorIds) // Corrected body to be a JSON array
+        body: JSON.stringify(assignments) // Passing the list of assignments
       });
   
       if (!response.ok) {
-        const errorText = await response.text(); // Changed to text to handle non-JSON responses
+        const errorText = await response.text(); // Extracting error message for detailed error reporting
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
   
@@ -162,6 +162,29 @@ export async function assignInstructorToUser(userId, instructorIds) {
       return { success: false, data: err.message };
     }
   }
+  
+// export async function assignInstructorToUser(userId, instructorIds) {
+//     try {
+//       const response = await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructors`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(instructorIds) // Corrected body to be a JSON array
+//       });
+  
+//       if (!response.ok) {
+//         const errorText = await response.text(); // Changed to text to handle non-JSON responses
+//         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+//       }
+  
+//       const result = await response.json();
+//       return { success: true, data: result };
+//     } catch (err) {
+//       console.error('Failed to assign instructors', err);
+//       return { success: false, data: err.message };
+//     }
+//   }
   
   
 

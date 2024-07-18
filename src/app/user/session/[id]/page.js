@@ -52,6 +52,14 @@ const Session = ({ params }) => {
     return date.getDay() === dayMap[day] && date >= new Date();
   };
 
+  const formatDate = (date) => {
+    return date.toISOString().split('T')[0]; // format as YYYY-MM-DD
+  };
+
+  const formatTime = (date) => {
+    return date.toTimeString().split(' ')[0]; // format as HH:mm:ss
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
@@ -59,8 +67,8 @@ const Session = ({ params }) => {
     try {
       const availability = selectedDays.map(day => ({
         day,
-        sessionDate: dayTimes[day]?.toISOString(),
-        startTime: dayTimes[day]?.toTimeString().split(' ')[0]
+        sessionDate: formatDate(dayTimes[day]),
+        startTime: formatTime(dayTimes[day])
       }));
       const result = await scheduleSession(id, { availability });
       setSession(result);
