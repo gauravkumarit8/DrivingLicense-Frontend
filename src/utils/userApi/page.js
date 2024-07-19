@@ -1,6 +1,8 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+
 export async function loginUser(userData) {
   try {
-    const response = await fetch('http://localhost:8080/api/users/login', { // Replace with your actual API endpoint
+    const response = await fetch(`${BASE_URL}/api/users/login`, { // Replace with your actual API endpoint
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +25,7 @@ export async function loginUser(userData) {
 
 export async function registerUser(userData) {
     try {
-      const response = await fetch('http://localhost:8080/api/users/register', { // Replace with your actual API endpoint
+      const response = await fetch(`${BASE_URL}/api/users/register`, { // Replace with your actual API endpoint
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +48,7 @@ export async function registerUser(userData) {
 
 export async function updateUser(userId,userData) {
   try {
-    const response = await fetch(`http://localhost:8080/api/users/update/${userId}`, {
+    const response = await fetch(`${BASE_URL}/api/users/update/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -69,7 +71,7 @@ export async function updateUser(userId,userData) {
 }
 
 export async function getUserByEmail(userEmail){
-    const response=await fetch(`http://localhost:8080/api/users/profile1/${userEmail}`,{
+    const response=await fetch(`${BASE_URL}/api/users/profile1/${userEmail}`,{
         method:"GET",
         headers:{
             'Context-Type':'application/json',
@@ -84,7 +86,7 @@ export async function getUserByEmail(userEmail){
 }
 
 export async function getUserById(userId){
-  const response=await fetch(`http://localhost:8080/api/users/profile/${userId}`,{
+  const response=await fetch(`${BASE_URL}/api/users/profile/${userId}`,{
       method:"GET",
       headers:{
           'Context-Type':'application/json',
@@ -99,7 +101,7 @@ export async function getUserById(userId){
 }
 
 export async function deleteUser(userId){
-    const response=await fetch(`/${userId}`,{
+    const response=await fetch(`${BASE_URL}/${userId}`,{
         method:"DELETE",
     });
     if(!response.ok){
@@ -112,7 +114,7 @@ export async function deleteUser(userId){
 
 export async function userSession(userId) {
   try {
-    const response = await fetch(`http://localhost:8080/api/sessions/user/${userId}`, { 
+    const response = await fetch(`${BASE_URL}/api/sessions/user/${userId}`, { 
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,8 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+
 export async function loginInstructor(instructorData) {
     try {
-      const response = await fetch('http://localhost:8080/api/instructor/login', { 
+      const response = await fetch(`${BASE_URL}/api/instructor/login`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -23,7 +25,7 @@ export async function loginInstructor(instructorData) {
   
   export async function registerInstructor(instructorData) {
       try {
-        const response = await fetch('http://localhost:8080/api/instructor/register', { // Replace with your actual API endpoint
+        const response = await fetch(`${BASE_URL}/api/instructor/register`, { // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +48,7 @@ export async function loginInstructor(instructorData) {
   
   export async function updateInstructor(instructorData) {
     try {
-      const response = await fetch("http://localhost:8080/api/instructor/update", {
+      const response = await fetch(`${BASE_URL}/api/instructor/update`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -69,7 +71,7 @@ export async function loginInstructor(instructorData) {
   }
   
   export async function getInstructorByEmail(InstructorEmail){
-      const response=await fetch(`http://localhost:8080/api/instructor/profile1/${InstructorEmail}`,{
+      const response=await fetch(`${BASE_URL}/api/instructor/profile1/${InstructorEmail}`,{
           method:"GET",
           headers:{
               'Context-Type':'application/json',
@@ -84,7 +86,7 @@ export async function loginInstructor(instructorData) {
   }
   
   export async function getInstructorById(instructorId){
-    const response=await fetch(`http://localhost:8080/api/instructor/profile/${instructorId}`,{
+    const response=await fetch(`${BASE_URL}/api/instructor/profile/${instructorId}`,{
         method:"GET",
         headers:{
             'Context-Type':'application/json',
@@ -99,7 +101,7 @@ export async function loginInstructor(instructorData) {
   }
   
 export async function deleteUser(instructorId){
-    const response=await fetch(`http://localhost:8080/api/instructor/delete/${instructorId}`,{
+    const response=await fetch(`${BASE_URL}/api/instructor/delete/${instructorId}`,{
         method:"DELETE",
     });
     if(!response.ok){
@@ -112,7 +114,7 @@ export async function deleteUser(instructorId){
   
 export async function userSession(instructorId) {
   try {
-    const response = await fetch(`http://localhost:8080/api/sessions/user/${instructorId}`, { 
+    const response = await fetch(`${BASE_URL}/api/sessions/user/${instructorId}`, { 
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -134,7 +136,7 @@ export async function userSession(instructorId) {
 
 export async function updateAvailability(instructorId,availabilityDay){
   try{
-    const response=await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability`,{
+    const response=await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability`,{
       method:"PUT",
       headers: {
               "Content-Type": "application/json"
@@ -155,7 +157,7 @@ export async function updateAvailability(instructorId,availabilityDay){
 
 export async function addAvailability(instructorId, availabilityDay) {
   try {
-      const response = await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability`, {
+      const response = await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability`, {
           method: "POST",
           headers: {
               "Content-Type": "application/json"
@@ -178,7 +180,7 @@ export async function addAvailability(instructorId, availabilityDay) {
 
 export async function deleteAvailability(instructorId,day){
   try{
-    const response=await fetch(`http://localhost:8080/api/instructor/${instructorId}/availability/${day}`,{
+    const response=await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability/${day}`,{
       method:"DELETE"
     })
     if (!response.ok) {
