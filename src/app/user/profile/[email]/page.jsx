@@ -17,13 +17,17 @@ const Profile = ({ params }) => {
         const dataUser = result.data;
         setUserData(dataUser);
 
-        const userSessionResult = await getSessionByUser(dataUser.id);
-        const sessions = userSessionResult.data.length > 0 ? userSessionResult.data : [];
-        setUserSessions(sessions);
+        const sessionResult = await getSessionByUser(dataUser.id);
+        if (sessionResult.success) {
+          setUserSessions(sessionResult.data);
+        } else {
+          console.error("Failed to fetch sessions:", sessionResult.message);
+        }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+
     fetchData();
   }, [params.email]);
 

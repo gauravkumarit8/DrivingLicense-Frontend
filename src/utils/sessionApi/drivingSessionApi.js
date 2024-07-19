@@ -1,6 +1,8 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+
 export async function scheduleSession(userId,{availability,scheduleDate}){
   try{
-    const response=await fetch(`http://localhost:8080/api/sessions/schedule/${userId}`,{
+    const response=await fetch(`${BASE_URL}/api/sessions/schedule/${userId}`,{
       method:"POST",
       headers: {
         'Content-Type': 'application/json',
@@ -23,7 +25,7 @@ export async function scheduleSession(userId,{availability,scheduleDate}){
 
 export async function getSessionByUser(userId){
   try{
-    const response=await fetch(`http://localhost:8080/api/sessions/user/${userId}`,{
+    const response=await fetch(`${BASE_URL}/api/sessions/user/${userId}`,{
       method:"GET",
       headers: {
         'Content-Type': 'application/json',
@@ -45,7 +47,7 @@ export async function getSessionByUser(userId){
 
 export async function getSessionByInstructor(instructorId){
   try{
-    const response=await fetch(`http://localhost:8080/api/sessions/instructor/${instructorId}`,{
+    const response=await fetch(`${BASE_URL}/api/sessions/instructor/${instructorId}`,{
       method:"GET",
       headers: {
         'Content-Type': 'application/json',

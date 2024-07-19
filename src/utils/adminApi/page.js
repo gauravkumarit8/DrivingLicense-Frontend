@@ -1,6 +1,8 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+
 export async function loginAdmin(adminData){
     try {
-        const response = await fetch('http://localhost:8080/api/admins/login', { // Replace with your actual API endpoint
+        const response = await fetch(`${BASE_URL}/api/admins/login`, { // Replace with your actual API endpoint
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -23,7 +25,7 @@ export async function loginAdmin(adminData){
 
 export async function registerAdmin(adminData){
     try{
-        const response=await fetch("http://localhost:8080/api/admins/register",{
+        const response=await fetch(`${BASE_URL}/api/admins/register`,{
             method:'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +46,7 @@ export async function registerAdmin(adminData){
 
 export async function getAdminById(adminId){
     try{
-        const response=await fetch(`http://localhost:8080/api/admins/${adminId}`,{
+        const response=await fetch(`${BASE_URL}/api/admins/${adminId}`,{
             method:'GET'
         })
         if(!response.ok){
@@ -61,7 +63,7 @@ export async function getAdminById(adminId){
 
 export async function updateAdmin(adminData){
     try{
-        const response=await fetch("http://localhost:8080/api/admins/update",{
+        const response=await fetch(`${BASE_URL}/api/admins/update`,{
             method:"PUT",
             headers: {
                 'Content-Type': 'application/json',
@@ -82,7 +84,7 @@ export async function updateAdmin(adminData){
 
 export async function getUsers(){
     try{
-        const response=await fetch("http://localhost:8080/api/admins/users",{
+        const response=await fetch(`${BASE_URL}/api/admins/users`,{
             method:"GET",
             headers:{
                 'Content-Type':'application/text'
@@ -102,7 +104,7 @@ export async function getUsers(){
 
 export async function getInstructors(){
     try{
-        const response=await fetch("http://localhost:8080/api/admins/instructors",{
+        const response=await fetch(`${BASE_URL}/api/admins/instructors`,{
             method:"GET",
             headers:{
                 'Content-Type':'application/text'
@@ -122,7 +124,7 @@ export async function getInstructors(){
 
 // export async function assignInstructorToUser(userId,instructorId){
 //     try{
-//         const response=await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructor/${instructorId}`,{
+//         const response=await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructor/${instructorId}`,{
 //             method:"PUT",
 //             headers:{
 //                 'Content-Type':'application/text'
@@ -140,18 +142,18 @@ export async function getInstructors(){
 //     }
 // }
 
-export async function assignInstructorToUser(userId, instructorIds) {
+export async function assignInstructorToUser(userId, assignments) {
     try {
-      const response = await fetch(`http://localhost:8080/api/admins/${userId}/assign-instructors`, {
+      const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors-to-days`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(instructorIds) // Corrected body to be a JSON array
+        body: JSON.stringify(assignments) // Passing the list of assignments
       });
   
       if (!response.ok) {
-        const errorText = await response.text(); // Changed to text to handle non-JSON responses
+        const errorText = await response.text(); // Extracting error message for detailed error reporting
         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
   
@@ -163,11 +165,34 @@ export async function assignInstructorToUser(userId, instructorIds) {
     }
   }
   
+// export async function assignInstructorToUser(userId, instructorIds) {
+//     try {
+//       const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(instructorIds) // Corrected body to be a JSON array
+//       });
+  
+//       if (!response.ok) {
+//         const errorText = await response.text(); // Changed to text to handle non-JSON responses
+//         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+//       }
+  
+//       const result = await response.json();
+//       return { success: true, data: result };
+//     } catch (err) {
+//       console.error('Failed to assign instructors', err);
+//       return { success: false, data: err.message };
+//     }
+//   }
+  
   
 
 export async function reAssignInstructor(userId,instructorId){
     try{
-        const response = await fetch(`http://localhost:8080/api/admins/${userId}/update-instructor/${instructorId}`,{
+        const response = await fetch(`${BASE_URL}/api/admins/${userId}/update-instructor/${instructorId}`,{
             method:"PUT",
             headers:{
                 'Content-Type':'application/text'
@@ -187,7 +212,7 @@ export async function reAssignInstructor(userId,instructorId){
 
 export async function deleteUser(userId){
     try{
-        const response= await fetch(`http://localhost:8080/api/admins/delete/${userId}`,{
+        const response= await fetch(`${BASE_URL}/api/admins/delete/${userId}`,{
             method:"DELETE"
         })
         if(!response.ok){
@@ -204,7 +229,7 @@ export async function deleteUser(userId){
 
 export async function deleteInstructor(instructorId){
     try{
-        const response= await fetch(`http://localhost:8080/api/admins/delete/instructor/${instructorId}`,{
+        const response= await fetch(`${BASE_URL}/api/admins/delete/instructor/${instructorId}`,{
             method:"DELETE"
         })
         if(!response.ok){
@@ -221,7 +246,7 @@ export async function deleteInstructor(instructorId){
 
 export async function getInstructorsByUserAvailability(userId) {
     try {
-      const response = await fetch(`http://localhost:8080/api/admins/${userId}/instructors`,{
+      const response = await fetch(`${BASE_URL}/api/admins/${userId}/instructors`,{
         method:"GET"
       });
       if (!response.ok) {
@@ -238,7 +263,7 @@ export async function getInstructorsByUserAvailability(userId) {
 
   export async function getUsersWithAvailability(){
     try{
-        const response=await fetch("http://localhost:8080/api/admins/usersWithAvailability",{
+        const response=await fetch(`${BASE_URL}/api/admins/usersWithAvailability`,{
             method:"GET"
         });
         if (!response.ok) {
