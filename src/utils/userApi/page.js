@@ -101,7 +101,7 @@ export async function getUserById(userId){
 }
 
 export async function deleteUser(userId){
-    const response=await fetch(`${BASE_URL}/${userId}`,{
+    const response=await fetch(`${BASE_URL}/api/user${userId}`,{
         method:"DELETE",
     });
     if(!response.ok){
