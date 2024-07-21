@@ -35,16 +35,6 @@ const Profile = ({ params }) => {
     return <div className={styles.container}>Loading...</div>;
   }
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return !isNaN(date) ? date.toLocaleDateString() : "Invalid Date";
-  };
-
-  const formatTime = (timeString) => {
-    const date = new Date(`1970-01-01T${timeString}Z`);
-    return !isNaN(date) ? date.toLocaleTimeString() : "Invalid Time";
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.topRight}>
@@ -54,7 +44,7 @@ const Profile = ({ params }) => {
       <div className={styles.details}>
         <h2>Name: <span>{userData.name}</span></h2>
         <h2>Email: <span>{userData.email}</span></h2>
-        <h2>Aadhaar Number: <span>{userData.aadhaarNumber}</span></h2>
+        <h2>Aadhaar Number: <span>{userData.aadhaarNumber || "Not Provided"}</span></h2>
         <h2>Role: <span>{userData.role}</span></h2>
         <h2>Status: <span>{userData.status}</span></h2>
         <h2>Instructors:</h2>
@@ -81,13 +71,13 @@ const Profile = ({ params }) => {
                   <h3>Instructor Email: <span>{session.instructor?.email || "Not Assigned"}</span></h3>
                 </>
               )}
-              <h3>Session Date: <span>{formatDate(session.availability[0].sessionDate)}</span></h3>
-              <h3>Schedule Date: <span>{formatDate(session.availability[0].scheduleDate)}</span></h3>
+              <h3>Session Date: <span>{session.availability[0].sessionDate}</span></h3>
+              <h3>Schedule Date: <span>{session.availability[0].scheduleDate}</span></h3>
               <h3>Availability:</h3>
               <ul>
                 {session.availability.map(avail => (
                   <li key={avail.sessionDate}>
-                    {avail.day} ({formatDate(avail.sessionDate)} {formatTime(avail.startTime)} - {formatTime(avail.endTime)})
+                    {avail.day} ({avail.sessionDate}) ({avail.startTime}) - ({avail.endTime})
                   </li>
                 ))}
               </ul>
