@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,8 @@ const Register = () => {
       password,
       adhar
     };
+
+    console.log('User data:', userData);  // Add this line to verify data
 
     const result = await registerUser(userData);
     if (result.success) {

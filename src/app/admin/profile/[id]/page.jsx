@@ -77,7 +77,7 @@ const Profile = ({ params }) => {
                     <FontAwesomeIcon icon={faTrash} />
                   </button>
                   <span>{index + 1}. </span>
-                  <span>Name: {user.name}</span><br />
+                  <span>Name: {user.userName}</span><br />
                   <span>Email: {user.email}</span><br />
                   <span>Aadhar: {user.aadhaarNumber}</span><br />
                   <span>Status: {user.status}</span><br />
@@ -92,32 +92,28 @@ const Profile = ({ params }) => {
                           <div>End Time: {availability.endTime}</div>
                           <div>Session Date: {new Date(availability.sessionDate).toLocaleDateString()}</div>
                           <div>Schedule Date: {new Date(availability.scheduleDate).toLocaleDateString()}</div>
+                          {/* Instructor details */}
+                          {availability.instructors && availability.instructors.length > 0 && (
+                            <div className={styles.instructor}>
+                              <h2>Instructor Details:</h2>
+                              {availability.instructors.map((instructor, index) => (
+                                <div key={index}>
+                                  <div>Name: {instructor.name}</div>
+                                  <div>Email: {instructor.email}</div>
+                                  <div>Phone: {instructor.phone}</div>
+                                  <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
-                  )}
-                  {/* Instructor details */}
-                  {user.instructors && user.instructors.length > 0 ? (
-                    <div className={styles.instructor}>
-                      <h2>Instructor Details:</h2>
-                      {user.instructors.map((instructor) => (
-                        <div key={instructor.id}>
-                          <div>Name: {instructor.name}</div>
-                          <div>Email: {instructor.email}</div>
-                          <div>Phone: {instructor.phone}</div>
-                          <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
-                        </div>
-                      ))}
-                      <Link href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
-                        Change Instructor
-                      </Link>
-                    </div>
-                  ) : (
-                    <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
-                      Assign Instructor
-                    </Link>
                   )}
                 </div>
+                <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
+                  Assign Instructor
+                </Link>
               </div>
             ))
           )}
