@@ -49,7 +49,8 @@ const Profile = ({ params }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+console.log("user")
+console.log(users);
   return (
     <div className={styles.container}>
       {/* Admin details */}
