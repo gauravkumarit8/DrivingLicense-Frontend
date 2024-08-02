@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import styles from "./reassign.module.css";
+import styles from "./ReAssignInstructor.module.css";
 import { getAvailableInstructors, reAssignInstructor } from "@/utils/adminApi/page";
 
 const ReassignInstructorPage = ({ params }) => {

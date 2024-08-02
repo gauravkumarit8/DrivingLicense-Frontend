@@ -13,7 +13,7 @@ const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
-  const [drivingLicense, setDrivingLicense] = useState('');
+  const [drivingLicenseNumber, setdrivingLicenseNumber] = useState('');
   // const [availability, setAvailability] = useState([]);
   const [message, setMessage] = useState('');
 
@@ -33,7 +33,7 @@ const Register = () => {
       email,
       password,
       phone,
-      drivingLicense,
+      drivingLicenseNumber,
       // availability
     };
     const result = await registerInstructor(instructorData);
@@ -95,13 +95,13 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="drivingLicense" className={styles.formLabel}>Driving License :</label>
+          <label htmlFor="drivingLicenseNumber" className={styles.formLabel}>Driving License :</label>
           <input
             type="text"
-            id="drivingLicense"
+            id="drivingLicenseNumber"
             className={styles.formInput}
-            value={drivingLicense}
-            onChange={(e) => setDrivingLicense(e.target.value)}
+            value={drivingLicenseNumber}
+            onChange={(e) => setdrivingLicenseNumber(e.target.value)}
             required
           />
         </div>

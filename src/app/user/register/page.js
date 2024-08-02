@@ -12,7 +12,7 @@ const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [adhar, setAdhar] = useState('');
+  const [aadhaarNumber, setaadhaarNumber] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -22,7 +22,7 @@ const Register = () => {
       name,
       email,
       password,
-      adhar
+      aadhaarNumber
     };
 
     console.log('User data:', userData);  // Add this line to verify data
@@ -76,13 +76,13 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="adhar" className={styles.formLabel}>Adhar:</label>
+          <label htmlFor="aadhaarNumber" className={styles.formLabel}>aadhaarNumber:</label>
           <input
             type="text"
-            id="adhar"
+            id="aadhaarNumber"
             className={styles.formInput}
-            value={adhar}
-            onChange={(e) => setAdhar(e.target.value)}
+            value={aadhaarNumber}
+            onChange={(e) => setaadhaarNumber(e.target.value)}
             required
           />
         </div>
