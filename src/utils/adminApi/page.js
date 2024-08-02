@@ -142,6 +142,29 @@ export async function getInstructors(){
 //     }
 // }
 
+// export async function assignInstructorToUser(userId, assignments) {
+//     try {
+//       const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors-to-days`, {
+//         method: 'PUT',
+//         headers: {
+//           'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify(assignments) // Passing the list of assignments
+//       });
+  
+//       if (!response.ok) {
+//         const errorText = await response.text(); // Extracting error message for detailed error reporting
+//         throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+//       }
+  
+//       const result = await response.json();
+//       return { success: true, data: result };
+//     } catch (err) {
+//       console.error('Failed to assign instructors', err);
+//       return { success: false, data: err.message };
+//     }
+//   }
+  
 export async function assignInstructorToUser(userId, assignments) {
     try {
       const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors-to-days`, {
@@ -165,6 +188,7 @@ export async function assignInstructorToUser(userId, assignments) {
     }
   }
   
+
 // export async function assignInstructorToUser(userId, instructorIds) {
 //     try {
 //       const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors`, {
@@ -190,23 +214,26 @@ export async function assignInstructorToUser(userId, assignments) {
   
   
 
-export async function reAssignInstructor(userId,instructorId){
-    try{
-        const response = await fetch(`${BASE_URL}/api/admins/${userId}/update-instructor/${instructorId}`,{
-            method:"PUT",
-            headers:{
-                'Content-Type':'application/text'
-            }
-        })
-        if(!response.ok){
-            const errorText=await response.json();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+export async function reAssignInstructor(userId, instructorId, day) {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/admins/${userId}/update-instructor?day=${day}&newInstructorId=${instructorId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
-        const result=await response.json();
-        return {success:true};
-    }catch(err){
-        console.error("Failed to fetch user",err);
-        return {success:false,data:err.message};
+      );
+      if (!response.ok) {
+        const errorText = await response.json();
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (err) {
+      console.error("Failed to reassign instructor", err);
+      return { success: false, data: err.message };
     }
 }
 
@@ -261,7 +288,7 @@ export async function getInstructorsByUserAvailability(userId) {
     }
   }
 
-  export async function getUsersWithAvailability(){
+export async function getUsersWithAvailability(){
     try{
         const response=await fetch(`${BASE_URL}/api/admins/usersWithAvailability`,{
             method:"GET"
@@ -276,6 +303,21 @@ export async function getInstructorsByUserAvailability(userId) {
         console.error("Failed to fetch instructors by user availability:", err);
         return { success: false, data: err.message };
     }
-  }
+}
   
-  
+export async function getAvailableInstructors(){
+    try{
+        const response=await fetch(`${BASE_URL}/api/admins/instructor`,{
+            method:"GET"
+        });
+        if (!response.ok) {
+            const errorText = await response.text(); // Get error text for better logging
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (err) {
+        console.error("Failed to fetch instructors by user availability:", err);
+        return { success: false, data: err.message };
+    }
+}

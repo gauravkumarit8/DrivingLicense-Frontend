@@ -1,98 +1,90 @@
-"use client"
+"use client";
 
-import { getInstructors, reAssignInstructor } from '@/utils/adminApi/page';
-import { getUserById } from '@/utils/userApi/page';
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './ReAssignInstructor.module.css';
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import styles from "./reassign.module.css";
+import { getAvailableInstructors, reAssignInstructor } from "@/utils/adminApi/page";
 
-const ReAssignInstructor = ({ params }) => {
+const ReassignInstructorPage = ({ params }) => {
+  const { adminId, userId } = params;
   const router = useRouter();
-  const { id } = params;
-  const [adminId, userId] = id;
-  const [user, setUser] = useState(null);
-  const [instructors, setInstructors] = useState([]);
-  const [selectedInstructorId, setSelectedInstructorId] = useState('');
+  const searchParams = useSearchParams();
+  const day = searchParams.get("day"); // Extract the day from URL query parameters
+
+  const [availableInstructors, setAvailableInstructors] = useState([]);
+  const [selectedInstructorId, setSelectedInstructorId] = useState("");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchAvailableInstructors = async () => {
       try {
-        const responseUser = await getUserById(userId);
-        const responseInstructor = await getInstructors();
-        setUser(responseUser.data);
-        setInstructors(responseInstructor.data);
-      } catch (err) {
-        setError('Failed to fetch data');
+        const result = await getAvailableInstructors(day); // Fetch instructors for the specific day
+        if (Array.isArray(result.data)) {
+          setAvailableInstructors(result.data);
+        } else {
+          setErrorMessage("No instructors available on this day.");
+        }
+      } catch (error) {
+        console.error("Failed to fetch available instructors:", error);
+        setErrorMessage("An error occurred while fetching instructors.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [userId]);
+    fetchAvailableInstructors();
+  }, [day]);
 
-  const handleInstructorSelect = (instructorId) => {
-    setSelectedInstructorId(instructorId);
-  };
+  const handleReassign = async () => {
+    if (!selectedInstructorId) {
+      alert("Please select an instructor to assign.");
+      return;
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (selectedInstructorId) {
-      try {
-        const assign = await reAssignInstructor(userId, selectedInstructorId);
-        if (assign) {
-          alert('Instructor assigned successfully!');
-          router.push(`/admin/profile/${adminId}`);
-        } else {
-          alert('Failed to assign instructor.');
-        }
-      } catch (err) {
-        alert('An error occurred while assigning the instructor.');
+    try {
+      const result = await reAssignInstructor(userId, selectedInstructorId, day);
+      if (result.success) {
+        alert("Instructor reassigned successfully!");
+        router.push(`/admin/profile/${adminId}`);
+      } else {
+        setErrorMessage(result.data);
       }
-    } else {
-      alert('Please select an instructor.');
+    } catch (error) {
+      console.error("Failed to reassign instructor:", error);
+      setErrorMessage("An error occurred during reassignment.");
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
+    return <div>Loading available instructors...</div>;
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.userDetails}>
-        <h2>User Details:</h2>
-        <div><strong>Name:</strong> {user.name}</div>
-        <div><strong>Email:</strong> {user.email}</div>
-        <div><strong>Aadhar:</strong> {user.aadhaarNumber}</div>
-        <div><strong>Status:</strong> {user.status}</div>
-        <div><strong>Assigned Instructor:</strong> {user.instructor.name}</div>
-      </div>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <h2>Select a New Instructor</h2>
-        <div className={styles.instructorList}>
-          {instructors.map((instructor) => (
-            <div
-              key={instructor.id}
-              className={`${styles.instructorCard} ${selectedInstructorId === instructor.id ? styles.selected : ''}`}
-              onClick={() => handleInstructorSelect(instructor.id)}
-            >
-              <h3>{instructor.name}</h3>
-              <p>Email: {instructor.email}</p>
-              <p>Experience: {instructor.experience} years</p>
-            </div>
-          ))}
-        </div>
-        <button type="submit" className={styles.submitButton}>Reassign Instructor</button>
-      </form>
+      <h1>Reassign Instructor for User</h1>
+      <p>Select an instructor available on <strong>{day}</strong>:</p>
+      {errorMessage && <div className={styles.error}>{errorMessage}</div>}
+      <ul className={styles.instructorList}>
+        {availableInstructors.map((instructor) => (
+          <li key={instructor.id} className={styles.instructorItem}>
+            <label>
+              <input
+                type="radio"
+                name="instructor"
+                value={instructor.id}
+                onChange={() => setSelectedInstructorId(instructor.id)}
+              />
+              {instructor.name} - {instructor.email} - License: {instructor.drivingLicenseNumber || "N/A"}
+            </label>
+          </li>
+        ))}
+      </ul>
+      <button onClick={handleReassign} className={styles.reassignButton}>
+        Reassign Instructor
+      </button>
     </div>
   );
 };
 
-export default ReAssignInstructor;
+export default ReassignInstructorPage;
