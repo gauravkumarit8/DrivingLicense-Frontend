@@ -113,7 +113,7 @@ const Profile = ({ params }) => {
                               ))}
                               {/* Update button for assigned instructor */}
                               <Link
-                                href={`/admin/assignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
+                                href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
                                 className={styles.linkButton}
                               >
                                 Update Instructor
@@ -125,7 +125,7 @@ const Profile = ({ params }) => {
                     </div>
                   )}
                 </div>
-                <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
+                <Link href={`/admin/assignInstructor/AssignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
                   Assign Instructor
                 </Link>
               </div>
