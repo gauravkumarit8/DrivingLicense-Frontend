@@ -28,6 +28,8 @@ export async function loginUser(userData) {
 
 export async function registerUser(userData) {
   try {
+    console.log("Gaurav", userData);
+    console.log("Ankit", JSON.stringify(userData));
     const response = await fetch(`${BASE_URL}/api/users/register`, {
       // Replace with your actual API endpoint
       method: "POST",
@@ -43,7 +45,6 @@ export async function registerUser(userData) {
         `HTTP error! status: ${response.status}, message: ${errorText}`
       );
     }
-
     const result = await response.json();
     console.log("data recieved", result);
     return { success: true, data: result };
@@ -141,6 +142,64 @@ export async function userSession(userId) {
     return { success: true, data: result };
   } catch (error) {
     console.error("Failed to login user:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+// post log time
+
+export async function postLogTime(userId, time) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(time),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+    const result = await response.text();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to post Log time:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+// get total time
+
+export async function getTotalTime(userId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to get total Log Time:", error);
     return { success: false, message: error.message };
   }
 }
