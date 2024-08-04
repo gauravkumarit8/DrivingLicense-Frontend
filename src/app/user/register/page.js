@@ -15,6 +15,7 @@ const Register = () => {
   const [aadhaarNumber, setaadhaarNumber] = useState("");
   const [message, setMessage] = useState("");
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -82,9 +83,11 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
+
           <label htmlFor="aadhaarNumber" className={styles.formLabel}>
             aadhaarNumber:
           </label>
+
           <input
             type="text"
             id="aadhaarNumber"
