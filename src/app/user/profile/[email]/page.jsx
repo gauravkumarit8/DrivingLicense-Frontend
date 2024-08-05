@@ -74,7 +74,7 @@ const Profile = ({ params }) => {
 
     try {
       await deleteSession(id);
-      console.log("delete ho gya bhai")
+      console.log("delete ho gya bhai");
     } catch (error) {
       console.error("Error Deleting Sessions", error);
     }
@@ -143,7 +143,13 @@ const Profile = ({ params }) => {
               )}
             </ul>
           </div>
-          
+          <div>
+            <Link href={`/user/update/${userData.id}`}>
+              <button className="p-2 font-bold text-white bg-red-400 rounded-lg">
+                Update Details
+              </button>
+            </Link>
+          </div>
         </div>
         <div className="w-1/2 p-2 m-2 bg-blue-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
           <h className="font-sans text-2xl font-bold">
@@ -202,7 +208,6 @@ const Profile = ({ params }) => {
                     <span className="text-lg text-white">
                       ({avail.endTime})
                     </span>
-                    
                   </li>
                 ))}
               </ol>
@@ -211,16 +216,16 @@ const Profile = ({ params }) => {
                 <span className="text-lg text-white">{session.status}</span>
               </h3>
               <div className="flex">
-              <button
-                className="p-1 mx-2 font-bold text-white bg-red-400 rounded-lg "
-                onClick={(e) => handleDeleteSession(e, session.id)}
-              >
-                Delete Sessions
-              </button>
-              <button className="p-1 mx-2 font-bold text-white bg-yellow-400 rounded-lg ">
-                      Update Sessions
-                    </button>
-                    </div>
+                <button
+                  className="p-1 mx-2 font-bold text-white bg-red-400 rounded-lg "
+                  onClick={(e) => handleDeleteSession(e, session.id)}
+                >
+                  Delete Sessions
+                </button>
+                <button className="p-1 mx-2 font-bold text-white bg-yellow-400 rounded-lg ">
+                  Update Sessions
+                </button>
+              </div>
             </div>
           ))}
         </div>
