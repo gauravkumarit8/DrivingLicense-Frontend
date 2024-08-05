@@ -3,47 +3,47 @@
 import React, { useState, useEffect } from "react";
 import { getUserById, updateUser } from "@/utils/userApi/page";
 import styles from "../Edit.module.css";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const Edit = ({ params }) => {
   const route = useRouter();
 
   const { id } = params;
 
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    password: "",
-    // Add more fields as needed
-  });
+  const [userName, setUserName] = useState("");
+  const [userPassword, setUserPassword] = useState("");
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    const getUserDetails = async () => {
+      const response = await getUserById(id);
+
+      setUserName(response.data.name);
+      setUserPassword(response.data.password);
+    };
+    getUserDetails();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userUpdatedData = {
+      name: userName,
+      password: userPassword,
+    };
+
     try {
-      const response = await getUserById(id);
-      setUser(response.data);
-      // console.log(response.data);
-      const result = await updateUser(id, { ...formData });
+      const result = await updateUser(id, userUpdatedData);
       alert("User updated successfully!");
-      route.push(`/user/profile/${response.data.email}`);
+
+      route.push(`/user/profile/${result.data.email}`);
     } catch (error) {
       setError(error.message);
     }
   };
 
   return (
-    <div className={styles.editContainer}>
-      <h1 className={styles.header}>Edit User</h1>
+    <div className="w-1/4 p-4 m-auto mt-24 border border-black rounded-lg shadow-sm shadow-black">
+      <h1 className="text-2xl font-bold text-center">Edit User</h1>
       <form onSubmit={handleSubmit} className={styles.editForm}>
         <div className={styles.formGroup}>
           <label htmlFor="name">Name:</label>
@@ -51,8 +51,8 @@ const Edit = ({ params }) => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleInputChange}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>
@@ -62,8 +62,8 @@ const Edit = ({ params }) => {
             type="password"
             id="password"
             name="password"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={userPassword}
+            onChange={(e) => setUserPassword(e.target.value)}
             required
           />
         </div>
