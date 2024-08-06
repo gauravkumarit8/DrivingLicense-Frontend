@@ -84,6 +84,7 @@ const Profile = ({ params }) => {
     return <div className="">Loading...</div>;
   }
 
+  
   return (
     <div className="h-screen bg-slate-100">
       <div className="fixed top-0 left-0 flex items-center justify-between w-full h-24 mx-1 rounded-lg bg-slate-400">
