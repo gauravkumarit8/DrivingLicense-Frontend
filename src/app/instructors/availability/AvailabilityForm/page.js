@@ -1,14 +1,22 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import styles from '../../profile/Profile.module.css';
+import { useState, useEffect } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import styles from "../../profile/Profile.module.css";
 
-const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+const daysOfWeek = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 const parseTimeStringToTodayDate = (timeString) => {
-  const [hours, minutes, seconds] = timeString.split(':');
+  const [hours, minutes, seconds] = timeString.split(":");
   const today = new Date();
   today.setHours(hours);
   today.setMinutes(minutes);
@@ -20,16 +28,16 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
   const [updatedAvailability, setUpdatedAvailability] = useState([]);
 
   useEffect(() => {
-    const initialAvailability = currentAvailability.map(avail => ({
+    const initialAvailability = currentAvailability.map((avail) => ({
       ...avail,
       startTime: parseTimeStringToTodayDate(avail.startTime),
-      endTime: parseTimeStringToTodayDate(avail.endTime)
+      endTime: parseTimeStringToTodayDate(avail.endTime),
     }));
     setUpdatedAvailability(initialAvailability);
   }, [currentAvailability]);
 
   const handleChangeDay = (index, value) => {
-    setUpdatedAvailability(prev => {
+    setUpdatedAvailability((prev) => {
       const updated = [...prev];
       updated[index] = { ...updated[index], day: value };
       return updated;
@@ -41,7 +49,7 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
       return;
     }
 
-    setUpdatedAvailability(prev => {
+    setUpdatedAvailability((prev) => {
       const updated = [...prev];
       updated[index] = { ...updated[index], [field]: date };
       return updated;
@@ -51,16 +59,16 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Convert Date objects back to time strings before submission
-    const formattedAvailability = updatedAvailability.map(avail => ({
+    const formattedAvailability = updatedAvailability.map((avail) => ({
       ...avail,
-      startTime: avail.startTime.toTimeString().split(' ')[0],
-      endTime: avail.endTime.toTimeString().split(' ')[0]
+      startTime: avail.startTime.toTimeString().split(" ")[0],
+      endTime: avail.endTime.toTimeString().split(" ")[0],
     }));
     onSubmit(formattedAvailability);
   };
 
   const handleDeleteAvailability = (index) => {
-    setUpdatedAvailability(prev => prev.filter((_, i) => i !== index));
+    setUpdatedAvailability((prev) => prev.filter((_, i) => i !== index));
   };
 
   return (
@@ -76,14 +84,18 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
                   onChange={(e) => handleChangeDay(index, e.target.value)}
                 >
                   {daysOfWeek.map((day) => (
-                    <option key={day} value={day}>{day}</option>
+                    <option key={day} value={day}>
+                      {day}
+                    </option>
                   ))}
                 </select>
               </span>
               <span>
                 <DatePicker
                   selected={avail.startTime}
-                  onChange={(date) => handleChangeDateTime(index, 'startTime', date)}
+                  onChange={(date) =>
+                    handleChangeDateTime(index, "startTime", date)
+                  }
                   showTimeSelect
                   timeFormat="HH:mm"
                   dateFormat="yyyy-MM-dd HH:mm"
@@ -92,7 +104,9 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
                 <span>to</span>
                 <DatePicker
                   selected={avail.endTime}
-                  onChange={(date) => handleChangeDateTime(index, 'endTime', date)}
+                  onChange={(date) =>
+                    handleChangeDateTime(index, "endTime", date)
+                  }
                   showTimeSelect
                   timeFormat="HH:mm"
                   dateFormat="yyyy-MM-dd HH:mm"
@@ -110,8 +124,16 @@ const AvailabilityForm = ({ currentAvailability, onSubmit, onClose }) => {
           ))}
         </ul>
         <div className={styles.formButtons}>
-          <button type="submit" className={styles.submitButton}>Save</button>
-          <button type="button" className={styles.cancelButton} onClick={onClose}>Cancel</button>
+          <button type="submit" className={styles.submitButton}>
+            Save
+          </button>
+          <button
+            type="button"
+            className={styles.cancelButton}
+            onClick={onClose}
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>

@@ -15,7 +15,7 @@ const Pichart = ({ data }) => {
     chartInstance.current = new Chart(myChartRef, {
       type: "pie",
       data: {
-        labels: ["Trainging Completed", "Remaining Trainging Hours"],
+        // labels: ["Trainging Completed", "Remaining Trainging Hours"],
         datasets: [
           {
             label: "Total Hours of Training ",
@@ -34,7 +34,7 @@ const Pichart = ({ data }) => {
   });
 
   return (
-    <div className="w-[400px] h-[400px] m-auto">
+    <div className="w-[200px] h-[200px] m-auto">
       <canvas ref={chartRef} />
     </div>
   );
