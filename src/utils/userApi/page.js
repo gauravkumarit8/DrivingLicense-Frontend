@@ -148,7 +148,7 @@ export async function userSession(userId) {
 
 // post log time
 
-export async function postLogTime(userId, time) {
+export async function postUserLogTime(userId, time) {
   try {
     const response = await fetch(
       `${BASE_URL}/api/users/profile/${userId}/totalTime`,
@@ -177,7 +177,7 @@ export async function postLogTime(userId, time) {
 
 // get total time
 
-export async function getTotalTime(userId) {
+export async function getUserTotalTime(userId) {
   try {
     const response = await fetch(
       `${BASE_URL}/api/users/profile/${userId}/totalTime`,
