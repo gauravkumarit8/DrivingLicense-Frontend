@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import {
   deleteAvailability,
   getInstructorById,
+  getInstructorSession,
+  getInstructorTotalTime,
+  postInstructorLogTime,
   updateAvailability,
 } from "@/utils/instructorApi/page";
 import Link from "next/link";
@@ -15,6 +18,8 @@ import Image from "next/image";
 
 import defaultIcon from "../../../../images/defaultIcon.png";
 import Pichart from "@/app/user/profile/[email]/Pichart";
+import InstructorSessions from "./InstructorSessions";
+import { getUserTotalTime, postUserLogTime } from "@/utils/userApi/page";
 
 const Profile = ({ params }) => {
   const { id } = params;
@@ -23,12 +28,16 @@ const Profile = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingAvailability, setUpdatingAvailability] = useState(false);
+  const [instrucotrSessions, setInstructorSessions] = useState([]);
+  const [intructorTotalTime, setInstructorTotalTime] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getInstructorById(id);
         setInstructor(result.data);
+        const totalTimeResult = await getInstructorTotalTime(id);
+        setInstructorTotalTime(totalTimeResult.data);
         setAvailability(result.data.availability);
       } catch (err) {
         console.error("Failed to fetch data:", err);
@@ -71,6 +80,51 @@ const Profile = ({ params }) => {
       setError("Failed to update availability");
     }
   };
+
+  const handleGetSessions = async (e) => {
+    try {
+      const result = await getInstructorSession(id);
+
+      setInstructorSessions(result.data);
+    } catch (err) {
+      console.error("Failed to get Instructors Sessions:", err);
+      setError("Failed to Instructors Sessions");
+    }
+  };
+  const submitInstructorLogTIme = async (e, userId, sessionDate) => {
+    e.preventDefault();
+
+    const time = 1;
+    console.log(userId);
+    console.log("ses", sessionDate);
+
+    try {
+      await postInstructorLogTime(id, userId, sessionDate, time);
+      await postUserLogTime(userId, time);
+
+      const result = await getInstructorTotalTime(id);
+      const result2 = await getUserTotalTime(userId);
+      console.log("instructor ka total hour", result);
+      console.log("user ka totla hour", result2);
+
+      setInstructorTotalTime(result.data);
+    } catch (error) {
+      console.error("Error updating total time:", error);
+    }
+  };
+  function getLocalDate() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
+    const day = now.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  var currentDate = getLocalDate();
+  console.log(currentDate);
+  currentDate = currentDate.substring(0, 9) + "8" + currentDate.substring(10);
+  console.log(currentDate);
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -129,7 +183,7 @@ const Profile = ({ params }) => {
                     Total Hours Trained
                   </label>
                   <span className={styles.profileValue}>
-                    {instructor.totalHoursTrained || "0"}
+                    {intructorTotalTime || "0"}
                   </span>
                 </div>
                 <Link href={`/instructors/update/${instructor.id}`}>
@@ -230,6 +284,22 @@ const Profile = ({ params }) => {
                     </span>
                   </div>
                   <div>
+                    <button
+                      className="p-2 bg-blue-600 border border-black "
+                      onClick={(e) =>
+                        submitInstructorLogTIme(
+                          e,
+                          user.id,
+                          user.availability.filter(
+                            (a) => a.sessionDate == currentDate
+                          )[0]?.sessionDate
+                        )
+                      }
+                    >
+                      Done
+                    </button>
+                  </div>
+                  <div>
                     <Pichart data={user.totalHours} />
                   </div>
                 </div>
@@ -239,6 +309,18 @@ const Profile = ({ params }) => {
             )}
           </div>
         </div>
+        {instrucotrSessions.length == 0 ? (
+          <div className="pb-4 mx-auto mt-10">
+            <button
+              className="p-2 m-auto text-3xl font-bold text-center bg-blue-500 rounded-lg shadow-2xl shadow-black"
+              onClick={handleGetSessions}
+            >
+              Get Your All Sessions
+            </button>
+          </div>
+        ) : (
+          <InstructorSessions data={instrucotrSessions} />
+        )}
       </div>
     </div>
   );

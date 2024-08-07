@@ -1,9 +1,11 @@
 "use client";
 
 import {
-  getTotalTime,
+  
   getUserByEmail,
-  postLogTime,
+  getUserTotalTime,
+ 
+  postUserLogTime,
 } from "@/utils/userApi/page";
 import Link from "next/link";
 import styles from "../Profile.module.css";
@@ -33,7 +35,7 @@ const Profile = ({ params }) => {
         } else {
           console.error("Failed to fetch sessions:", sessionResult.message);
         }
-        const totalTimeResult = await getTotalTime(dataUser.id);
+        const totalTimeResult = await getUserTotalTime(dataUser.id);
         setTotalTime(totalTimeResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,9 +50,9 @@ const Profile = ({ params }) => {
     const time = 1;
 
     try {
-      await postLogTime(userData.id, time);
+      await postUserLogTime(userData.id, time);
 
-      const result = await getTotalTime(userData.id);
+      const result = await getUserTotalTime(userData.id);
 
       setTotalTime(result.data);
     } catch (error) {
