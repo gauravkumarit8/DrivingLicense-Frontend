@@ -1,18 +1,23 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function scheduleSession(userId,{availability,scheduleDate}){
-  try{
-    const response=await fetch(`${BASE_URL}/api/sessions/schedule/${userId}`,{
-      method:"POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body:JSON.stringify({availability,scheduleDate})
-    })
-    
+export async function scheduleSession(userId, { availability, scheduleDate }) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/sessions/schedule/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ availability, scheduleDate }),
+      }
+    );
+
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
 
     const result = await response.json();
@@ -23,18 +28,20 @@ export async function scheduleSession(userId,{availability,scheduleDate}){
   }
 }
 
-export async function getSessionByUser(userId){
-  try{
-    const response=await fetch(`${BASE_URL}/api/sessions/user/${userId}`,{
-      method:"GET",
+export async function getSessionByUser(userId) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/sessions/user/${userId}`, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    })
-    
+    });
+
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
 
     const result = await response.json();
@@ -45,24 +52,56 @@ export async function getSessionByUser(userId){
   }
 }
 
-export async function getSessionByInstructor(instructorId){
-  try{
-    const response=await fetch(`${BASE_URL}/api/sessions/instructor/${instructorId}`,{
-      method:"GET",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    
+export async function getSessionByInstructor(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/sessions/instructor/${instructorId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
 
     const result = await response.json();
     return { success: true, data: result };
   } catch (error) {
     console.error("Failed to schedule session:", error);
+    return { success: false, message: error.message };
+  }
+}
+export async function deleteSession(sessionId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/sessions/delete/${sessionId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+    console.log("deleted");
+
+    // const result = await response.json();
+    // return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to Delete session:", error);
     return { success: false, message: error.message };
   }
 }

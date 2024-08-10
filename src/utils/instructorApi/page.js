@@ -1,129 +1,150 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
 export async function loginInstructor(instructorData) {
-    try {
-      const response = await fetch(`${BASE_URL}/api/instructor/login`, { 
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(instructorData),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-  
-      const result = await response.json();
-      return { success: true, data: result };
-    } catch (error) {
-      console.error("Failed to login instructor:", error);
-      return { success: false, message: error.message };
-    }
-  }
-  
-  export async function registerInstructor(instructorData) {
-      try {
-        const response = await fetch(`${BASE_URL}/api/instructor/register`, { // Replace with your actual API endpoint
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(instructorData),
-        });
-    
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-        }
-    
-        const result = await response.json();
-        return { success: true, data: result };
-      } catch (error) {
-        console.error("Failed to register instructor:", error);
-        return { success: false, message: error.message };
-      }
-  }  
-  
-  export async function updateInstructor(instructorData) {
-    try {
-      const response = await fetch(`${BASE_URL}/api/instructor/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(instructorData),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server Response:", errorText);
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
-  
-      const result = await response.json();
-      return { success: true, data: result };
-    } catch (error) {
-      console.error("Fetch Error:", error);
-      throw error;
-    }
-  }
-  
-  export async function getInstructorByEmail(InstructorEmail){
-      const response=await fetch(`${BASE_URL}/api/instructor/profile1/${InstructorEmail}`,{
-          method:"GET",
-          headers:{
-              'Context-Type':'application/json',
-          }
-      });
-      if(!response.ok){
-          throw new Error("No user found");
-      }
-  
-      const result = await response.json();
-      return { success: true, data: result };
-  }
-  
-  export async function getInstructorById(instructorId){
-    const response=await fetch(`${BASE_URL}/api/instructor/profile/${instructorId}`,{
-        method:"GET",
-        headers:{
-            'Context-Type':'application/json',
-        }
-    });
-    if(!response.ok){
-        throw new Error("No user found");
-    }
-  
-    const result = await response.json();
-    return { success: true, data: result };
-  }
-  
-export async function deleteUser(instructorId){
-    const response=await fetch(`${BASE_URL}/api/instructor/delete/${instructorId}`,{
-        method:"DELETE",
-    });
-    if(!response.ok){
-        throw new Error("No user found");
-    }
-
-    const result = await response.json();
-    return { success: true, data: result };
-}
-  
-export async function userSession(instructorId) {
   try {
-    const response = await fetch(`${BASE_URL}/api/sessions/user/${instructorId}`, { 
-      method: 'GET',
+    const response = await fetch(`${BASE_URL}/api/instructor/login`, {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify(instructorData),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to login instructor:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function registerInstructor(instructorData) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/instructor/register`, {
+      // Replace with your actual API endpoint
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(instructorData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to register instructor:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function updateInstructor(id, instructorData) {
+  try {
+    const response = await fetch(`${BASE_URL}/api/instructor/update/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(instructorData),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Server Response:", errorText);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Fetch Error:", error);
+    throw error;
+  }
+}
+
+export async function getInstructorByEmail(InstructorEmail) {
+  const response = await fetch(
+    `${BASE_URL}/api/instructor/profile1/${InstructorEmail}`,
+    {
+      method: "GET",
+      headers: {
+        "Context-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("No user found");
+  }
+
+  const result = await response.json();
+  return { success: true, data: result };
+}
+
+export async function getInstructorById(instructorId) {
+  const response = await fetch(
+    `${BASE_URL}/api/instructor/profile/${instructorId}`,
+    {
+      method: "GET",
+      headers: {
+        "Context-Type": "application/json",
+      },
+    }
+  );
+  if (!response.ok) {
+    throw new Error("No user found");
+  }
+
+  const result = await response.json();
+  return { success: true, data: result };
+}
+
+export async function deleteInstructor(instructorId) {
+  const response = await fetch(
+    `${BASE_URL}/api/instructor/delete/${instructorId}`,
+    {
+      method: "DELETE",
+    }
+  );
+  if (!response.ok) {
+    throw new Error("No user found");
+  }
+
+  const result = await response.json();
+  return { success: true, data: result };
+}
+
+export async function userSession(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/sessions/user/${instructorId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
 
     const result = await response.json();
@@ -133,23 +154,80 @@ export async function userSession(instructorId) {
     return { success: false, message: error.message };
   }
 }
+export async function getInstructorSession(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/users/session`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-export async function updateAvailability(instructorId,availabilityDay){
-  try{
-    const response=await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability`,{
-      method:"PUT",
-      headers: {
-              "Content-Type": "application/json"
-          },
-      body:JSON.stringify(availabilityDay)
-    })
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to Instructor Sessions:", error);
+    return { success: false, message: error.message };
+  }
+}
+export async function getUserSession(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/userSessions`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed user Sessions:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+export async function updateAvailability(instructorId, availabilityDay) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/availability`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(availabilityDay),
+      }
+    );
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
     const result = await response.json();
     return { success: true, data: result };
-  }catch (error) {
+  } catch (error) {
     console.error("Failed to login user:", error);
     return { success: false, message: error.message };
   }
@@ -157,40 +235,113 @@ export async function updateAvailability(instructorId,availabilityDay){
 
 export async function addAvailability(instructorId, availabilityDay) {
   try {
-      const response = await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability`, {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(availabilityDay)
-      });
-
-      if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/availability`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(availabilityDay),
       }
+    );
 
-      const result = await response.json();
-      return { success: true, data: result };
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
   } catch (error) {
-      console.error("Failed to add availability:", error);
-      return { success: false, message: error.message };
+    console.error("Failed to add availability:", error);
+    return { success: false, message: error.message };
   }
 }
 
-export async function deleteAvailability(instructorId,day){
-  try{
-    const response=await fetch(`${BASE_URL}/api/instructor/${instructorId}/availability/${day}`,{
-      method:"DELETE"
-    })
+export async function deleteAvailability(instructorId, day) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/availability/${day}`,
+      {
+        method: "DELETE",
+      }
+    );
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
     }
     const result = await response.json();
     return { success: true, data: result };
-  }catch (error) {
+  } catch (error) {
     console.error("Failed to login user:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+// post log time
+
+export async function postInstructorLogTime(
+  instructorId,
+  userId,
+  sessionDate,
+  time
+) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/logTrainingTime?userId=${userId}&sessionDate=${sessionDate}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(time),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+    const result = await response.text();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to post Instructor Log time:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+// get total time
+
+export async function getInstructorTotalTime(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/logTrainingTime`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to get total Log Time:", error);
     return { success: false, message: error.message };
   }
 }

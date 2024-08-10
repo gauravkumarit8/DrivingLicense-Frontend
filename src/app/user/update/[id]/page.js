@@ -1,48 +1,49 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { getUserById, updateUser } from "@/utils/userApi/page";
 import styles from "../Edit.module.css";
+import { useRouter } from "next/navigation";
 
 const Edit = ({ params }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    password: "",
-    // Add more fields as needed
-  });
+  const route = useRouter();
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const { id } = params;
+
+  const [error, setError] = useState(null);
+  const [userName, setUserName] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+
+  useEffect(() => {
+    const getUserDetails = async () => {
+      const response = await getUserById(id);
+
+      setUserName(response.data.name);
+      setUserPassword(response.data.password);
+    };
+    getUserDetails();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const userUpdatedData = {
+      name: userName,
+      password: userPassword,
+    };
+
     try {
-      const result = await updateUser({...formData });
+      const result = await updateUser(id, userUpdatedData);
       alert("User updated successfully!");
+
+      route.push(`/user/profile/${result.data.email}`);
     } catch (error) {
       setError(error.message);
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
-    <div className={styles.editContainer}>
-      <h1 className={styles.header}>Edit User</h1>
+    <div className="w-1/4 p-4 m-auto mt-24 border border-black rounded-lg shadow-sm shadow-black">
+      <h1 className="text-2xl font-bold text-center">Edit User</h1>
       <form onSubmit={handleSubmit} className={styles.editForm}>
         <div className={styles.formGroup}>
           <label htmlFor="name">Name:</label>
@@ -50,8 +51,8 @@ const Edit = ({ params }) => {
             type="text"
             id="name"
             name="name"
-            value={formData.name}
-            onChange={handleInputChange}
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
             required
           />
         </div>
@@ -61,13 +62,15 @@ const Edit = ({ params }) => {
             type="password"
             id="password"
             name="password"
-            value={formData.password}
-            onChange={handleInputChange}
+            value={userPassword}
+            onChange={(e) => setUserPassword(e.target.value)}
             required
           />
         </div>
         {/* Add more form fields as needed */}
-        <button type="submit" className={styles.submitButton}>Update</button>
+        <button type="submit" className={styles.submitButton}>
+          Update
+        </button>
       </form>
     </div>
   );

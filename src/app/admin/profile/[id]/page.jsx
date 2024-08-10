@@ -52,7 +52,8 @@ const Profile = ({ params }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+console.log("user")
+console.log(users);
   return (
     <div className={styles.container}>
       {/* Admin details */}
@@ -109,7 +110,7 @@ const Profile = ({ params }) => {
                                 <h3>Assigned Instructors:</h3>
                                 <div>Name: {assignedInstructor.instructorName}</div>
                                 <div>Day: {assignedInstructor.day}</div>
-                                <div>Instructor ID: {assignedInstructor.instructorId}</div>
+                                {/* <div>Instructor ID: {assignedInstructor.instructorId}</div> */}
                                 <Link
                                   href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
                                   className={styles.linkButton}
@@ -122,6 +123,7 @@ const Profile = ({ params }) => {
                       ))}
                     </div>
                   )}
+                  
                 </div>
 
                 {/* Conditionally render "Assign Instructor" button */}

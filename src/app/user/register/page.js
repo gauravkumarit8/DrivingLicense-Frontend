@@ -2,18 +2,19 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import styles from './Register.module.css';
+import styles from "./Register.module.css";
 import { registerUser } from "@/utils/userApi/page";
 import Link from "next/link";
 
 const Register = () => {
   const router = useRouter();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [aadhaarNumber, setaadhaarNumber] = useState('');
-  const [message, setMessage] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [aadhaarNumber, setaadhaarNumber] = useState("");
+  const [message, setMessage] = useState("");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,17 +23,17 @@ const Register = () => {
       name,
       email,
       password,
-      aadhaarNumber
+      aadhaarNumber,
     };
 
-    console.log('User data:', userData);  // Add this line to verify data
+    console.log("User data:", userData); // Add this line to verify data
 
     const result = await registerUser(userData);
     if (result.success) {
-      setMessage('User registered successfully!');
-      console.log('User registered:', result.data);
+      setMessage("User registered successfully!");
+      console.log("User registered:", result.data);
 
-      router.push('/user/login');
+      router.push("/user/login");
     } else {
       setMessage(`Error: ${result.message}`);
     }
@@ -43,7 +44,9 @@ const Register = () => {
       <h1 className={styles.header}>Register</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
-          <label htmlFor="name" className={styles.formLabel}>Name:</label>
+          <label htmlFor="name" className={styles.formLabel}>
+            Name:
+          </label>
           <input
             type="text"
             id="name"
@@ -54,7 +57,9 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="email" className={styles.formLabel}>Email:</label>
+          <label htmlFor="email" className={styles.formLabel}>
+            Email:
+          </label>
           <input
             type="email"
             id="email"
@@ -65,7 +70,9 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="password" className={styles.formLabel}>Password:</label>
+          <label htmlFor="password" className={styles.formLabel}>
+            Password:
+          </label>
           <input
             type="password"
             id="password"
@@ -76,7 +83,11 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-          <label htmlFor="aadhaarNumber" className={styles.formLabel}>aadhaarNumber:</label>
+
+          <label htmlFor="aadhaarNumber" className={styles.formLabel}>
+            aadhaarNumber:
+          </label>
+
           <input
             type="text"
             id="aadhaarNumber"
@@ -86,10 +97,15 @@ const Register = () => {
             required
           />
         </div>
-        <button type="submit" className={styles.submitButton}>Register</button>
+        <button type="submit" className={styles.submitButton}>
+          Register
+        </button>
       </form>
-      {message && <p className={styles.message}>{message}</p>}<br/>
-      <Link href="/user/login" className={styles.submitButton}>Login</Link>
+      {message && <p className={styles.message}>{message}</p>}
+      <br />
+      <Link href="/user/login" className={styles.submitButton}>
+        Login
+      </Link>
     </div>
   );
 };
