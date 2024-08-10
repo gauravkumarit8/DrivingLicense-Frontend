@@ -1,11 +1,11 @@
 "use client";
 
-import { getAvailableInstructors, reAssignInstructor } from "@/utils/adminApi/page";
+import { getAvailableInstructors, reAssignInstructorUpdate } from "@/utils/adminApi/page";
 import { getUserById } from "@/utils/userApi/page";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from './ReassignInstructor.module.css';
+import styles from './ReAssignInstructor.module.css'
 
 const ReassignInstructorPage = ({ params }) => {
   const { id } = params;
@@ -46,7 +46,7 @@ const ReassignInstructorPage = ({ params }) => {
   const handleReassign = async () => {
     if (!user || !selectedInstructor) return;
     
-    const response = await reAssignInstructor(user.id, selectedInstructor, day);
+    const response = await reAssignInstructorUpdate(user.id, selectedInstructor, day);
     if (response.success) {
       alert("Instructor reassigned successfully!");
       router.push(`/admin/profile/${adminId}`);

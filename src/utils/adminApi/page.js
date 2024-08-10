@@ -214,7 +214,7 @@ export async function assignInstructorToUser(userId, assignments) {
   
   
 
-export async function reAssignInstructor(userId, instructorId, day) {
+export async function reAssignInstructorUpdate(userId, instructorId, day) {
     try {
       const response = await fetch(
         `${BASE_URL}/api/admins/${userId}/update-instructor?day=${day}&newInstructorId=${instructorId}`,
