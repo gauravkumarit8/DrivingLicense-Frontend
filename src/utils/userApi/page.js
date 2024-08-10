@@ -145,3 +145,61 @@ export async function userSession(userId) {
     return { success: false, message: error.message };
   }
 }
+
+// post log time
+
+export async function postUserLogTime(userId, time) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(time),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+    const result = await response.text();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to post Log time:", error);
+    return { success: false, message: error.message };
+  }
+}
+
+// get total time
+
+export async function getUserTotalTime(userId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to get total Log Time:", error);
+    return { success: false, message: error.message };
+  }
+}
