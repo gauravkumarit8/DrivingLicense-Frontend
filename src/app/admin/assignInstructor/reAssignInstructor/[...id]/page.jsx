@@ -1,19 +1,18 @@
 "use client";
 
-import { getAvailableInstructors } from "@/utils/adminApi/page";
+import { getAvailableInstructors, reAssignInstructorUpdate } from "@/utils/adminApi/page";
 import { getUserById } from "@/utils/userApi/page";
-import { reAssignInstructor } from "@/utils/adminApi/page"; // Make sure this is correctly imported
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import styles from './ReassignInstructor.module.css'; // Import the CSS module
+import styles from './ReAssignInstructor.module.css'
 
 const ReassignInstructorPage = ({ params }) => {
   const { id } = params;
   const router = useRouter();
   const [adminId, userId] = id;
   const searchParams = useSearchParams();
-  const day = searchParams.get("day"); // Extract the day from URL query parameters
+  const day = searchParams.get("day");
 
   const [user, setUser] = useState(null);
   const [instructors, setInstructors] = useState([]);
@@ -29,12 +28,7 @@ const ReassignInstructorPage = ({ params }) => {
         setUser(responseUser.data);
 
         if (Array.isArray(availableInstructors.data)) {
-          // const matchedInstructors = availableInstructors.data.filter((instructor) =>
-          //   instructor.availability.some((availability) => availability.day === day)
-          // );
-          // setInstructors(matchedInstructors);
           setInstructors(availableInstructors.data);
-          console.log(availableInstructors.data)
         } else {
           console.error("Expected array but got:", availableInstructors.data);
           setInstructors([]);
@@ -52,7 +46,7 @@ const ReassignInstructorPage = ({ params }) => {
   const handleReassign = async () => {
     if (!user || !selectedInstructor) return;
     
-    const response = await reAssignInstructor(user.id, selectedInstructor, day);
+    const response = await reAssignInstructorUpdate(user.id, selectedInstructor, day);
     if (response.success) {
       alert("Instructor reassigned successfully!");
       router.push(`/admin/profile/${adminId}`);

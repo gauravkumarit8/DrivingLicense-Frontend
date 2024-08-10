@@ -1,10 +1,8 @@
 "use client";
 
 import {
-  
   getUserByEmail,
   getUserTotalTime,
- 
   postUserLogTime,
 } from "@/utils/userApi/page";
 import Link from "next/link";

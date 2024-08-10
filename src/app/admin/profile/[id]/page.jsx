@@ -110,7 +110,7 @@ console.log(users);
                                 <h3>Assigned Instructors:</h3>
                                 <div>Name: {assignedInstructor.instructorName}</div>
                                 <div>Day: {assignedInstructor.day}</div>
-                                <div>Instructor ID: {assignedInstructor.instructorId}</div>
+                                {/* <div>Instructor ID: {assignedInstructor.instructorId}</div> */}
                                 <Link
                                   href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
                                   className={styles.linkButton}
