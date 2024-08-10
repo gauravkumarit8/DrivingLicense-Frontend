@@ -153,4 +153,4 @@ const Profile = ({ params }) => {
   );
 };
 
-export default Profile;
+export default Profile; 
