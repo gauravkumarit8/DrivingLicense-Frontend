@@ -305,10 +305,11 @@ export async function getUsersWithAvailability(){
     }
 }
   
-export async function getAvailableInstructors(){
+export async function getAvailableInstructors(day){
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/instructor`,{
-            method:"GET"
+        const response=await fetch(`${BASE_URL}/api/admins/instructors/available?day=${day}`,{
+            method:"GET",
+            
         });
         if (!response.ok) {
             const errorText = await response.text(); // Get error text for better logging

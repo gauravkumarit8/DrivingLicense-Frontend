@@ -85,11 +85,12 @@ console.log(users);
                   <br />
                   <span>Email: {user.email}</span>
                   <br />
-                  <span>Aadhar: {user.aadhaarNumber}</span>
+                  <span>Aadhaar: {user.aadhaarNumber}</span>
                   <br />
                   <span>Status: {user.status}</span>
                   <br />
-                  {/* Availability details */}
+                  
+                  {/* Availability and Instructor Details */}
                   {user.availability && user.availability.length > 0 && (
                     <div className={styles.availability}>
                       <h2>Availability:</h2>
@@ -100,42 +101,46 @@ console.log(users);
                           <div>End Time: {availability.endTime}</div>
                           <div>Session Date: {new Date(availability.sessionDate).toLocaleDateString()}</div>
                           <div>Schedule Date: {new Date(availability.scheduleDate).toLocaleDateString()}</div>
-                          {/* Instructor details */}
-                          {availability.instructors && availability.instructors.length > 0 ? (
-                            <div className={styles.instructor}>
-                              <h2>Instructor Details:</h2>
-                              {availability.instructors.map((instructor, instrIndex) => (
-                                <div key={instrIndex}>
-                                  <div>Name: {instructor.name}</div>
-                                  <div>Email: {instructor.email}</div>
-                                  <div>Phone: {instructor.phone}</div>
-                                  <div>Driving License Number: {instructor.drivingLicenseNumber}</div>
-                                </div>
-                              ))}
-                              {/* Update button for assigned instructor */}
-                              <Link
-                                href={`/admin/assignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
-                                className={styles.linkButton}
-                              >
-                                Update Instructor
-                              </Link>
-                            </div>
-                          ) : null}
+
+                          {/* Assigned Instructors */}
+                          {user.assignedInstructors
+                            .filter((instructor) => instructor.day === availability.day)
+                            .map((assignedInstructor, instrIndex) => (
+                              <div key={instrIndex} className={styles.instructorDetails}>
+                                <h3>Assigned Instructors:</h3>
+                                <div>Name: {assignedInstructor.instructorName}</div>
+                                <div>Day: {assignedInstructor.day}</div>
+                                <div>Instructor ID: {assignedInstructor.instructorId}</div>
+                                <Link
+                                  href={`/admin/assignInstructor/reAssignInstructor/${admin.id}/${user.id}?day=${availability.day}`}
+                                  className={styles.linkButton}
+                                >
+                                  Update Instructor
+                                </Link>
+                              </div>
+                            ))}
                         </div>
                       ))}
                     </div>
                   )}
                   
                 </div>
-                <Link href={`/admin/assignInstructor/${admin.id}/${user.id}`} className={styles.linkButton}>
-                  Assign Instructor
-                </Link>
+
+                {/* Conditionally render "Assign Instructor" button */}
+                {!user.assignedInstructors.length && (
+                  <Link
+                    href={`/admin/assignInstructor/AssignInstructor/${admin.id}/${user.id}`}
+                    className={styles.linkButton}
+                  >
+                    Assign Instructor
+                  </Link>
+                )}
               </div>
             ))
           )}
         </div>
 
-        {/* Update admin link */}
+        {/* Update admin links */}
         <Link href={`/admin/update/${id}`} className={styles.linkButton}>
           Update
         </Link>
@@ -150,4 +155,4 @@ console.log(users);
   );
 };
 
-export default Profile;
+export default Profile; 

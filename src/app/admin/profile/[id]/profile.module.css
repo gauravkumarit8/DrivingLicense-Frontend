@@ -38,6 +38,26 @@
   margin-bottom: 10px;
 }
 
+.availability {
+  margin-top: 20px;
+}
+
+.availabilityCard {
+  background-color: #e7f7ff; /* Light blue background for availability details */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.assignedInstructor {
+  background-color: #ffeb3b; /* Bright yellow background for assigned instructor details */
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-weight: bold; /* Bold text for emphasis */
+  border: 2px solid #ff9800; /* Orange border to make it stand out */
+}
+
 .instructor {
   background-color: #d7ec5e; /* Background color for instructor details */
   padding: 10px;
