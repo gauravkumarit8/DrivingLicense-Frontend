@@ -117,8 +117,8 @@ const Profile = ({ params }) => {
 
             <h2>Total Trainging Time - {totalTime}</h2>
 
-            {userData.availability.length !== 0 &&
-            userData.availability.some((d) => d.sessionDate == currentDate) ? (
+            {userData?.availability?.length !== 0 &&
+            userData?.availability?.some((d) => d.sessionDate == currentDate) ? (
               <div>
                 <h2>Is traing done?</h2>
                 <button
