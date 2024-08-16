@@ -27,13 +27,13 @@ const Profile = ({ params }) => {
         const dataUser = result.data;
         setUserData(dataUser);
 
-        const sessionResult = await getSessionByUser(dataUser.id);
+        const sessionResult = await getSessionByUser(dataUser.userId);
         if (sessionResult.success) {
           setUserSessions(sessionResult.data);
         } else {
           console.error("Failed to fetch sessions:", sessionResult.message);
         }
-        const totalTimeResult = await getUserTotalTime(dataUser.id);
+        const totalTimeResult = await getUserTotalTime(dataUser.userId);
         setTotalTime(totalTimeResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,9 +48,9 @@ const Profile = ({ params }) => {
     const time = 1;
 
     try {
-      await postUserLogTime(userData.id, time);
+      await postUserLogTime(userData.userId, time);
 
-      const result = await getUserTotalTime(userData.id);
+      const result = await getUserTotalTime(userData.userId);
 
       setTotalTime(result.data);
     } catch (error) {
@@ -69,11 +69,11 @@ const Profile = ({ params }) => {
 
   const currentDate = getLocalDate();
 
-  const handleDeleteSession = async (e, id) => {
+  const handleDeleteSession = async (e, userId) => {
     e.preventDefault();
 
     try {
-      await deleteSession(id);
+      await deleteSession(userId);
       console.log("delete ho gya bhai");
     } catch (error) {
       console.error("Error Deleting Sessions", error);
@@ -106,7 +106,7 @@ const Profile = ({ params }) => {
             </h2>
             <h2>
               Aadhaar Number:{" "}
-              <span>{userData.aadhaarNumber || "Not Provided"}</span>
+              <span>{userData.aadhaarNumber || "Not ProvuserIded"}</span>
             </h2>
             <h2>
               Role: <span>{userData.role}</span>
@@ -135,7 +135,7 @@ const Profile = ({ params }) => {
             <ul>
               {userData.instructors && userData.instructors.length > 0 ? (
                 userData.instructors.map((instructor) => (
-                  <li key={instructor.id}>
+                  <li key={instructor.userId}>
                     {instructor.name} ({instructor.email})
                   </li>
                 ))
@@ -145,7 +145,7 @@ const Profile = ({ params }) => {
             </ul>
           </div>
           <div>
-            <Link href={`/user/update/${userData.id}`}>
+            <Link href={`/user/update/${userData.userId}`}>
               <button className="p-2 font-bold text-white bg-red-400 rounded-lg">
                 Update Details
               </button>
@@ -168,7 +168,7 @@ const Profile = ({ params }) => {
             Session Details
           </h2>
           {userSessions.map((session) => (
-            <div key={session.id} className="">
+            <div key={session.userId} className="">
               {session.instructor && (
                 <>
                   <h3>
@@ -219,7 +219,7 @@ const Profile = ({ params }) => {
               <div className="flex">
                 <button
                   className="p-1 mx-2 font-bold text-white bg-red-400 rounded-lg "
-                  onClick={(e) => handleDeleteSession(e, session.id)}
+                  onClick={(e) => handleDeleteSession(e, session.userId)}
                 >
                   Delete Sessions
                 </button>
@@ -234,7 +234,7 @@ const Profile = ({ params }) => {
       {userSessions.length === 0 && (
         <div className="pb-4 mt-10">
           <h4 className="w-1/4 p-2 m-auto text-3xl font-bold text-center bg-blue-500 rounded-lg shadow-2xl shadow-black">
-            <Link href={`/user/session/${userData.id}`}>
+            <Link href={`/user/session/${userData.userId}`}>
               Book Your Sessions
             </Link>
           </h4>
