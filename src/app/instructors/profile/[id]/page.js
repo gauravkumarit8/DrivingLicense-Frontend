@@ -8,6 +8,7 @@ import {
   getInstructorTotalTime,
   postInstructorLogTime,
   updateAvailability,
+  getSessionTime,
 } from "@/utils/instructorApi/page";
 import Link from "next/link";
 import styles from "../Profile.module.css";
@@ -28,17 +29,27 @@ const Profile = ({ params }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [updatingAvailability, setUpdatingAvailability] = useState(false);
-  const [instrucotrSessions, setInstructorSessions] = useState([]);
-  const [intructorTotalTime, setInstructorTotalTime] = useState(0);
+  const [instructorSessions, setInstructorSessions] = useState([]);
+  const [instructorTotalTime, setInstructorTotalTime] = useState(0);
+  const [allSessionTime, setAllSessionTime] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await getInstructorById(id);
         setInstructor(result.data);
+  
         const totalTimeResult = await getInstructorTotalTime(id);
         setInstructorTotalTime(totalTimeResult.data);
+  
         setAvailability(result.data.availability);
+  
+        const allSessionTrainingTime = await getSessionTime(id);
+        const sessionsArray = Object.entries(allSessionTrainingTime.data).map(([date, times]) => ({
+          sessionDate: date,
+          sessionTimes: times,
+        }));
+        setAllSessionTime(sessionsArray);
       } catch (err) {
         console.error("Failed to fetch data:", err);
         setError("Failed to fetch data");
@@ -48,6 +59,7 @@ const Profile = ({ params }) => {
     };
     fetchData();
   }, [id]);
+  
 
   const handleDeleteAvailability = async (day) => {
     try {
@@ -91,7 +103,8 @@ const Profile = ({ params }) => {
       setError("Failed to Instructors Sessions");
     }
   };
-  const submitInstructorLogTIme = async (e, userId, sessionDate) => {
+
+  const submitInstructorLogTime = async (e, userId, sessionDate) => {
     e.preventDefault();
 
     const time = 1;
@@ -104,14 +117,15 @@ const Profile = ({ params }) => {
 
       const result = await getInstructorTotalTime(id);
       const result2 = await getUserTotalTime(userId);
-      console.log("instructor ka total hour", result);
-      console.log("user ka totla hour", result2);
+      console.log("Instructor total hours", result);
+      console.log("User total hours", result2);
 
       setInstructorTotalTime(result.data);
     } catch (error) {
       console.error("Error updating total time:", error);
     }
   };
+
   function getLocalDate() {
     const now = new Date();
     const year = now.getFullYear();
@@ -133,7 +147,6 @@ const Profile = ({ params }) => {
   if (error) {
     return <div className={styles.error}>{error}</div>;
   }
-  console.log("lodu", instructor);
 
   return (
     <div className="">
@@ -183,7 +196,7 @@ const Profile = ({ params }) => {
                     Total Hours Trained
                   </label>
                   <span className={styles.profileValue}>
-                    {intructorTotalTime || "0"}
+                    {instructorTotalTime || "0"}
                   </span>
                 </div>
                 <Link href={`/instructors/update/${instructor.id}`}>
@@ -198,6 +211,8 @@ const Profile = ({ params }) => {
                 src={defaultIcon}
               />
             </div>
+            <div>
+          </div>
           </div>
           <div className="w-1/2 p-2 m-2 bg-blue-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
             {updatingAvailability ? (
@@ -244,83 +259,42 @@ const Profile = ({ params }) => {
         </div>
 
         <div className="w-full p-2 m-2 bg-green-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
-          <h2 className="m-auto font-sans text-2xl font-bold text-center">
-            Users
-          </h2>
-          <div className="">
-            {instructor?.users?.length > 0 ? (
-              instructor.users.map((user, index) => (
-                <div
-                  key={user.id}
-                  className="flex items-center justify-between w-full bg-orange-200 border border-black rounded-lg shadow-2xl shadow-slate-400 h-60"
-                >
-                  <div className="">
-                    {" "}
-                    <Image
-                      className="w-24 h-24 m-auto ml-4 rounded-full"
-                      alt="logo"
-                      src={defaultIcon}
-                    />
-                  </div>
-                  <div>
-                    <div className="">
-                      <label className="text-lg font-bold">Name:</label>
-                      <span className="text-lg">{user.name}</span>
-                    </div>
-                    <div className="">
-                      <label className="text-lg font-bold">Email:</label>
-                      <span className="text-lg">{user.email}</span>
-                    </div>
-                    <div className="">
-                      <label className="text-lg font-bold">Status:</label>
-                      <span className="text-lg">{user.status}</span>
-                    </div>
-
-                    <span className={styles.userStatus}>
-                      {user.sessionDate}
-                    </span>
-                    <span className={styles.userStatus}>
-                      {user.scheduleDate}
-                    </span>
-                  </div>
-                  <div>
-                    <button
-                      className="p-2 bg-blue-600 border border-black "
-                      onClick={(e) =>
-                        submitInstructorLogTIme(
-                          e,
-                          user.id,
-                          user.availability.filter(
-                            (a) => a.sessionDate == currentDate
-                          )[0]?.sessionDate
-                        )
-                      }
-                    >
-                      Done
-                    </button>
-                  </div>
-                  <div>
-                    <Pichart data={user.totalHours} />
-                  </div>
-                </div>
-              ))
-            ) : (
-              <li>No users assigned</li>
-            )}
-          </div>
-        </div>
-        {instrucotrSessions.length == 0 ? (
-          <div className="pb-4 mx-auto mt-10">
+          <div className="flex">
             <button
-              className="p-2 m-auto text-3xl font-bold text-center bg-blue-500 rounded-lg shadow-2xl shadow-black"
-              onClick={handleGetSessions}
+              className="p-2 mx-auto font-bold text-white bg-red-400 rounded-lg w-44"
+              onClick={(e) => {
+                handleGetSessions(e);
+              }}
             >
-              Get Your All Sessions
+              Get Session
             </button>
           </div>
-        ) : (
-          <InstructorSessions data={instrucotrSessions} />
-        )}
+          <div className={styles.sessionCardsContainer}>
+        {allSessionTime.map((session, index) => (
+          <div key={index} className={styles.sessionCard}>
+            <p className={styles.sessionDate}>{session.sessionDate}</p>
+            <div className={styles.sessionTimes}>
+              {session.sessionTimes.map((time, timeIndex) => (
+                <span key={timeIndex} className={styles.sessionTime}>
+                  {time}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+          <InstructorSessions
+            instructorSessions={instructorSessions} // Pass the sessions data correctly
+            instructorId={id}
+            submitInstructorLogTime={submitInstructorLogTime}
+          />
+
+        </div>
+        <div className="flex justify-center mt-6">
+          <Pichart />
+        </div>
+        
       </div>
     </div>
   );
