@@ -345,3 +345,30 @@ export async function getInstructorTotalTime(instructorId) {
     return { success: false, message: error.message };
   }
 }
+
+export async function getSessionTime(instructorId) {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/api/instructor/${instructorId}/allSessionTime`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `HTTP error! status: ${response.status}, message: ${errorText}`
+      );
+    }
+
+    const result = await response.json();
+    return { success: true, data: result };
+  } catch (error) {
+    console.error("Failed to get Session Time:", error);
+    return { success: false, message: error.message };
+  }
+}

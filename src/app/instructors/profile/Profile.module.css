@@ -155,3 +155,39 @@
   cursor: pointer;
   border-radius: 5px;
 }
+.sessionCardsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.sessionCard {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  width: calc(33.33% - 20px);
+  min-width: 200px;
+}
+
+.sessionDate {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.sessionTimes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.sessionTime {
+  background-color: #e0f2f1;
+  color: #00796b;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+}
