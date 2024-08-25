@@ -15,6 +15,7 @@ const Register = () => {
   const [aadhaarNumber, setaadhaarNumber] = useState("");
   const [message, setMessage] = useState("");
 
+  const adminName="admin2";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ const Register = () => {
 
     console.log("User data:", userData); // Add this line to verify data
 
-    const result = await registerUser(userData);
+    const result = await registerUser(adminName,userData);
     if (result.success) {
       setMessage("User registered successfully!");
       console.log("User registered:", result.data);

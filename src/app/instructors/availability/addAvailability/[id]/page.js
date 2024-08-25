@@ -26,6 +26,8 @@ const AddAvailability = ({ params }) => {
 
   const router = useRouter();
 
+  const adminName="admin2";
+
   const handleAddAvailability = () => {
     // Check if start time and end time are set and valid
     if (currentDay && startTime && endTime) {
@@ -65,7 +67,7 @@ const AddAvailability = ({ params }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await addAvailability(id, availability);
+      const response = await addAvailability(adminName,id, availability);
       setMessage("Availability added successfully");
       router.push(`/instructors/profile/${id}`);
     } catch (error) {

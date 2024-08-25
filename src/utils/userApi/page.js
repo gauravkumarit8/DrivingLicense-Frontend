@@ -1,8 +1,8 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function loginUser(userData) {
+export async function loginUser(adminName,userData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/users/login`, {
+    const response = await fetch(`${BASE_URL}/api/users/login/${adminName}`, {
       // Replace with your actual API endpoint
       method: "POST",
       headers: {
@@ -26,11 +26,11 @@ export async function loginUser(userData) {
   }
 }
 
-export async function registerUser(userData) {
+export async function registerUser(adminName,userData) {
   try {
     console.log("Gaurav", userData);
     console.log("Ankit", JSON.stringify(userData));
-    const response = await fetch(`${BASE_URL}/api/users/register`, {
+    const response = await fetch(`${BASE_URL}/api/users/register/${adminName}`, {
       // Replace with your actual API endpoint
       method: "POST",
       headers: {
@@ -54,9 +54,9 @@ export async function registerUser(userData) {
   }
 }
 
-export async function updateUser(userId, userData) {
+export async function updateUser(adminName,userId, userData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/users/update/${userId}`, {
+    const response = await fetch(`${BASE_URL}/api/users/update/${adminName}/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -80,8 +80,8 @@ export async function updateUser(userId, userData) {
   }
 }
 
-export async function getUserByEmail(userEmail) {
-  const response = await fetch(`${BASE_URL}/api/users/profile1/${userEmail}`, {
+export async function getUserByEmail(adminName,userEmail) {
+  const response = await fetch(`${BASE_URL}/api/users/profile1/${adminName}/${userEmail}`, {
     method: "GET",
     headers: {
       "Context-Type": "application/json",
@@ -95,8 +95,8 @@ export async function getUserByEmail(userEmail) {
   return { success: true, data: result };
 }
 
-export async function getUserById(userId) {
-  const response = await fetch(`${BASE_URL}/api/users/profile/${userId}`, {
+export async function getUserById(adminName,userId) {
+  const response = await fetch(`${BASE_URL}/api/users/profile/${adminName}/${userId}`, {
     method: "GET",
     headers: {
       "Context-Type": "application/json",
@@ -110,8 +110,8 @@ export async function getUserById(userId) {
   return { success: true, data: result };
 }
 
-export async function deleteUser(userId) {
-  const response = await fetch(`${BASE_URL}/api/user${userId}`, {
+export async function deleteUser(adminName,userId) {
+  const response = await fetch(`${BASE_URL}/api/user/${adminName}/${userId}`, {
     method: "DELETE",
   });
   if (!response.ok) {
@@ -122,9 +122,9 @@ export async function deleteUser(userId) {
   return { success: true, data: result };
 }
 
-export async function userSession(userId) {
+export async function userSession(adminName,userId) {
   try {
-    const response = await fetch(`${BASE_URL}/api/sessions/user/${userId}`, {
+    const response = await fetch(`${BASE_URL}/api/sessions/user/${adminName}/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -148,10 +148,10 @@ export async function userSession(userId) {
 
 // post log time
 
-export async function postUserLogTime(userId, time) {
+export async function postUserLogTime(adminName,userId, time) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      `${BASE_URL}/api/users/profile/${adminName}/${userId}/totalTime`,
       {
         method: "POST",
         headers: {
@@ -177,10 +177,10 @@ export async function postUserLogTime(userId, time) {
 
 // get total time
 
-export async function getUserTotalTime(userId) {
+export async function getUserTotalTime(adminName,userId) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/users/profile/${userId}/totalTime`,
+      `${BASE_URL}/api/users/profile/${adminName}/${userId}/totalTime`,
       {
         method: "GET",
         headers: {

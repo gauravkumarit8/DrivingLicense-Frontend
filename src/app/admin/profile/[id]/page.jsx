@@ -19,7 +19,7 @@ const Profile = ({ params }) => {
   const fetchData = async () => {
     try {
       const adminResult = await getAdminById(id);
-      const usersResult = await getUsersWithAvailability();
+      const usersResult = await getUsersWithAvailability(adminResult.data.name);
       console.log(usersResult);
       setAdmin(adminResult.data);
       if (Array.isArray(usersResult.data)) {
@@ -39,9 +39,9 @@ const Profile = ({ params }) => {
     fetchData();
   }, [id]);
 
-  const handleDeleteUser = async (userId) => {
+  const handleDeleteUser = async (admin,userId) => {
     try {
-      await deleteUser(userId);
+      await deleteUser(admin,userId);
       setUsers(users.filter((user) => user.id !== userId));
     } catch (err) {
       console.error("Failed to delete user:", err);
@@ -74,7 +74,7 @@ console.log(users);
               <div key={user.id} className={styles.userCard}>
                 <div className={styles.userDetails}>
                   <button
-                    onClick={() => handleDeleteUser(user.id)}
+                    onClick={() => handleDeleteUser(admin.name,user.id)}
                     type="submit"
                     className={styles.deleteButton}
                   >

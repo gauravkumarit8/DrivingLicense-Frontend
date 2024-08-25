@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteInstructor, getInstructors } from '@/utils/adminApi/page';
+import { deleteInstructor, getAdminById, getInstructors } from '@/utils/adminApi/page';
 import React, { useEffect, useState } from 'react';
 import styles from './Instructor.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +11,7 @@ import { getSessionByInstructor } from '@/utils/sessionApi/drivingSessionApi';
 const Instructor = ({ params }) => {
   const { id } = params;
 
+  const [adminDe,setAdminDe]=useState(null);
   const [instructors, setInstructors] = useState([]);
   const [instructorSessions, setInstructorSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +20,10 @@ const Instructor = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const adminDetails=await getAdminById(id);
+        setAdminDe(adminDetails.data);
         // Fetch instructors
-        const response = await getInstructors();
+        const response = await getInstructors(adminDetails.data.name);
         if (response.data.message === "Instructor not present") {
           setError(response.data.message);
         } else {
@@ -44,9 +47,9 @@ const Instructor = ({ params }) => {
     fetchData();
   }, []);
 
-  const handleDelete = async (instructorId) => {
+  const handleDelete = async (admin,instructorId) => {
     try {
-      await deleteInstructor(instructorId);
+      await deleteInstructor(admin,instructorId);
       setInstructors(instructors.filter(instructor => instructor.id !== instructorId));
     } catch (err) {
       console.error('Failed to delete instructor:', err);
@@ -91,7 +94,7 @@ const Instructor = ({ params }) => {
                 className={styles.deleteButton}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDelete(instructor.id);
+                  handleDelete(setAdminDe.name,instructor.id);
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />

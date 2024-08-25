@@ -1,8 +1,8 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function loginInstructor(instructorData) {
+export async function loginInstructor(adminName,instructorData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/instructor/login`, {
+    const response = await fetch(`${BASE_URL}/api/instructor/login/${adminName}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -25,9 +25,9 @@ export async function loginInstructor(instructorData) {
   }
 }
 
-export async function registerInstructor(instructorData) {
+export async function registerInstructor(adminName,instructorData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/instructor/register`, {
+    const response = await fetch(`${BASE_URL}/api/instructor/register/${adminName}`, {
       // Replace with your actual API endpoint
       method: "POST",
       headers: {
@@ -51,9 +51,9 @@ export async function registerInstructor(instructorData) {
   }
 }
 
-export async function updateInstructor(id, instructorData) {
+export async function updateInstructor(adminName,id, instructorData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/instructor/update/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/instructor/update/${adminName}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -77,6 +77,8 @@ export async function updateInstructor(id, instructorData) {
   }
 }
 
+
+//not in use
 export async function getInstructorByEmail(InstructorEmail) {
   const response = await fetch(
     `${BASE_URL}/api/instructor/profile1/${InstructorEmail}`,
@@ -95,9 +97,9 @@ export async function getInstructorByEmail(InstructorEmail) {
   return { success: true, data: result };
 }
 
-export async function getInstructorById(instructorId) {
+export async function getInstructorById(adminName,instructorId) {
   const response = await fetch(
-    `${BASE_URL}/api/instructor/profile/${instructorId}`,
+    `${BASE_URL}/api/instructor/profile/${adminName}/${instructorId}`,
     {
       method: "GET",
       headers: {
@@ -113,6 +115,8 @@ export async function getInstructorById(instructorId) {
   return { success: true, data: result };
 }
 
+
+//not in use
 export async function deleteInstructor(instructorId) {
   const response = await fetch(
     `${BASE_URL}/api/instructor/delete/${instructorId}`,
@@ -128,6 +132,8 @@ export async function deleteInstructor(instructorId) {
   return { success: true, data: result };
 }
 
+
+//not in use
 export async function userSession(instructorId) {
   try {
     const response = await fetch(
@@ -154,10 +160,10 @@ export async function userSession(instructorId) {
     return { success: false, message: error.message };
   }
 }
-export async function getInstructorSession(instructorId) {
+export async function getInstructorSession(adminName,instructorId) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/users/session`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/users/session`,
       {
         method: "GET",
         headers: {
@@ -180,10 +186,10 @@ export async function getInstructorSession(instructorId) {
     return { success: false, message: error.message };
   }
 }
-export async function getUserSession(instructorId) {
+export async function getUserSession(adminName,instructorId) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/userSessions`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/userSessions`,
       {
         method: "GET",
         headers: {
@@ -207,10 +213,10 @@ export async function getUserSession(instructorId) {
   }
 }
 
-export async function updateAvailability(instructorId, availabilityDay) {
+export async function updateAvailability(adminName,instructorId, availabilityDay) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/availability`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/availability`,
       {
         method: "PUT",
         headers: {
@@ -233,10 +239,10 @@ export async function updateAvailability(instructorId, availabilityDay) {
   }
 }
 
-export async function addAvailability(instructorId, availabilityDay) {
+export async function addAvailability(adminName,instructorId, availabilityDay) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/availability`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/availability`,
       {
         method: "POST",
         headers: {
@@ -261,10 +267,10 @@ export async function addAvailability(instructorId, availabilityDay) {
   }
 }
 
-export async function deleteAvailability(instructorId, day) {
+export async function deleteAvailability(adminName,instructorId, day) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/availability/${day}`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/availability/${day}`,
       {
         method: "DELETE",
       }
@@ -286,6 +292,7 @@ export async function deleteAvailability(instructorId, day) {
 // post log time
 
 export async function postInstructorLogTime(
+  adminName,
   instructorId,
   userId,
   sessionDate,
@@ -293,7 +300,7 @@ export async function postInstructorLogTime(
 ) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/logTrainingTime?userId=${userId}&sessionDate=${sessionDate}`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/logTrainingTime?userId=${userId}&sessionDate=${sessionDate}`,
       {
         method: "POST",
         headers: {
@@ -319,10 +326,10 @@ export async function postInstructorLogTime(
 
 // get total time
 
-export async function getInstructorTotalTime(instructorId) {
+export async function getInstructorTotalTime(adminName,instructorId) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/logTrainingTime`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/logTrainingTime`,
       {
         method: "GET",
         headers: {
@@ -346,10 +353,10 @@ export async function getInstructorTotalTime(instructorId) {
   }
 }
 
-export async function getSessionTime(instructorId) {
+export async function getSessionTime(adminName,instructorId) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/instructor/${instructorId}/allSessionTime`,
+      `${BASE_URL}/api/instructor/${adminName}/${instructorId}/allSessionTime`,
       {
         method: "GET",
         headers: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { getAvailableInstructors, reAssignInstructorUpdate } from "@/utils/adminApi/page";
+import { getAdminById, getAvailableInstructors, reAssignInstructorUpdate } from "@/utils/adminApi/page";
 import { getUserById } from "@/utils/userApi/page";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -14,6 +14,7 @@ const ReassignInstructorPage = ({ params }) => {
   const searchParams = useSearchParams();
   const day = searchParams.get("day");
 
+  const [adminDa,setAdminDa]=useState(null);
   const [user, setUser] = useState(null);
   const [instructors, setInstructors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +24,10 @@ const ReassignInstructorPage = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseUser = await getUserById(userId);
-        const availableInstructors = await getAvailableInstructors(day);
+        const adminDetails=await getAdminById(adminId);
+        setAdminDa(adminDetails.data);
+        const responseUser = await getUserById(adminDetails.data.name,userId);
+        const availableInstructors = await getAvailableInstructors(adminDetails.data.name,day);
         setUser(responseUser.data);
 
         if (Array.isArray(availableInstructors.data)) {
@@ -46,7 +49,7 @@ const ReassignInstructorPage = ({ params }) => {
   const handleReassign = async () => {
     if (!user || !selectedInstructor) return;
     
-    const response = await reAssignInstructorUpdate(user.id, selectedInstructor, day);
+    const response = await reAssignInstructorUpdate(setAdminDa.name,user.id, selectedInstructor, day);
     if (response.success) {
       alert("Instructor reassigned successfully!");
       router.push(`/admin/profile/${adminId}`);

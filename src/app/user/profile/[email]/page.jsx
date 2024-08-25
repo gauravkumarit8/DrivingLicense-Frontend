@@ -20,10 +20,12 @@ const Profile = ({ params }) => {
   const [userSessions, setUserSessions] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
 
+  const adminName="admin2"
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getUserByEmail(params.email);
+        const result = await getUserByEmail(adminName,params.email);
         const dataUser = result.data;
         setUserData(dataUser);
 
@@ -33,7 +35,7 @@ const Profile = ({ params }) => {
         } else {
           console.error("Failed to fetch sessions:", sessionResult.message);
         }
-        const totalTimeResult = await getUserTotalTime(dataUser.userId);
+        const totalTimeResult = await getUserTotalTime(adminName,dataUser.userId);
         setTotalTime(totalTimeResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,9 +50,9 @@ const Profile = ({ params }) => {
     const time = 1;
 
     try {
-      await postUserLogTime(userData.userId, time);
+      await postUserLogTime(adminName,userData.userId, time);
 
-      const result = await getUserTotalTime(userData.userId);
+      const result = await getUserTotalTime(adminName,userData.userId);
 
       setTotalTime(result.data);
     } catch (error) {
