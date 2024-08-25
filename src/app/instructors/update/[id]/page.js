@@ -19,9 +19,11 @@ const Edit = ({ params }) => {
   const [instructorPassword, setIntrutorPassword] = useState("");
   const [instructorPhone, setInstructorPhone] = useState(null);
 
+  const adminName="admin2";
+
   useEffect(() => {
     const getInstructorDetails = async () => {
-      const response = await getInstructorById(id);
+      const response = await getInstructorById(adminName,id);
 
       setInstructorName(response.data.name);
       setIntrutorPassword(response.data.password);
@@ -40,7 +42,7 @@ const Edit = ({ params }) => {
     };
 
     try {
-      const result = await updateInstructor(id, instructorUpdatedData);
+      const result = await updateInstructor(adminName,id, instructorUpdatedData);
       alert("Instructor updated successfully!");
 
       route.push(`/instructors/profile/${result.data.id}`);

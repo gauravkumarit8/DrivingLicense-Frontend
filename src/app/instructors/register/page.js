@@ -36,7 +36,8 @@ const Register = () => {
       drivingLicenseNumber,
       // availability
     };
-    const result = await registerInstructor(instructorData);
+    const adminName="admin2"
+    const result = await registerInstructor(adminName,instructorData);
     if (result.success) {
       setMessage('Instructor registered successfully!');
       console.log('Instructor registered:', result.data);
