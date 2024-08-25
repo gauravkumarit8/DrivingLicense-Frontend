@@ -4,12 +4,13 @@ import React, { useEffect, useState } from "react";
 import styles from "./AssignInstructor.module.css";
 import { useRouter } from "next/navigation";
 import { getUserById } from "@/utils/userApi/page";
-import { getInstructorsByUserAvailability, assignInstructorToUser } from "@/utils/adminApi/page";
+import { getInstructorsByUserAvailability, assignInstructorToUser, getAdminById } from "@/utils/adminApi/page";
 
 const AssignInstructor = ({ params }) => {
   const router = useRouter();
   const { id } = params;
   const [adminId, userId] = id;
+  const [admin,setAdmin]=useState(null);
   const [user, setUser] = useState(null);
   const [instructors, setInstructors] = useState([]);
   const [selectedInstructors, setSelectedInstructors] = useState({});
@@ -19,8 +20,10 @@ const AssignInstructor = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseUser = await getUserById(userId);
-        const responseInstructor = await getInstructorsByUserAvailability(userId);
+        const adminDetails=await getAdminById(adminId);
+        setAdmin(adminDetails.data);
+        const responseUser = await getUserById(adminDetails.data.name,userId);
+        const responseInstructor = await getInstructorsByUserAvailability(adminDetails.data.name,userId);
 
         console.log("User Data:", responseUser.data);
         console.log("Instructor Data:", responseInstructor.data);
@@ -58,7 +61,7 @@ const AssignInstructor = ({ params }) => {
 
     if (assignments.length > 0) {
       try {
-        const assign = await assignInstructorToUser(userId, assignments);
+        const assign = await assignInstructorToUser(setAdmin.name,userId, assignments);
         if (assign.success) {
           alert("Instructors assigned successfully!");
           router.push(`/admin/profile/${adminId}`);

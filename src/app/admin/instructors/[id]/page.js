@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteInstructor, getInstructors } from '@/utils/adminApi/page';
+import { deleteInstructor, getAdminById, getInstructors } from '@/utils/adminApi/page';
 import React, { useEffect, useState } from 'react';
 import styles from './Instructor.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,8 +19,9 @@ const Instructor = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const adminDetails=await getAdminById(id);
         // Fetch instructors
-        const response = await getInstructors();
+        const response = await getInstructors(adminDetails.data.name);
         if (response.data.message === "Instructor not present") {
           setError(response.data.message);
         } else {

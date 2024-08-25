@@ -82,9 +82,9 @@ export async function updateAdmin(adminData){
     }
 }
 
-export async function getUsers(){
+export async function getUsers(adminName){
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/users`,{
+        const response=await fetch(`${BASE_URL}/api/admins/users/${adminName}`,{
             method:"GET",
             headers:{
                 'Content-Type':'application/text'
@@ -102,9 +102,9 @@ export async function getUsers(){
     }
 }
 
-export async function getInstructors(){
+export async function getInstructors(adminName){
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/instructors`,{
+        const response=await fetch(`${BASE_URL}/api/admins/instructors/${adminName}`,{
             method:"GET",
             headers:{
                 'Content-Type':'application/text'
@@ -165,9 +165,9 @@ export async function getInstructors(){
 //     }
 //   }
   
-export async function assignInstructorToUser(userId, assignments) {
+export async function assignInstructorToUser(adminName,userId, assignments) {
     try {
-      const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors-to-days`, {
+      const response = await fetch(`${BASE_URL}/api/admins/${adminName}/${userId}/assign-instructors-to-days`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -189,9 +189,9 @@ export async function assignInstructorToUser(userId, assignments) {
   }
   
 
-// export async function assignInstructorToUser(userId, instructorIds) {
+// export async function assignInstructorToUser(adminName,userId, instructorIds) {
 //     try {
-//       const response = await fetch(`${BASE_URL}/api/admins/${userId}/assign-instructors`, {
+//       const response = await fetch(`${BASE_URL}/api/admins/${adminName}/${userId}/assign-instructors`, {
 //         method: 'PUT',
 //         headers: {
 //           'Content-Type': 'application/json'
@@ -214,10 +214,10 @@ export async function assignInstructorToUser(userId, assignments) {
   
   
 
-export async function reAssignInstructorUpdate(userId, instructorId, day) {
+export async function reAssignInstructorUpdate(adminName,userId, instructorId, day) {
     try {
       const response = await fetch(
-        `${BASE_URL}/api/admins/${userId}/update-instructor?day=${day}&newInstructorId=${instructorId}`,
+        `${BASE_URL}/api/admins/${adminName}/${userId}/update-instructor?day=${day}&newInstructorId=${instructorId}`,
         {
           method: "PUT",
           headers: {
@@ -237,9 +237,26 @@ export async function reAssignInstructorUpdate(userId, instructorId, day) {
     }
 }
 
-export async function deleteUser(userId){
+export async function deleteUser(admin,userId){
     try{
-        const response= await fetch(`${BASE_URL}/api/admins/delete/${userId}`,{
+        const response= await fetch(`${BASE_URL}/api/admins/delete/${admin}/${userId}`,{
+            method:"DELETE"
+        })
+        if(!response.ok){
+            const errorText=await response.json();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        }
+        const result=await response.json();
+        return {success:true,data:result};
+    }catch(err){
+        console.error("Failed to fetch user",err);
+        return {success:false,data:err.message};
+    }
+}
+ 
+export async function deleteInstructor(admin,instructorId){
+    try{
+        const response= await fetch(`${BASE_URL}/api/admins/delete/${admin}/instructor/${instructorId}`,{
             method:"DELETE"
         })
         if(!response.ok){
@@ -254,27 +271,14 @@ export async function deleteUser(userId){
     }
 }
 
-export async function deleteInstructor(instructorId){
-    try{
-        const response= await fetch(`${BASE_URL}/api/admins/delete/instructor/${instructorId}`,{
-            method:"DELETE"
-        })
-        if(!response.ok){
-            const errorText=await response.json();
-            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
-        }
-        const result=await response.json();
-        return {success:true,data:result};
-    }catch(err){
-        console.error("Failed to fetch user",err);
-        return {success:false,data:err.message};
-    }
-}
-
-export async function getInstructorsByUserAvailability(userId) {
+export async function getInstructorsByUserAvailability(adminName,userId) {
     try {
-      const response = await fetch(`${BASE_URL}/api/admins/${userId}/instructors`,{
-        method:"GET"
+      const response = await fetch(`${BASE_URL}/api/admins/${adminName}/instructors`,{
+        method:"Post",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
       });
       if (!response.ok) {
         const errorText = await response.text(); // Get error text for better logging
@@ -288,9 +292,9 @@ export async function getInstructorsByUserAvailability(userId) {
     }
   }
 
-export async function getUsersWithAvailability(){
+export async function getUsersWithAvailability(adminName){
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/usersWithAvailability`,{
+        const response=await fetch(`${BASE_URL}/api/admins/${adminName}/usersWithAvailability`,{
             method:"GET"
         });
         if (!response.ok) {
@@ -305,9 +309,9 @@ export async function getUsersWithAvailability(){
     }
 }
   
-export async function getAvailableInstructors(day){
+export async function getAvailableInstructors(adminName,day){
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/instructors/available?day=${day}`,{
+        const response=await fetch(`${BASE_URL}/api/admins/${adminName}/instructors/available?day=${day}`,{
             method:"GET",
             
         });

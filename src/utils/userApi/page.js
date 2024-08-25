@@ -95,8 +95,8 @@ export async function getUserByEmail(userEmail) {
   return { success: true, data: result };
 }
 
-export async function getUserById(userId) {
-  const response = await fetch(`${BASE_URL}/api/users/profile/${userId}`, {
+export async function getUserById(adminName,userId) {
+  const response = await fetch(`${BASE_URL}/api/users/profile/${adminName}/${userId}`, {
     method: "GET",
     headers: {
       "Context-Type": "application/json",

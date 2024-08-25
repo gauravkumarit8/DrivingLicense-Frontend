@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteUser, getUsers } from '@/utils/adminApi/page';
+import { deleteUser, getAdminById, getUsers } from '@/utils/adminApi/page';
 import React, { useEffect, useState } from 'react';
 import styles from './Users.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,8 +20,9 @@ const User = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const adminDetails=await getAdminById(id);
         // Fetch users
-        const response = await getUsers();
+        const response = await getUsers(adminDetails.data.name);
         console.log(response.data);
         if (response.data.message === "Users not present") {
           setError(response.data.message);
