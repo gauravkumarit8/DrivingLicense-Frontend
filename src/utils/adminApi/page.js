@@ -326,3 +326,20 @@ export async function getAvailableInstructors(adminName,day){
         return { success: false, data: err.message };
     }
 }
+
+export async function getAllAdmin(){
+    try{
+        const response=await fetch(`${BASE_URL}/api/admins/allAdmin`,{
+            method:"GET",
+            
+        });
+        if (!response.ok) {
+            const errorText = await response.text(); // Get error text for better logging
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (err) {
+        return { success: false, data: err.message };
+    }
+}

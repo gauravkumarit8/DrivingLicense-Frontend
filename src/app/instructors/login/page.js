@@ -19,8 +19,7 @@ const Login = () => {
       email,
       password
     }
-    const adminName="admin2"
-    const result=await loginInstructor(adminName,instructorData);
+    const result=await loginInstructor(instructorData);
     const response=result.data;
     if (result.success) {
       setMessage('Instructor Logged in successfully!');

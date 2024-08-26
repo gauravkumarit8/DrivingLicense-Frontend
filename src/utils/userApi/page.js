@@ -1,8 +1,8 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function loginUser(adminName,userData) {
+export async function loginUser(userData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/users/login/${adminName}`, {
+    const response = await fetch(`${BASE_URL}/api/users/login`, {
       // Replace with your actual API endpoint
       method: "POST",
       headers: {
@@ -80,8 +80,8 @@ export async function updateUser(adminName,userId, userData) {
   }
 }
 
-export async function getUserByEmail(adminName,userEmail) {
-  const response = await fetch(`${BASE_URL}/api/users/profile1/${adminName}/${userEmail}`, {
+export async function getUserByEmail(userEmail) {
+  const response = await fetch(`${BASE_URL}/api/users/profile1/${userEmail}`, {
     method: "GET",
     headers: {
       "Context-Type": "application/json",

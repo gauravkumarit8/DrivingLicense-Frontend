@@ -1,8 +1,8 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function loginInstructor(adminName,instructorData) {
+export async function loginInstructor(instructorData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/instructor/login/${adminName}`, {
+    const response = await fetch(`${BASE_URL}/api/instructor/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

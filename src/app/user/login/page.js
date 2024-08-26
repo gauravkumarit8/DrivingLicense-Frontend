@@ -13,7 +13,7 @@ const login = () => {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const adminName="admin2";
+  // const adminName="admin2";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +23,7 @@ const login = () => {
       password
     };
 
-    const result = await loginUser(adminName,userData);
+    const result = await loginUser(userData);
     if (result.success) {
       setMessage('User Logged in successfully!');
       console.log('User logged:', result.data);

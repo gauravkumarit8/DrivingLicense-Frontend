@@ -9,16 +9,18 @@ const Edit = ({ params }) => {
   const route = useRouter();
 
   const { id } = params;
+  const [adminName,userId]=id;
+  console.log(adminName);
 
   const [error, setError] = useState(null);
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
-  const adminName="admin2";
+  // const adminName="admin2";
 
   useEffect(() => {
     const getUserDetails = async () => {
-      const response = await getUserById(adminName,id);
+      const response = await getUserById(adminName,userId);
 
       setUserName(response.data.name);
       setUserPassword(response.data.password);
@@ -34,7 +36,7 @@ const Edit = ({ params }) => {
     };
 
     try {
-      const result = await updateUser(adminName,id, userUpdatedData);
+      const result = await updateUser(adminName,userId, userUpdatedData);
       alert("User updated successfully!");
 
       route.push(`/user/profile/${result.data.email}`);
