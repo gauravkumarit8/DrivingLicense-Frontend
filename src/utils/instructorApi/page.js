@@ -1,8 +1,8 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
-export async function loginInstructor(adminName,instructorData) {
+export async function loginInstructor(instructorData) {
   try {
-    const response = await fetch(`${BASE_URL}/api/instructor/login/${adminName}`, {
+    const response = await fetch(`${BASE_URL}/api/instructor/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,9 +97,9 @@ export async function getInstructorByEmail(InstructorEmail) {
   return { success: true, data: result };
 }
 
-export async function getInstructorById(adminName,instructorId) {
+export async function getInstructorById(instructorId) {
   const response = await fetch(
-    `${BASE_URL}/api/instructor/profile/${adminName}/${instructorId}`,
+    `${BASE_URL}/api/instructor/profile/${instructorId}`,
     {
       method: "GET",
       headers: {

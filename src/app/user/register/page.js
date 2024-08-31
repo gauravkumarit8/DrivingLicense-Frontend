@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./Register.module.css";
 import { registerUser } from "@/utils/userApi/page";
 import Link from "next/link";
+import { getAllAdmin } from "@/utils/adminApi/page";
 
 const Register = () => {
   const router = useRouter();
@@ -14,8 +15,23 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [aadhaarNumber, setaadhaarNumber] = useState("");
   const [message, setMessage] = useState("");
+  const [admins, setAdmins] = useState([]);
+  const [selectedAdmin, setSelectedAdmin] = useState("");
 
-  const adminName="admin2";
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const admins = await getAllAdmin();
+        setAdmins(admins.data);
+        if (admins.data.length > 0) {
+          setSelectedAdmin(admins.data[0].name); // Set the default selected admin to the first one
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +43,9 @@ const Register = () => {
       aadhaarNumber,
     };
 
-    console.log("User data:", userData); // Add this line to verify data
+    console.log("User data:", userData);
 
-    const result = await registerUser(adminName,userData);
+    const result = await registerUser(selectedAdmin, userData);
     if (result.success) {
       setMessage("User registered successfully!");
       console.log("User registered:", result.data);
@@ -84,11 +100,9 @@ const Register = () => {
           />
         </div>
         <div className={styles.formGroup}>
-
           <label htmlFor="aadhaarNumber" className={styles.formLabel}>
-            aadhaarNumber:
+            Aadhaar Number:
           </label>
-
           <input
             type="text"
             id="aadhaarNumber"
@@ -97,6 +111,24 @@ const Register = () => {
             onChange={(e) => setaadhaarNumber(e.target.value)}
             required
           />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="admin" className={styles.formLabel}>
+            Select Admin:
+          </label>
+          <select
+            id="admin"
+            className={styles.formInput}
+            value={selectedAdmin}
+            onChange={(e) => setSelectedAdmin(e.target.value)}
+            required
+          >
+            {admins.map((admin) => (
+              <option key={admin.id} value={admin.name}>
+                {admin.name}
+              </option>
+            ))}
+          </select>
         </div>
         <button type="submit" className={styles.submitButton}>
           Register

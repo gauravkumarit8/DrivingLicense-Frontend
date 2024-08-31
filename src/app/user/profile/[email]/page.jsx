@@ -14,28 +14,31 @@ import {
 import { useEffect, useState } from "react";
 import { CONFIG_FILES } from "next/dist/shared/lib/constants";
 import PieChart from "./Pichart";
+import { getAdminById } from "@/utils/adminApi/page";
 
 const Profile = ({ params }) => {
   const [userData, setUserData] = useState(null);
   const [userSessions, setUserSessions] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
+  const [admin,setAdmin]=useState(null);
 
-  const adminName="admin2"
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getUserByEmail(adminName,params.email);
+        const result = await getUserByEmail(params.email);
         const dataUser = result.data;
         setUserData(dataUser);
-
+        const adminName=await getAdminById(dataUser.adminId);
+        setAdmin(adminName.data);
         const sessionResult = await getSessionByUser(dataUser.userId);
         if (sessionResult.success) {
           setUserSessions(sessionResult.data);
         } else {
           console.error("Failed to fetch sessions:", sessionResult.message);
         }
-        const totalTimeResult = await getUserTotalTime(adminName,dataUser.userId);
+        const totalTimeResult = await getUserTotalTime(adminName.data.name,dataUser.userId);
         setTotalTime(totalTimeResult.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -50,9 +53,9 @@ const Profile = ({ params }) => {
     const time = 1;
 
     try {
-      await postUserLogTime(adminName,userData.userId, time);
+      await postUserLogTime(setAdmin.name,userData.userId, time);
 
-      const result = await getUserTotalTime(adminName,userData.userId);
+      const result = await getUserTotalTime(setAdmin.name,userData.userId);
 
       setTotalTime(result.data);
     } catch (error) {
@@ -135,8 +138,8 @@ const Profile = ({ params }) => {
              )} 
             <h2>Instructors:</h2>
             <ul>
-              {userData.instructors && userData.instructors.length > 0 ? (
-                userData.instructors.map((instructor) => (
+              {userData.assignedInstructors && userData.assignedInstructors.length > 0 ? (
+                userData.assignedInstructors.map((instructor) => (
                   <li key={instructor.userId}>
                     {instructor.name} ({instructor.email})
                   </li>
@@ -147,7 +150,7 @@ const Profile = ({ params }) => {
             </ul>
           </div>
           <div>
-            <Link href={`/user/update/${userData.userId}`}>
+            <Link href={`/user/update/${userData.adminName}/${userData.userId}`}>
               <button className="p-2 font-bold text-white bg-red-400 rounded-lg">
                 Update Details
               </button>

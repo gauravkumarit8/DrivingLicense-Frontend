@@ -1,10 +1,11 @@
 "use client"
 
 import { registerInstructor } from "@/utils/instructorApi/page";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from '../login/Login.module.css'
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { getAllAdmin } from "@/utils/adminApi/page";
 
 const Register = () => {
   const router = useRouter();
@@ -26,6 +27,24 @@ const Register = () => {
   //   }
   // };
 
+  const [admins, setAdmins] = useState([]);
+  const [selectedAdmin, setSelectedAdmin] = useState("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const admins = await getAllAdmin();
+        setAdmins(admins.data);
+        if (admins.data.length > 0) {
+          setSelectedAdmin(admins.data[0].name); // Set the default selected admin to the first one
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const instructorData = {
@@ -36,8 +55,8 @@ const Register = () => {
       drivingLicenseNumber,
       // availability
     };
-    const adminName="admin2"
-    const result = await registerInstructor(adminName,instructorData);
+    
+    const result = await registerInstructor(selectedAdmin,instructorData);
     if (result.success) {
       setMessage('Instructor registered successfully!');
       console.log('Instructor registered:', result.data);
@@ -105,6 +124,24 @@ const Register = () => {
             onChange={(e) => setdrivingLicenseNumber(e.target.value)}
             required
           />
+        </div>
+        <div className={styles.formGroup}>
+          <label htmlFor="admin" className={styles.formLabel}>
+            Select Admin:
+          </label>
+          <select
+            id="admin"
+            className={styles.formInput}
+            value={selectedAdmin}
+            onChange={(e) => setSelectedAdmin(e.target.value)}
+            required
+          >
+            {admins.map((admin) => (
+              <option key={admin.id} value={admin.name}>
+                {admin.name}
+              </option>
+            ))}
+          </select>
         </div>
         {/* <div className={styles.formGroup}>
           <label className={styles.formLabel}>Availability:</label>
