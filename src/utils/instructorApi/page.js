@@ -97,9 +97,9 @@ export async function getInstructorByEmail(InstructorEmail) {
   return { success: true, data: result };
 }
 
-export async function getInstructorById(adminName,instructorId) {
+export async function getInstructorById(instructorId) {
   const response = await fetch(
-    `${BASE_URL}/api/instructor/profile/${adminName}/${instructorId}`,
+    `${BASE_URL}/api/instructor/profile/${instructorId}`,
     {
       method: "GET",
       headers: {

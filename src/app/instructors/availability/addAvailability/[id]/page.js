@@ -1,6 +1,6 @@
 "use client";
 
-import { addAvailability } from "@/utils/instructorApi/page";
+import { addAvailability, getInstructorById } from "@/utils/instructorApi/page";
 import React, { useState } from "react";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
@@ -18,6 +18,8 @@ const daysOfWeek = [
 
 const AddAvailability = ({ params }) => {
   const { id } = params;
+
+  const [admin,setAdmin]=useState(null)
   const [availability, setAvailability] = useState([]);
   const [currentDay, setCurrentDay] = useState("");
   const [startTime, setStartTime] = useState(null);
@@ -67,7 +69,8 @@ const AddAvailability = ({ params }) => {
 
   const handleSubmit = async () => {
     try {
-      const response = await addAvailability(adminName,id, availability);
+      const instructordetails=await getInstructorById(id);
+      const response = await addAvailability(instructordetails.data.adminName,id, availability);
       setMessage("Availability added successfully");
       router.push(`/instructors/profile/${id}`);
     } catch (error) {

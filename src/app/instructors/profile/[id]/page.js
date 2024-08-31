@@ -24,6 +24,8 @@ import { getUserTotalTime, postUserLogTime } from "@/utils/userApi/page";
 
 const Profile = ({ params }) => {
   const { id } = params;
+
+  const [admin,setAdmin]=useState(null);
   const [instructor, setInstructor] = useState(null);
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,13 +35,16 @@ const Profile = ({ params }) => {
   const [instructorTotalTime, setInstructorTotalTime] = useState(0);
   const [allSessionTime, setAllSessionTime] = useState([]);
 
-  const adminName="admin2";
+  // const adminName="admin1";
   useEffect(() => {
     const fetchData = async () => {
       try {
         
-        const result = await getInstructorById(adminName,id);
+        const result = await getInstructorById(id);
         setInstructor(result.data);
+        const adminName=result.data.adminName;
+        setAdmin(result.data.adminName);
+        console.log(result.data);
   
         const totalTimeResult = await getInstructorTotalTime(adminName,id);
         setInstructorTotalTime(totalTimeResult.data);
@@ -65,7 +70,7 @@ const Profile = ({ params }) => {
 
   const handleDeleteAvailability = async (day) => {
     try {
-      await deleteAvailability(adminName,id, day);
+      await deleteAvailability(admin,id, day);
       setAvailability((prevAvailability) =>
         prevAvailability.filter((avail) => avail.day !== day)
       );
@@ -85,7 +90,7 @@ const Profile = ({ params }) => {
 
   const handleSubmitAvailability = async (updatedAvailability) => {
     try {
-      const result = await updateAvailability(adminName,id, updatedAvailability);
+      const result = await updateAvailability(admin,id, updatedAvailability);
       setAvailability(result.data.availability);
       setUpdatingAvailability(false);
       console.log("Availability updated successfully:", result);
@@ -97,7 +102,7 @@ const Profile = ({ params }) => {
 
   const handleGetSessions = async (e) => {
     try {
-      const result = await getInstructorSession(adminName,id);
+      const result = await getInstructorSession(admin,id);
 
       setInstructorSessions(result.data);
     } catch (err) {
@@ -106,7 +111,7 @@ const Profile = ({ params }) => {
     }
   };
 
-  const submitInstructorLogTime = async (adminName,e, userId, sessionDate) => {
+  const submitInstructorLogTime = async (admin,e, userId, sessionDate) => {
     e.preventDefault();
 
     const time = 1;
@@ -114,11 +119,11 @@ const Profile = ({ params }) => {
     console.log("ses", sessionDate);
 
     try {
-      await postInstructorLogTime(adminName,id, userId, sessionDate, time);
-      await postUserLogTime(adminName,userId, time);
+      await postInstructorLogTime(admin,id, userId, sessionDate, time);
+      await postUserLogTime(admin,userId, time);
 
-      const result = await getInstructorTotalTime(adminName,id);
-      const result2 = await getUserTotalTime(adminName,userId);
+      const result = await getInstructorTotalTime(admin,id);
+      const result2 = await getUserTotalTime(admin,userId);
       console.log("Instructor total hours", result);
       console.log("User total hours", result2);
 
