@@ -130,9 +130,9 @@ const Profile = ({ params }) => {
                   Done
                 </button>
               </div>
-            ) : (
-              <h2>no available session date</h2>
-            )}
+             ) : (
+               <h2>no available session date</h2>
+             )} 
             <h2>Instructors:</h2>
             <ul>
               {userData.instructors && userData.instructors.length > 0 ? (
