@@ -137,17 +137,19 @@ const Profile = ({ params }) => {
                <h2>no available session date</h2>
              )} 
             <h2>Instructors:</h2>
+            <h2>Assigned Instructors:</h2>
             <ul>
               {userData.assignedInstructors && userData.assignedInstructors.length > 0 ? (
                 userData.assignedInstructors.map((instructor) => (
-                  <li key={instructor.userId}>
-                    {instructor.name} ({instructor.email})
+                  <li key={instructor.instructorId}>
+                    {instructor.instructorName} (Day: {instructor.day})
                   </li>
                 ))
               ) : (
                 <li>No Instructor Assigned</li>
               )}
             </ul>
+
           </div>
           <div>
             <Link href={`/user/update/${userData.adminName}/${userData.userId}`}>
@@ -155,15 +157,19 @@ const Profile = ({ params }) => {
                 Update Details
               </button>
             </Link>
+            <Link href={`/license/user/${userData.userId}`}>
+              <button className="p-2 font-bold text-white bg-red-400 rounded-lg">
+                Get License Details
+              </button></Link>
           </div>
         </div>
         <div className="w-1/2 p-2 m-2 bg-blue-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
-          <h className="font-sans text-2xl font-bold">
+          <h2 className="font-sans text-2xl font-bold">
             Traing Status
             <div>
               <PieChart data={totalTime} />
             </div>
-          </h>
+          </h2>
         </div>
       </div>
 
@@ -231,6 +237,7 @@ const Profile = ({ params }) => {
                 <button className="p-1 mx-2 font-bold text-white bg-yellow-400 rounded-lg ">
                   Update Sessions
                 </button>
+                
               </div>
             </div>
           ))}

@@ -61,7 +61,7 @@ const AssignInstructor = ({ params }) => {
 
     if (assignments.length > 0) {
       try {
-        const assign = await assignInstructorToUser(setAdmin.name,userId, assignments);
+        const assign = await assignInstructorToUser(admin.name,userId, assignments);
         if (assign.success) {
           alert("Instructors assigned successfully!");
           router.push(`/admin/profile/${adminId}`);

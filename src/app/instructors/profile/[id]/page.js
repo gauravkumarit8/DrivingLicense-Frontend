@@ -9,6 +9,7 @@ import {
   postInstructorLogTime,
   updateAvailability,
   getSessionTime,
+  getAssignedUserDetails,
 } from "@/utils/instructorApi/page";
 import Link from "next/link";
 import styles from "../Profile.module.css";
@@ -45,6 +46,9 @@ const Profile = ({ params }) => {
         const adminName=result.data.adminName;
         setAdmin(result.data.adminName);
         console.log(result.data);
+
+        const getUserAssigned=await getAssignedUserDetails(id);
+        console.log(getUserAssigned.data);
   
         const totalTimeResult = await getInstructorTotalTime(adminName,id);
         setInstructorTotalTime(totalTimeResult.data);
