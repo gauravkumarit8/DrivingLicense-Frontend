@@ -258,6 +258,20 @@ const Profile = ({ params }) => {
           >
             Get Session
           </button> */}
+          <div className={styles.sessionCardsContainer}>
+        {allSessionTime.map((session, index) => (
+          <div key={index} className={styles.sessionCard}>
+            <p className={styles.sessionDate}>{session.sessionDate}</p>
+            <div className={styles.sessionTimes}>
+              {session.sessionTimes.map((time, timeIndex) => (
+                <span key={timeIndex} className={styles.sessionTime}>
+                  {time}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
 
           <InstructorSessions
             instructorSessions={instructorSessions}
