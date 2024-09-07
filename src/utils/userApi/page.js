@@ -148,10 +148,10 @@ export async function userSession(adminName,userId) {
 
 // post log time
 
-export async function postUserLogTime(adminName,userId, time) {
+export async function postUserLogTime(adminName,userId, time,sessionDate) {
   try {
     const response = await fetch(
-      `${BASE_URL}/api/users/profile/${adminName}/${userId}/totalTime`,
+      `${BASE_URL}/api/users/profile/${adminName}/${userId}/totalTime?sessionDate=${sessionDate}`,
       {
         method: "POST",
         headers: {
@@ -175,7 +175,6 @@ export async function postUserLogTime(adminName,userId, time) {
   }
 }
 
-// get total time
 
 export async function getUserTotalTime(adminName,userId) {
   try {
