@@ -175,7 +175,6 @@ export async function postUserLogTime(adminName,userId, time,sessionDate) {
   }
 }
 
-// get total time
 
 export async function getUserTotalTime(adminName,userId) {
   try {

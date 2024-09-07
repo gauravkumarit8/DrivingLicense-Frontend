@@ -17,7 +17,6 @@ import AvailabilityForm from "../../availability/AvailabilityForm/page";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import Image from "next/image";
-
 import defaultIcon from "../../../../images/defaultIcon.png";
 import Pichart from "@/app/user/profile/[email]/Pichart";
 import InstructorSessions from "./InstructorSessions";
@@ -26,7 +25,7 @@ import { getUserTotalTime, postUserLogTime } from "@/utils/userApi/page";
 const Profile = ({ params }) => {
   const { id } = params;
 
-  const [admin,setAdmin]=useState(null);
+  const [admin, setAdmin] = useState(null);
   const [instructor, setInstructor] = useState(null);
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,32 +34,35 @@ const Profile = ({ params }) => {
   const [instructorSessions, setInstructorSessions] = useState([]);
   const [instructorTotalTime, setInstructorTotalTime] = useState(0);
   const [allSessionTime, setAllSessionTime] = useState([]);
+  const [logTimeError, setLogTimeError] = useState(null);
 
-  // const adminName="admin1";
   useEffect(() => {
     const fetchData = async () => {
       try {
-        
         const result = await getInstructorById(id);
         setInstructor(result.data);
-        const adminName=result.data.adminName;
-        setAdmin(result.data.adminName);
-        console.log(result.data);
+        const adminName = result.data.adminName;
+        setAdmin(adminName);
 
-        const getUserAssigned=await getAssignedUserDetails(id);
+        const getUserAssigned = await getAssignedUserDetails(id);
         console.log(getUserAssigned.data);
-  
-        const totalTimeResult = await getInstructorTotalTime(adminName,id);
+
+        const totalTimeResult = await getInstructorTotalTime(adminName, id);
         setInstructorTotalTime(totalTimeResult.data);
-  
+
         setAvailability(result.data.availability);
-  
-        const allSessionTrainingTime = await getSessionTime(adminName,id);
-        const sessionsArray = Object.entries(allSessionTrainingTime.data).map(([date, times]) => ({
-          sessionDate: date,
-          sessionTimes: times,
-        }));
+
+        const allSessionTrainingTime = await getSessionTime(adminName, id);
+        const sessionsArray = Object.entries(allSessionTrainingTime.data).map(
+          ([date, times]) => ({
+            sessionDate: date,
+            sessionTimes: times,
+          })
+        );
         setAllSessionTime(sessionsArray);
+
+        const loggedSession = await getInstructorSession(adminName, id);
+        setInstructorSessions(loggedSession.data);
       } catch (err) {
         console.error("Failed to fetch data:", err);
         setError("Failed to fetch data");
@@ -70,11 +72,10 @@ const Profile = ({ params }) => {
     };
     fetchData();
   }, [id]);
-  
 
   const handleDeleteAvailability = async (day) => {
     try {
-      await deleteAvailability(admin,id, day);
+      await deleteAvailability(admin, id, day);
       setAvailability((prevAvailability) =>
         prevAvailability.filter((avail) => avail.day !== day)
       );
@@ -94,7 +95,7 @@ const Profile = ({ params }) => {
 
   const handleSubmitAvailability = async (updatedAvailability) => {
     try {
-      const result = await updateAvailability(admin,id, updatedAvailability);
+      const result = await updateAvailability(admin, id, updatedAvailability);
       setAvailability(result.data.availability);
       setUpdatingAvailability(false);
       console.log("Availability updated successfully:", result);
@@ -106,50 +107,33 @@ const Profile = ({ params }) => {
 
   const handleGetSessions = async (e) => {
     try {
-      const result = await getInstructorSession(admin,id);
-
+      const result = await getInstructorSession(admin, id);
       setInstructorSessions(result.data);
     } catch (err) {
       console.error("Failed to get Instructors Sessions:", err);
-      setError("Failed to Instructors Sessions");
+      setError("Failed to fetch Instructors Sessions");
     }
   };
 
-  const submitInstructorLogTime = async (admin,e, userId, sessionDate) => {
+  const submitInstructorLogTime = async (e, userId, sessionDate) => {
     e.preventDefault();
-
     const time = 1;
-    console.log(userId);
-    console.log("ses", sessionDate);
-
     try {
-      await postInstructorLogTime(admin,id, userId, sessionDate, time);
-      await postUserLogTime(admin,userId, time);
-
-      const result = await getInstructorTotalTime(admin,id);
-      const result2 = await getUserTotalTime(admin,userId);
-      console.log("Instructor total hours", result);
-      console.log("User total hours", result2);
-
+      await postInstructorLogTime(admin, id, userId, sessionDate, time);
+      await postUserLogTime(admin, userId, time);
+  
+      const result = await getInstructorTotalTime(admin, id);
+      const result2 = await getUserTotalTime(admin, userId);
       setInstructorTotalTime(result.data);
+      setLogTimeError(null); // Clear the error if successful
     } catch (error) {
-      console.error("Error updating total time:", error);
+      const errorMessage = `Failed to post Instructor Log time: Error: HTTP error! status: ${error.response?.status || 500}, message: ${error.response?.data?.message || "An error occurred"}`;
+      console.error(errorMessage);
+      setLogTimeError(errorMessage); // Set the detailed error message
     }
   };
-
-  function getLocalDate() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = (now.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-indexed
-    const day = now.getDate().toString().padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  }
-
-  var currentDate = getLocalDate();
-  console.log(currentDate);
-  currentDate = currentDate.substring(0, 9) + "8" + currentDate.substring(10);
-  console.log(currentDate);
+  
+  
 
   if (loading) {
     return <div className={styles.loading}>Loading...</div>;
@@ -161,71 +145,65 @@ const Profile = ({ params }) => {
 
   return (
     <div className="">
-      <div className="fixed top-0 left-0 flex items-center justify-between w-full h-24 mx-1 rounded-lg bg-slate-400">
+      {/* Error pop-up */}
+      {logTimeError && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
+            <h2 className="text-red-500 text-xl mb-4">Error</h2>
+            <p className="text-gray-800 mb-4">{logTimeError}</p>
+            <button 
+              onClick={() => setLogTimeError(null)} 
+              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+
+      <div className="fixed top-0 left-0 flex items-center justify-between w-full h-24 bg-slate-400">
         <h1 className="p-2 text-2xl font-bold text-white">RoadRover</h1>
         <div className="p-2 text-lg text-white">
-          <span>{instructor.email}</span>{" "}
-          <span className="p-2 font-bold text-white">Logout</span>
+          <span>{instructor.email}</span>
+          <span className="p-2 font-bold">Logout</span>
         </div>
       </div>
-      <div className="flex h-[800px] pt-24  flex-col">
-        <div className="flex h-screen">
-          <div className="w-1/2 p-2 m-2 bg-yellow-200 border border-black rounded-lg shadow-2xl shadow-slate-400 ">
-            <h1 className="m-auto font-sans text-2xl font-bold text-center">
-              Instructor Profile
-            </h1>
+
+      <div className="flex flex-col pt-24">
+        <div className="flex h-full">
+          <div className="w-1/2 p-2 m-2 bg-yellow-200 border border-black rounded-lg shadow-lg">
+            <h1 className="text-center text-2xl font-bold">Instructor Profile</h1>
             <div className="flex justify-end mt-8">
-              <div className="">
+              <div>
                 <div className={styles.profileGroup}>
                   <label className={styles.profileLabel}>Name:</label>
-                  <span className={styles.profileValue}>
-                    {instructor?.name}
-                  </span>
+                  <span className={styles.profileValue}>{instructor?.name}</span>
                 </div>
                 <div className={styles.profileGroup}>
                   <label className={styles.profileLabel}>Email:</label>
-                  <span className={styles.profileValue}>
-                    {instructor?.email}
-                  </span>
+                  <span className={styles.profileValue}>{instructor?.email}</span>
                 </div>
                 <div className={styles.profileGroup}>
                   <label className={styles.profileLabel}>Phone Number:</label>
-                  <span className={styles.profileValue}>
-                    {instructor?.phone}
-                  </span>
+                  <span className={styles.profileValue}>{instructor?.phone}</span>
                 </div>
                 <div className={styles.profileGroup}>
-                  <label className={styles.profileLabel}>
-                    Driving License:
-                  </label>
-                  <span className={styles.profileValue}>
-                    {instructor?.drivingLicenseNumber || "Not available"}
-                  </span>
-                </div>
-                <div className={styles.profileGroup}>
-                  <label className={styles.profileLabel}>
-                    Total Hours Trained
-                  </label>
+                  <label className={styles.profileLabel}>Total Hours Trained:</label>
                   <span className={styles.profileValue}>
                     {instructorTotalTime || "0"}
                   </span>
                 </div>
-                <Link href={`/instructors/update/${instructor.id}`}>
-                  <button className="p-1 mx-2 font-bold text-white bg-red-400 rounded-lg ">
-                    Update Profile
-                  </button>
-                </Link>
               </div>
               <Image
-                className="w-48 h-48 m-auto rounded-full "
+                className="w-48 h-48 m-auto rounded-full"
                 alt="logo"
                 src={defaultIcon}
               />
             </div>
-            <div>
           </div>
-          </div>
-          <div className="w-1/2 p-2 m-2 bg-blue-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
+
+          <div className="w-1/2 p-2 m-2 bg-blue-200 border border-black rounded-lg shadow-lg">
             {updatingAvailability ? (
               <AvailabilityForm
                 currentAvailability={availability}
@@ -247,7 +225,6 @@ const Profile = ({ params }) => {
                       ))}
                     </ul>
                     <button
-                      type="button"
                       className={styles.updateButton}
                       onClick={handleUpdateAvailability}
                     >
@@ -257,9 +234,7 @@ const Profile = ({ params }) => {
                 ) : (
                   <div className={styles.addAvailabilitySection}>
                     <h2 className={styles.sectionHeader}>Add Availability</h2>
-                    <Link
-                      href={`/instructors/availability/addAvailability/${id}`}
-                    >
+                    <Link href={`/instructors/availability/addAvailability/${id}`}>
                       Add Availability
                     </Link>
                   </div>
@@ -269,43 +244,49 @@ const Profile = ({ params }) => {
           </div>
         </div>
 
-        <div className="w-full p-2 m-2 bg-green-200 border border-black rounded-lg shadow-2xl shadow-slate-400">
-          <div className="flex">
-            <button
-              className="p-2 mx-auto font-bold text-white bg-red-400 rounded-lg w-44"
-              onClick={(e) => {
-                handleGetSessions(e);
-              }}
-            >
-              Get Session
-            </button>
-          </div>
-          <div className={styles.sessionCardsContainer}>
-        {allSessionTime.map((session, index) => (
-          <div key={index} className={styles.sessionCard}>
-            <p className={styles.sessionDate}>{session.sessionDate}</p>
-            <div className={styles.sessionTimes}>
-              {session.sessionTimes.map((time, timeIndex) => (
-                <span key={timeIndex} className={styles.sessionTime}>
-                  {time}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
+        <div className="w-full p-2 m-2 bg-green-200 border border-black rounded-lg shadow-lg">
+          {/* <button
+            className="p-2 mx-auto font-bold text-white bg-red-400 rounded-lg w-44"
+            onClick={handleGetSessions}
+          >
+            Get Session
+          </button> */}
 
           <InstructorSessions
-            instructorSessions={instructorSessions} // Pass the sessions data correctly
+            instructorSessions={instructorSessions}
             instructorId={id}
             submitInstructorLogTime={submitInstructorLogTime}
           />
 
+          <div className={styles.userCardsContainer}>
+            {instructor?.users?.map((user, index) => (
+              <div key={index} className={styles.userCard}>
+                <div className={styles.profileGroup}>
+                  <label className={styles.profileLabel}>User Name:</label>
+                  <span className={styles.profileValue}>{user.name}</span>
+                </div>
+                <div className={styles.profileGroup}>
+                  <label className={styles.profileLabel}>User Email:</label>
+                  <span className={styles.profileValue}>{user.email}</span>
+                </div>
+                <div className={styles.profileGroup}>
+                  <label className={styles.profileLabel}>Session Dates:</label>
+                  <div className={styles.profileValue}>
+                    {user.availability.map((session, idx) => (
+                      <p key={idx}>{session.day}</p>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  className="p-2 mx-auto font-bold text-white bg-blue-400 rounded-lg w-44"
+                  onClick={(e) => submitInstructorLogTime(e, user.id, session.date)}
+                >
+                  Log Time
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="flex justify-center mt-6">
-          <Pichart />
-        </div>
-        
       </div>
     </div>
   );
