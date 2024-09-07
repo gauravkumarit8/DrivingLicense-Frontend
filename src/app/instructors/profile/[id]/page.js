@@ -35,6 +35,7 @@ const Profile = ({ params }) => {
   const [instructorTotalTime, setInstructorTotalTime] = useState(0);
   const [allSessionTime, setAllSessionTime] = useState([]);
   const [logTimeError, setLogTimeError] = useState(null);
+  const [userLogTime,setUserLogTime]= useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,13 +45,15 @@ const Profile = ({ params }) => {
         const adminName = result.data.adminName;
         setAdmin(adminName);
 
-        const getUserAssigned = await getAssignedUserDetails(id);
-        console.log(getUserAssigned.data);
+        // const getUserAssigned = await getAssignedUserDetails(id);
+        // console.log(getUserAssigned.data);
 
         const totalTimeResult = await getInstructorTotalTime(adminName, id);
         setInstructorTotalTime(totalTimeResult.data);
 
         setAvailability(result.data.availability);
+
+        
 
         const allSessionTrainingTime = await getSessionTime(adminName, id);
         const sessionsArray = Object.entries(allSessionTrainingTime.data).map(
@@ -63,6 +66,8 @@ const Profile = ({ params }) => {
 
         const loggedSession = await getInstructorSession(adminName, id);
         setInstructorSessions(loggedSession.data);
+
+        
       } catch (err) {
         console.error("Failed to fetch data:", err);
         setError("Failed to fetch data");
@@ -120,16 +125,15 @@ const Profile = ({ params }) => {
     const time = 1;
     try {
       await postInstructorLogTime(admin, id, userId, sessionDate, time);
-      await postUserLogTime(admin, userId, time);
-  
       const result = await getInstructorTotalTime(admin, id);
-      const result2 = await getUserTotalTime(admin, userId);
       setInstructorTotalTime(result.data);
-      setLogTimeError(null); // Clear the error if successful
+      setLogTimeError(null);  // Clear any existing error when successful
+      const result2 = await getUserTotalTime(adminName, userId);
+        setUserLogTime(result2.data);
     } catch (error) {
-      const errorMessage = `Failed to post Instructor Log time: Error: HTTP error! status: ${error.response?.status || 500}, message: ${error.response?.data?.message || "An error occurred"}`;
-      console.error(errorMessage);
-      setLogTimeError(errorMessage); // Set the detailed error message
+      console.error("Failed to post Instructor Log time:", error);
+      const errorMessage = error.response?.data?.message || "An error occurred";
+      setLogTimeError(errorMessage); // Set the error state with the message
     }
   };
   
@@ -143,24 +147,27 @@ const Profile = ({ params }) => {
     return <div className={styles.error}>{error}</div>;
   }
 
+  const handleError = (error) => {
+    setError(error);
+  };
+
   return (
     <div className="">
       {/* Error pop-up */}
       {logTimeError && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
-            <h2 className="text-red-500 text-xl mb-4">Error</h2>
-            <p className="text-gray-800 mb-4">{logTimeError}</p>
-            <button 
-              onClick={() => setLogTimeError(null)} 
-              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md">
+            <h2 className="text-xl font-bold mb-2">Error Occurred</h2>
+            <p className="text-lg mb-4">{logTimeError}</p>
+            <button
+              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              onClick={() => setLogTimeError(null)}
             >
               Close
             </button>
           </div>
         </div>
       )}
-
 
       <div className="fixed top-0 left-0 flex items-center justify-between w-full h-24 bg-slate-400">
         <h1 className="p-2 text-2xl font-bold text-white">RoadRover</h1>
@@ -270,6 +277,10 @@ const Profile = ({ params }) => {
                   <span className={styles.profileValue}>{user.email}</span>
                 </div>
                 <div className={styles.profileGroup}>
+                  <label className={styles.profileLabel}>User LoggedTime:</label>
+                  <span className={styles.profileValue}>{userLogTime}</span>
+                </div>
+                <div className={styles.profileGroup}>
                   <label className={styles.profileLabel}>Session Dates:</label>
                   <div className={styles.profileValue}>
                     {user.availability.map((session, idx) => (
@@ -277,12 +288,12 @@ const Profile = ({ params }) => {
                     ))}
                   </div>
                 </div>
-                <button
+                {/* <button
                   className="p-2 mx-auto font-bold text-white bg-blue-400 rounded-lg w-44"
                   onClick={(e) => submitInstructorLogTime(e, user.id, session.date)}
                 >
                   Log Time
-                </button>
+                </button> */}
               </div>
             ))}
           </div>
