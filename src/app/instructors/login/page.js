@@ -13,23 +13,43 @@ const Login = () => {
   const [password,setPassword]=useState('');
   const [message,setMessage]=useState('');
 
-  const handleSubmit=async(e)=>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const instructorData={
-      email,
-      password
-    }
-    const result=await loginInstructor(instructorData);
-    const response=result.data;
-    if (result.success) {
-      setMessage('Instructor Logged in successfully!');
-      console.log('Instructor logged:', result.data);
 
-      router.push(`/instructors/profile/${response.id}`);
-    } else {
-      setMessage(`Error: ${result.message}`);
+    // Prepare the login data
+    const instructorData = {
+        email,
+        password
+    };
+
+    try {
+        // Call the login function (assuming it returns a response with data)
+        const result = await loginInstructor(instructorData);
+        
+        // Check if the login was successful
+        if (result.success) {
+            const response = result.data;
+
+            // Extract userDetails from the response
+            const userDetails = response.userDetails;
+
+            // Log success message
+            setMessage('Instructor logged in successfully!');
+            console.log('Instructor logged:', userDetails);
+
+            // Navigate to the profile page with the user's ID
+            router.push(`/instructors/profile/${userDetails.id}`);
+        } else {
+            // Set error message if login was not successful
+            setMessage(`Error: ${result.message}`);
+        }
+    } catch (error) {
+        // Handle any errors that occurred during login
+        console.error('An error occurred:', error);
+        setMessage('An error occurred during login.');
     }
-  }
+};
+
 
   return (
     <div className={styles.container}>
