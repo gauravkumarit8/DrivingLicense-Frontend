@@ -461,6 +461,8 @@ export async function logoutInstructor() {
           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
 
+      localStorage.removeItem('authToken');
+
       const result = await response.json();
       return { success: true, data: result };
   } catch (error) {

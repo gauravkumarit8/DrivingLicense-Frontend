@@ -18,7 +18,7 @@ export async function loginUser(userData) {
     }
 
     const result = await response.json();
-
+    console.log(result.accessToken)
     // Store accessToken in localStorage
     if (result.accessToken) {
       localStorage.setItem('authToken', result.accessToken);
@@ -262,6 +262,7 @@ export async function logoutUser() {
           const errorText = await response.text();
           throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
       }
+      console.log(localStorage.removeItem('authToken'));
 
       const result = await response.json();
       return { success: true, data: result };
