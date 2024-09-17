@@ -16,6 +16,7 @@ import {
 import { useEffect, useState } from "react";
 import PieChart from "./Pichart";
 import { getAdminById } from "@/utils/adminApi/page";
+import { useRouter } from "next/navigation";
 
 const Profile = ({ params }) => {
   const [userData, setUserData] = useState(null);
@@ -24,6 +25,7 @@ const Profile = ({ params }) => {
   const [admin, setAdmin] = useState(null);
   const [error, setError] = useState(null);
   const [token,setToken]= useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,6 +101,7 @@ const Profile = ({ params }) => {
   const handleLogout= async()=>{
     try{
       await logoutUser();
+      router.push(`/`);
     }catch(error){
       console.error("Error ocured while logout ", error);
     }

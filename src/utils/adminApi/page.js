@@ -279,7 +279,49 @@ export async function getAvailableInstructors(adminName, day){
     }
 }
 
+export async function getUsersWithAvailability(adminName){
+    try{
+        const token = localStorage.getItem('authToken'); 
+        const response=await fetch(`${BASE_URL}/api/admins/${adminName}/usersWithAvailability`,{
+            method:"GET",
+            headers:{
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+        if (!response.ok) {
+            const errorText = await response.text(); // Get error text for better logging
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (err) {
+        console.error("Failed to fetch instructors by user availability:", err);
+        return { success: false, data: err.message };
+    }
+}
 
+export async function getInstructorsByUserAvailability(adminName,userId) {
+    try {
+        const token = localStorage.getItem('authToken'); 
+      const response = await fetch(`${BASE_URL}/api/admins/${adminName}/instructors`,{
+        method:"Post",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userId),
+      });
+      if (!response.ok) {
+        const errorText = await response.text(); // Get error text for better logging
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (err) {
+      console.error("Failed to fetch instructors by user availability:", err);
+      return { success: false, data: err.message };
+    }
+}
 
 export async function getAllAdmin(){
     try{
@@ -297,3 +339,28 @@ export async function getAllAdmin(){
         return { success: false, data: err.message };
     }
 }
+
+
+export async function logoutAdmin() {
+    try {
+      const token = localStorage.getItem('authToken'); // Retrieve token
+        const response = await fetch(`${BASE_URL}/api/auth/logout`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,  // Pass JWT token in the Authorization header
+                'Content-Type': 'application/json',
+            },
+        });
+  
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+  
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (error) {
+        console.error("Logout failed:", error);
+        return { success: false, message: error.message };
+    }
+  }

@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteUser, getAdminById, getUsersWithAvailability } from "@/utils/adminApi/page";
+import { deleteUser, getAdminById, getUsersWithAvailability, logoutAdmin } from "@/utils/adminApi/page";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "./profile.module.css";
@@ -39,6 +39,15 @@ const Profile = ({ params }) => {
     fetchData();
   }, [id]);
 
+  const handleLogout= async()=>{
+    try{
+      await logoutAdmin();
+      router.push(`/`);
+    }catch(error){
+      console.error("Error ocured while logout ", error);
+    }
+  }
+
   const handleDeleteUser = async (admin,userId) => {
     try {
       await deleteUser(admin,userId);
@@ -63,6 +72,11 @@ console.log(users);
           <div>Name: {admin.name}</div>
           <div>Email: {admin.email}</div>
           <div>Role: {admin.role}</div>
+        </div>
+        <div className="p-2 text-lg text-white">
+          <button className="p-2 font-bold text-white" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
 
         {/* Users details */}

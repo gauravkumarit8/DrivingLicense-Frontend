@@ -10,6 +10,7 @@ import {
   updateAvailability,
   getSessionTime,
   getAssignedUserDetails,
+  logoutInstructor,
 } from "@/utils/instructorApi/page";
 import Link from "next/link";
 import styles from "../Profile.module.css";
@@ -21,6 +22,7 @@ import defaultIcon from "../../../../images/defaultIcon.png";
 import Pichart from "@/app/user/profile/[email]/Pichart";
 import InstructorSessions from "./InstructorSessions";
 import { getUserTotalTime, postUserLogTime } from "@/utils/userApi/page";
+import { useRouter } from "next/navigation";
 
 const Profile = ({ params }) => {
   const { id } = params;
@@ -36,6 +38,8 @@ const Profile = ({ params }) => {
   const [allSessionTime, setAllSessionTime] = useState([]);
   const [logTimeError, setLogTimeError] = useState(null);
   const [userLogTime,setUserLogTime]= useState(null);
+
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -136,6 +140,16 @@ const Profile = ({ params }) => {
       setLogTimeError(errorMessage); // Set the error state with the message
     }
   };
+
+
+  const handleLogout= async()=>{
+    try{
+      await logoutInstructor();
+      router.push(`/`);
+    }catch(error){
+      console.error("Error ocured while logout ", error);
+    }
+  }
   
   
 
@@ -173,7 +187,9 @@ const Profile = ({ params }) => {
         <h1 className="p-2 text-2xl font-bold text-white">RoadRover</h1>
         <div className="p-2 text-lg text-white">
           <span>{instructor.email}</span>
-          <span className="p-2 font-bold">Logout</span>
+          <button className="p-2 font-bold text-white" onClick={handleLogout}>
+            Logout
+          </button>
         </div>
       </div>
 

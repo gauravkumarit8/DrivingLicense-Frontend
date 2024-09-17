@@ -18,15 +18,31 @@ const Login = () => {
             email,
             password
         };
-        const result = await loginAdmin(adminData);
-        console.log(result.success)
-        console.log(result.data.id);
-        if (result.success) {
-            setMessage('Admin Logged in successfully!');
-            console.log('Admin logged:', result.data);
-            router.push(`/admin/profile/${result.data.id}`);
-        } else {
-            setMessage(`Error: ${result.message}`);
+        try {
+            // Call the login function (assuming it returns a response with data)
+            const result = await loginAdmin(adminData);
+            
+            // Check if the login was successful
+            if (result.success) {
+                const response = result.data;
+    
+                // Extract userDetails from the response
+                const userDetails = response.userDetails;
+    
+                // Log success message
+                setMessage('Admin Logged in successfully!');
+                console.log('Admin logged:', result.data);
+    
+                // Navigate to the profile page with the user's ID
+                router.push(`/admin/profile/${userDetails.id}`);
+            } else {
+                // Set error message if login was not successful
+                setMessage(`Error: ${result.message}`);
+            }
+        } catch (error) {
+            // Handle any errors that occurred during login
+            console.error('An error occurred:', error);
+            setMessage('An error occurred during login.');
         }
     }
 
