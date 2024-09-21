@@ -4,16 +4,19 @@ import { getUserLicenseDetails } from '@/utils/licenseApi/page';
 import React, { useEffect, useState } from 'react';
 import './LicenseCard.css';  // Make sure to import your CSS file
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const ViewLicense = ({ params }) => {
   const { id } = params;
   const [licenseDetails, setLicenseDetails] = useState(null);
 
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await getUserLicenseDetails(id);
       if (response.success) {
-        setLicenseDetails(response.data.license);  // Ensure you're accessing the 'license' object in the response
+        setLicenseDetails(response.data.license);  
       }
     };
     fetchData();
@@ -23,14 +26,17 @@ const ViewLicense = ({ params }) => {
     return <div>Loading...</div>;
   }
 
-  // Destructure safely with default values to avoid errors
   const { users = {}, licenseNumber, issueDate, expiryDate } = licenseDetails;
-  const { name = 'N/A', aadhaarNumber = 'N/A' ,email='N/A'} = users;  // Provide fallbacks
+  const { name = 'N/A', aadhaarNumber = 'N/A' ,email='N/A'} = users;  
+
+  const redirectBack=()=>{
+    router.back();
+  }
 
   return (
     <section>
     <div class="emailTop">
-      <Link href={`/user/profile/${email}`}>Back</Link>
+      <button onClick={redirectBack}>Back</button>
     </div>
       <div class="container">
         <div class="card front-face">

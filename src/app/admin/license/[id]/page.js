@@ -4,6 +4,7 @@ import { getAdminById, getCompletedTrainingUser, getUserById } from '@/utils/adm
 import React, { useEffect, useState } from 'react';
 import './LicenseIssuePage.css'; // Assuming you'll create this CSS file for styling
 import Link from "next/link";
+import { issueLicenseToUser } from '@/utils/licenseApi/page';
 
 const LicenseIssuePage = ({ params }) => {
     const { id } = params;
@@ -37,9 +38,11 @@ const LicenseIssuePage = ({ params }) => {
         fetchData();
     }, [id]);
 
-    const handleGenerateLicense = (userId) => {
-        // Logic to generate the user's driving license
-        console.log(`Generating license for user: ${userId}`);
+    const handleGenerateLicense =async (userId) => {
+        const generateLicense= await issueLicenseToUser(userId);
+
+        console.log(generateLicense.data);
+        console.log(`Generating license for user: ${userId} `);
     };
 
     return (
@@ -60,12 +63,20 @@ const LicenseIssuePage = ({ params }) => {
                                 <p>Email: {user.email}</p>
                                 <p>Aadhaar Number: {user.aadhaarNumber}</p>
                                 <p>Total Hours: {user.totalHours}</p>
-                                <button 
-                                    className="generate-license-button" 
-                                    onClick={() => handleGenerateLicense(user.id)}
-                                >
-                                    Generate Driving License
-                                </button>
+
+                                {/* Conditional Rendering based on isLogged */}
+                                {user.isLicenseProvided ? (
+                                    <Link href={`../../license/user/${user.id}`} className="generate-license-button">
+                                        View License
+                                    </Link>
+                                ) : (
+                                    <button 
+                                        className="generate-license-button" 
+                                        onClick={() => handleGenerateLicense(user.id)}
+                                    >
+                                        Generate Driving License
+                                    </button>
+                                )}
                             </div>
                         ))
                     ) : (
