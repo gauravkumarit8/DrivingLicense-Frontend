@@ -1,0 +1,49 @@
+.admin-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.users-list {
+    padding: 20px;
+}
+
+.user-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.user-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 20px;
+    margin: 15px;
+    text-align: center;
+}
+
+.user-card h3 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.user-card p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.generate-license-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.generate-license-button:hover {
+    background-color: #45a049;
+}
