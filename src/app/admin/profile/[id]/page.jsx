@@ -73,10 +73,16 @@ console.log(users);
           <div>Email: {admin.email}</div>
           <div>Role: {admin.role}</div>
         </div>
-        <div className="p-2 text-lg text-white">
+        <div className="p-2 text-lg text-red">
           <button className="p-2 font-bold text-white" onClick={handleLogout}>
             Logout
           </button>
+        </div>
+        <div className="border-separate border flex-auto">
+          <Link href={`/admin/license/${id}`} className="p-2 font border-lime-500 text-red-600">
+              View Trained User 
+          </Link>
+
         </div>
 
         {/* Users details */}

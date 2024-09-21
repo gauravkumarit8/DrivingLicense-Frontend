@@ -323,6 +323,45 @@ export async function getInstructorsByUserAvailability(adminName,userId) {
     }
 }
 
+export async function getCompletedTrainingUser(adminName) {
+    try {
+        const token = localStorage.getItem('authToken'); 
+      const response = await fetch(`${BASE_URL}/api/admins/users/${adminName}/completedTraining`,{
+        method:"Get",
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) {
+        const errorText = await response.text(); // Get error text for better logging
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      const result = await response.json();
+      return { success: true, data: result };
+    } catch (err) {
+      console.error("Failed to fetch instructors by user availability:", err);
+      return { success: false, data: err.message };
+    }
+}
+
+export async function getUserById(adminName,userId) {
+    const token = localStorage.getItem('authToken'); // Retrieve token
+    const response = await fetch(`${BASE_URL}/api/users/profile/${adminName}/${userId}`, {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        "Context-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("No user found");
+    }
+  
+    const result = await response.json();
+    return { success: true, data: result };
+  }
+
 export async function getAllAdmin(){
     try{
         const response=await fetch(`${BASE_URL}/api/admins/allAdmin`,{
