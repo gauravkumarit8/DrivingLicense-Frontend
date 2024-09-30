@@ -1,5 +1,39 @@
 /* Profile.module.css */
 
+.profile-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.profile-container h1, .profile-container h2, .profile-container h3 {
+  color: #333;
+}
+
+.profile-container h1 {
+  font-size: 24px;
+}
+
+.profile-container h2 {
+  font-size: 18px;
+}
+
+.profile-container h3 {
+  font-size: 16px;
+}
+
+.profile-container button {
+  cursor: pointer;
+}
+
+.profile-container a {
+  text-decoration: none;
+  color: #337ab7;
+}
+
+.profile-container a:hover {
+  color: #23527c;
+}
+
 .details {
   display: flex;
   flex-direction: column;
@@ -22,8 +56,34 @@
   margin: 20px auto;
 }
 
+.user-details-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.user-details {
+  flex-basis: 48%;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  word-wrap: break-word;
+  border: 1px solid #ddd;
+}
+
+.training-status {
+  flex-basis: 48%;
+  padding: 20px;
+  background-color: #f7f7f7;
+  border-radius: 5px;
+  word-wrap: break-word;
+  border: 1px solid #ddd;
+}
+
 .session-details {
   padding: 20px;
+  margin-top: 20px;
 }
 
 .session-details h3 {
@@ -92,40 +152,4 @@
 
 .error-message button:hover {
   background-color: #3e8e41;
-}
-
-/* Add some basic styling to the page */
-/* Profile.module.css */
-
-.profile-container {
-  font-family: Arial, sans-serif;
-}
-
-.profile-container h1, .profile-container h2, .profile-container h3 {
-  color: #333;
-}
-
-.profile-container h1 {
-  font-size: 24px;
-}
-
-.profile-container h2 {
-  font-size: 18px;
-}
-
-.profile-container h3 {
-  font-size: 16px;
-}
-
-.profile-container button {
-  cursor: pointer;
-}
-
-.profile-container a {
-  text-decoration: none;
-  color: #337ab7;
-}
-
-.profile-container a:hover {
-  color: #23527c;
 }

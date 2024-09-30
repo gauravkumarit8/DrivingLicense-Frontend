@@ -314,7 +314,7 @@ const Profile = ({ params }) => {
                   <label className={styles.profileLabel}>Session Dates:</label>
                   <div className={styles.profileValue}>
                     {user.availability.map((session, idx) => (
-                      <p key={idx}>{session.day}</p>
+                      <p key={idx}>{session.day} : {session.startTime}</p>
                     ))}
                   </div>
                 </div>
