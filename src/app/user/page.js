@@ -19,6 +19,9 @@ const HomePage = () => {
             <p>Our application offers a variety of features to help you manage your tasks efficiently and effectively. Whether you're a student, a professional, or just someone looking to organize their life, our app has something for you.</p>
           </section>
           <div className={styles.buttonContainer}>
+            <Link href="/user/distance">
+            <button className={styles.button}>Check Nearest Admin</button>
+            </Link>
             <Link href="/user/login">
               <button className={styles.button}>Login</button>
             </Link>

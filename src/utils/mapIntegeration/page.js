@@ -1,3 +1,5 @@
+const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
+
 export async function calculateDistance(address){
     try {
         const response=await fetch(`${BASE_URL}/api/address/user/calculate`,{
@@ -14,8 +16,8 @@ export async function calculateDistance(address){
         const result = await response.json();
         return { success: true, data: result };
     } catch (error) {
-        console.error('Failed to assign instructors', err);
-        return { success: false, data: err.message };
+        console.error('Failed to calculate distance', error);
+        return { success: false, data: error.message };
     }
 }
 
@@ -35,8 +37,8 @@ export async function saveUserAddress(userId,address){
         const result = await response.json();
         return { success: true, data: result };
     } catch (error) {
-        console.error('Failed to assign instructors', err);
-        return { success: false, data: err.message };
+        console.error('Failed to save user address', error);
+        return { success: false, data: error.message };
     }
 }
 
@@ -56,7 +58,7 @@ export async function saveAdminAddress(adminId,address){
         const result = await response.json();
         return { success: true, data: result };
     } catch (error) {
-        console.error('Failed to assign instructors', err);
-        return { success: false, data: err.message };
+        console.error('Failed to save admin address', error);
+        return { success: false, data: error.message };
     }
 }
