@@ -62,3 +62,24 @@ export async function saveAdminAddress(adminId,address){
         return { success: false, data: error.message };
     }
 }
+
+
+export async function showAdminLocation(){
+    try {
+        const response=await fetch(`${BASE_URL}/api/address/admin/location`,{
+            method:"GET",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        if(!response.ok){
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (error) {
+        console.error('Failed to show admin location', error);
+        return { success: false, data: error.message };
+    }
+}
