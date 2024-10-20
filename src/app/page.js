@@ -1,6 +1,9 @@
-
-import styles from './HomePage.module.css'
+import dynamic from 'next/dynamic';
+import styles from './HomePage.module.css';
 import Link from 'next/link';
+
+const Map = dynamic(() => import('./Map'), { ssr: false });
+
 export default function Home() {
   return (
     <main>
@@ -21,6 +24,7 @@ export default function Home() {
         </div>
         <div className={styles.content}>
           <h1 className={styles.header}>Welcome to Our Platform</h1>
+          <Map />
         </div>
       </div>
     </main>
