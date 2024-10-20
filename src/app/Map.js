@@ -1,10 +1,26 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './Map.module.css';
+import { showAdminLocation } from '@/utils/mapIntegeration/page';
 
 export default function Map() {
+  const mapRef = useRef(null); // Use a ref to store the map instance
+  const [locations, setLocations] = useState([]); // State to store admin locations
+
   useEffect(() => {
+    // Fetch admin locations and store them in state
+    const fetchLocations = async () => {
+      const response = await showAdminLocation();
+      if (response.success) {
+        setLocations(response.data); // Set the locations if the API call is successful
+      } else {
+        console.error('Failed to fetch locations:', response.data);
+      }
+    };
+
+    fetchLocations();
+
     // Function to load the HERE Maps scripts dynamically
     const loadHereMaps = () => {
       return new Promise((resolve, reject) => {
@@ -36,39 +52,47 @@ export default function Map() {
       });
     };
 
-    // Function to initialize the map
+    // Function to initialize the map and add markers
     const loadMap = () => {
-      const platform = new H.service.Platform({
-        apikey: 'yAFizCg33WDQA0Y3Nox9p6PkxUZBqB0JA6S3wiAgoWo'
-      });
+      if (!mapRef.current) { // Only initialize the map if it hasn't been created yet
+        const platform = new H.service.Platform({
+          apikey: 'yAFizCg33WDQA0Y3Nox9p6PkxUZBqB0JA6S3wiAgoWo'
+        });
 
-      const defaultLayers = platform.createDefaultLayers();
+        const defaultLayers = platform.createDefaultLayers();
 
-      const map = new H.Map(
-        document.getElementById('mapContainer'),
-        defaultLayers.vector.normal.map,
-        {
-          zoom: 10,
-          center: { lat: 52.5, lng: 13.4 }
-        }
-      );
+        mapRef.current = new H.Map(
+          document.getElementById('mapContainer'),
+          defaultLayers.vector.normal.map,
+          {
+            zoom: 10,
+            center: { lat: 52.5, lng: 13.4 }
+          }
+        );
 
-      // Enable map event handling (mouse zoom, pan, etc.)
-      const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
+        // Enable map event handling (mouse zoom, pan, etc.)
+        const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(mapRef.current));
 
-      // Add default UI controls (including zoom buttons on the map)
-      const ui = H.ui.UI.createDefault(map, defaultLayers);
+        // Add default UI controls (including zoom buttons on the map)
+        const ui = H.ui.UI.createDefault(mapRef.current, defaultLayers);
 
-      // Zoom controls via custom buttons
-      const zoomInButton = document.getElementById('zoomIn');
-      const zoomOutButton = document.getElementById('zoomOut');
+        // Zoom controls via custom buttons
+        const zoomInButton = document.getElementById('zoomIn');
+        const zoomOutButton = document.getElementById('zoomOut');
 
-      zoomInButton.addEventListener('click', () => {
-        map.setZoom(map.getZoom() + 1); // Increase zoom level by 1
-      });
+        zoomInButton.addEventListener('click', () => {
+          mapRef.current.setZoom(mapRef.current.getZoom() + 1); // Increase zoom level by 1
+        });
 
-      zoomOutButton.addEventListener('click', () => {
-        map.setZoom(map.getZoom() - 1); // Decrease zoom level by 1
+        zoomOutButton.addEventListener('click', () => {
+          mapRef.current.setZoom(mapRef.current.getZoom() - 1); // Decrease zoom level by 1
+        });
+      }
+
+      // Add markers for each location
+      locations.forEach(location => {
+        const marker = new H.map.Marker({ lat: location.latitude, lng: location.longitude });
+        mapRef.current.addObject(marker);
       });
     };
 
@@ -80,7 +104,7 @@ export default function Map() {
       .catch(err => {
         console.error('Failed to load HERE Maps scripts', err);
       });
-  }, []);
+  }, [locations]); // Add locations as a dependency to ensure markers are updated when data changes
 
   return (
     <div className={styles.mapContainerWrapper}>

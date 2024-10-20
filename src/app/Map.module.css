@@ -1,14 +1,19 @@
 .mapContainerWrapper {
     position: relative;
-    width: 640px;
-    height: 350px;
+    width: 80%; /* Make the map responsive to screen size */
+    height: 400px; /* Increased height for better visibility */
+    max-width: 800px; /* Set a max width for larger screens */
     margin: 20px auto;
+    border-radius: 8px; /* Smooth border for map container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    overflow: hidden; /* Prevent content overflow */
   }
   
   .mapContainer {
     width: 100%;
     height: 100%;
-    border: 1px solid #ddd;
+    border: 2px solid #ddd;
+    border-radius: 8px; /* Smooth border for the inner map */
   }
   
   .zoomControls {
@@ -18,19 +23,62 @@
     display: flex;
     flex-direction: column;
     z-index: 10;
+    gap: 8px; /* Spacing between the buttons */
   }
   
   .zoomButton {
-    background-color: rgba(146, 224, 19, 0.8);
-    border: 1px solid #ccc;
-    border-radius: 3px;
+    background-color: rgba(30, 144, 255, 0.8); /* Change to a soft blue for a modern look */
+    border: 1px solid #0073e6; /* Stronger border for contrast */
+    border-radius: 4px;
     padding: 10px;
-    margin: 5px 0;
     cursor: pointer;
     font-size: 16px;
+    color: white; /* White text for better readability */
+    transition: background-color 0.3s ease; /* Smooth transition on hover */
   }
   
   .zoomButton:hover {
-    background-color: rgb(204, 23, 23);
+    background-color: #0073e6; /* Darken the blue on hover for effect */
+  }
+  
+  .zoomButton:active {
+    transform: scale(0.95); /* Subtle scaling effect when clicked */
+  }
+  
+  .adminList {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    z-index: 11;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 200px; /* Fixed width for the admin list */
+  }
+  
+  .adminList h3 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
+  }
+  
+  .adminItem {
+    padding: 8px;
+    margin-bottom: 5px;
+    cursor: pointer;
+    background-color: #f7f7f7;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .adminItem:hover {
+    background-color: rgba(30, 144, 255, 0.1); /* Hover effect for better visibility */
+    color: #0073e6;
+  }
+  
+  .adminItem:active {
+    background-color: rgba(30, 144, 255, 0.2); /* Active state color */
   }
   
