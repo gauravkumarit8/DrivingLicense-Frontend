@@ -61,8 +61,8 @@ const Profile = ({ params }) => {
   if (loading) {
     return <div>Loading...</div>;
   }
-console.log("user")
-console.log(users);
+// console.log("user")
+// console.log(users);
   return (
     <div className={styles.container}>
       {/* Admin details */}
@@ -81,6 +81,12 @@ console.log(users);
         <div className="border-separate border flex-auto">
           <Link href={`/admin/license/${id}`} className="p-2 font border-lime-500 text-red-600">
               View Trained User 
+          </Link>
+
+        </div>
+        <div className="border-separate border flex-auto">
+          <Link href={`/admin/address/${id}`} className="p-2 font border-lime-800 text-red-300">
+              Want to start the uservice then provide the location
           </Link>
 
         </div>
