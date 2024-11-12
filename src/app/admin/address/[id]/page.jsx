@@ -1,7 +1,9 @@
-"use client";
+"use client"
+
 import { saveAdminAddress } from '@/utils/mapIntegeration/page';
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from "next/navigation";
+import styles from './address.module.css'
 
 const Page = ({ params }) => {
   const { id } = params;
@@ -40,29 +42,29 @@ const Page = ({ params }) => {
 
   return (
     <div>
-      {message && <p className="success-message">{message}</p>}
-      <form className="distance-form" onSubmit={handleSubmit}>
-        <div className="form-group">
+      {message && <p className={styles.successMessage}>{message}</p>}
+      <form className={styles.distanceForm} onSubmit={handleSubmit}>
+        <div className={styles.formGroup}>
           <label htmlFor="street">Street:</label>
           <input type="text" name="street" value={street} onChange={handleChange} required />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="city">City:</label>
           <input type="text" name="city" value={city} onChange={handleChange} required />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="state">State:</label>
           <input type="text" name="state" value={state} onChange={handleChange} required />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="zip">Zip:</label>
           <input type="text" name="zip" value={zip} onChange={handleChange} required />
         </div>
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label htmlFor="country">Country:</label>
           <input type="text" name="country" value={country} onChange={handleChange} required />
         </div>
-        <button type="submit" className="submit-button">Save Address</button>
+        <button type="submit" className={styles.submitButton}>Save Address</button>
       </form>
     </div>
   );
