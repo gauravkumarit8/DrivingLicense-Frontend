@@ -78,18 +78,28 @@ const Profile = ({ params }) => {
             Logout
           </button>
         </div>
-        <div className="border-separate border flex-auto">
-          <Link href={`/admin/license/${id}`} className="p-2 font border-lime-500 text-red-600">
-              View Trained User 
+        {/* Conditionally render location button or address details */}
+        {!admin.address ? (
+          <Link href={`/admin/address/${id}`} className={styles.linkButton}>
+            Want to start the service? Provide your location
           </Link>
+        ) : (
+          <div className={styles.addressDetails}>
+            <h3>Address Details:</h3>
+            <p>Street: {admin.address.street}</p>
+            <p>City: {admin.address.city}</p>
+            <p>State: {admin.address.state}</p>
+            <p>Zip: {admin.address.zip}</p>
+            <p>Country: {admin.address.country}</p>
+            {/* <p>Latitude: {admin.address.latitude}</p>
+            <p>Longitude: {admin.address.longitude}</p> */}
+          </div>
+        )}
 
-        </div>
-        <div className="border-separate border flex-auto">
-          <Link href={`/admin/address/${id}`} className="p-2 font border-lime-800 text-red-300">
-              Want to start the uservice then provide the location
-          </Link>
-
-        </div>
+        {/* Additional Links */}
+        <Link href={`/admin/license/${id}`} className={styles.linkButton}>
+          View Trained Users
+        </Link>
 
         {/* Users details */}
         <div className={styles.userContainer}>

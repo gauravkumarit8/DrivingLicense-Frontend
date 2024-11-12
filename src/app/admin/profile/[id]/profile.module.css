@@ -13,6 +13,17 @@
   width: 100%;
 }
 
+.adminDetails {
+  margin-bottom: 20px;
+}
+
+.addressDetails {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
 .userContainer {
   display: flex;
   flex-wrap: wrap;
@@ -66,15 +77,20 @@
 }
 
 .linkButton {
-  display: block;
-  width: fit-content;
+  display: inline-block;
   margin-top: 10px;
+  margin-right: 10px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
   text-decoration: none;
-  color: #0070f3;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color 0.3s ease;
 }
 
 .linkButton:hover {
-  text-decoration: underline;
+  background-color: #45a049;
 }
 
 /* Positioning the delete button at the top-right corner */
