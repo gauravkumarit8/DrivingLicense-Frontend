@@ -379,6 +379,23 @@ export async function getAllAdmin(){
     }
 }
 
+export async function getAllAdminWithLocation(){
+    try{
+        const response=await fetch(`${BASE_URL}/api/admins/withlocation`,{
+            method:"GET",
+            
+        });
+        if (!response.ok) {
+            const errorText = await response.text(); // Get error text for better logging
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const result = await response.json();
+        return { success: true, data: result };
+    } catch (err) {
+        return { success: false, data: err.message };
+    }
+}
+
 
 export async function logoutAdmin() {
     try {

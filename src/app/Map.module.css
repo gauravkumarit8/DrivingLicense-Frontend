@@ -54,8 +54,9 @@
   font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.226);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: black;
   cursor: pointer;
   outline: none;
   transition: border-color 0.3s ease;
@@ -68,6 +69,6 @@
 
 .selectDropdown option {
   padding: 10px;
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   color: #333;
 }

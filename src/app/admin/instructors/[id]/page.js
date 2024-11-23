@@ -11,7 +11,7 @@ import { getSessionByInstructor } from '@/utils/sessionApi/drivingSessionApi';
 const Instructor = ({ params }) => {
   const { id } = params;
 
-  const [adminDe,setAdminDe]=useState(null);
+  const [adminDe, setAdminDe] = useState(null);
   const [instructors, setInstructors] = useState([]);
   const [instructorSessions, setInstructorSessions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,16 +20,15 @@ const Instructor = ({ params }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const adminDetails=await getAdminById(id);
+        const adminDetails = await getAdminById(id);
         setAdminDe(adminDetails.data);
-        // Fetch instructors
+
         const response = await getInstructors(adminDetails.data.name);
         if (response.data.message === "Instructor not present") {
           setError(response.data.message);
         } else {
           setInstructors(response.data);
 
-          // Fetch sessions for each instructor
           const sessionsPromises = response.data.map(async (instructor) => {
             const sessionResponse = await getSessionByInstructor(instructor.id);
             return sessionResponse.data.length > 0 ? sessionResponse.data[0] : null;
@@ -47,10 +46,12 @@ const Instructor = ({ params }) => {
     fetchData();
   }, []);
 
-  const handleDelete = async (admin,instructorId) => {
+  const handleDelete = async (instructorId) => {
     try {
-      await deleteInstructor(admin,instructorId);
-      setInstructors(instructors.filter(instructor => instructor.id !== instructorId));
+      if (adminDe) {
+        await deleteInstructor(adminDe.name, instructorId);
+        setInstructors(instructors.filter(instructor => instructor.id !== instructorId));
+      }
     } catch (err) {
       console.error('Failed to delete instructor:', err);
     }
@@ -94,7 +95,7 @@ const Instructor = ({ params }) => {
                 className={styles.deleteButton}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleDelete(setAdminDe.name,instructor.id);
+                  handleDelete(instructor.id);
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />
