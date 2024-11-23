@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import styles from '../login/Login.module.css'
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getAllAdmin } from "@/utils/adminApi/page";
+import { getAllAdmin, getAllAdminWithLocation } from "@/utils/adminApi/page";
 
 const Register = () => {
   const router = useRouter();
@@ -33,7 +33,8 @@ const Register = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const admins = await getAllAdmin();
+        // const admins = await getAllAdmin();
+        const admins = await getAllAdminWithLocation();
         setAdmins(admins.data);
         if (admins.data.length > 0) {
           setSelectedAdmin(admins.data[0].name); // Set the default selected admin to the first one
