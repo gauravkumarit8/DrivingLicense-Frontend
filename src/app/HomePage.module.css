@@ -132,6 +132,7 @@
 .mapSection {
   min-height: 80vh;
   padding: 3rem;
+  padding-right: 8rem;
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(10px);
 }
