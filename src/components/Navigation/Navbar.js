@@ -11,7 +11,7 @@ export default function Navbar() {
       <div className={styles.logoSection}>
         <Link href="/" className={styles.logo}>
           <Home className="w-6 h-6 mr-2" />
-          <span>MapTracker</span>
+          <span>LearnAndEarn</span>
         </Link>
       </div>
 

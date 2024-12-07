@@ -25,10 +25,9 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className={styles.header}>Welcome to MapTracker</h1>
+          <h1 className={styles.header}>Welcome to LearnAndEarn</h1>
           <p className={styles.subHeader}>
-            Discover the future of navigation and tracking with our advanced mapping system.
-            Real-time tracking, intelligent routing, and comprehensive analytics all in one platform.
+            Discover the future of getting the driving license. We help you learn then you earn your license.
           </p>
         </motion.div>
       </section>
