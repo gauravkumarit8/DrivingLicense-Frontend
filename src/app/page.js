@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import dynamic from 'next/dynamic';
 import styles from './HomePage.module.css';
 import Navbar from '../components/Navigation/Navbar';
-// import Footer from './components/Footer/Footer';
+import Footer from '../components/Footer/Footer';
 
 const Map = dynamic(() => import('./Map'), { ssr: false });
 
@@ -37,7 +37,7 @@ export default function Home() {
         <Map />
       </section>
 
-      {/* <Footer /> */}
+      <Footer />
     </main>
   );
 }
