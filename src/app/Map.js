@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './Map.module.css';
-import showAdminLocation from '../utils/mapIntegeration';
+import showAdminLocation from '../utils/mapIntegeration'
 
 export default function Map() {
   const mapRef = useRef(null); // Use a ref to store the map instance
