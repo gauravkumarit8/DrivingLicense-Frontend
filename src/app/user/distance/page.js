@@ -1,6 +1,6 @@
 "use client";
 
-import { calculateDistance } from '@/utils/mapIntegeration/page';
+import { calculateDistance } from '@/utils/mapApi/page';
 import './distance.css';
 import React, { useState } from 'react';
 import Link from 'next/link';

@@ -64,7 +64,7 @@ export async function saveAdminAddress(adminId,address){
 }
 
 
-export async function showAdminLocation(){
+export async function adminLocations(){
     try {
         const response=await fetch(`${BASE_URL}/api/address/admin/location`,{
             method:"GET",
