@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import styles from './Map.module.css';
-import showAdminLocation from '../utils/mapIntegeration'
+import { adminLocations } from '@/utils/mapApi/page';
 
 export default function Map() {
   const mapRef = useRef(null); // Use a ref to store the map instance
@@ -48,7 +48,7 @@ export default function Map() {
       .then(() => {
         if (!platformRef.current) {
           platformRef.current = new H.service.Platform({
-            apikey: 'yAFizCg33WDQA0Y3Nox9p6PkxUZBqB0JA6S3wiAgoWo'
+            apikey: process.env.NEXT_PUBLIC_HERE_API_KEY
           });
         }
 
@@ -91,7 +91,7 @@ export default function Map() {
   useEffect(() => {
     // Fetch admin locations and store them in state
     const fetchLocations = async () => {
-      const response = await showAdminLocation();
+      const response = await adminLocations();
       if (response.success) {
         setLocations(response.data); // Set the locations if the API call is successful
       } else {

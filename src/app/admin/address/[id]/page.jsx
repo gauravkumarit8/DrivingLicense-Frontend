@@ -1,6 +1,6 @@
 "use client"
 
-import { saveAdminAddress } from '@/utils/mapIntegeration/page';
+import { saveAdminAddress } from '@/utils/mapApi/page';
 import React, { useState } from 'react';
 import { useRouter } from "next/navigation";
 import styles from './address.module.css'
