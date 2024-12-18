@@ -22,10 +22,13 @@ import defaultIcon from "../../../../images/defaultIcon.png";
 import Pichart from "@/app/user/profile/[email]/Pichart";
 import InstructorSessions from "./InstructorSessions";
 import { getUserTotalTime, postUserLogTime } from "@/utils/userApi/page";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-const Profile = ({ params }) => {
-  const { id } = params;
+const Profile = () => {
+  // const { id } = params;
+  const params = useParams();
+  const id = params.id;
+
 
   const [admin, setAdmin] = useState(null);
   const [instructor, setInstructor] = useState(null);
