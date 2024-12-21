@@ -1,34 +1,39 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
 export async function loginUser(userData) {
-  try {
-    const response = await fetch(`${BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `HTTP error! status: ${response.status}, message: ${errorText}`
-      );
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
+      }
+  
+      const result = await response.json();
+  
+      // Check if the logged-in user is an admin
+      if (result.userDetails && result.userDetails.role !== 'USER') {
+        throw new Error('Access denied. User is not an user.');
+      }
+  
+      // Store accessToken in localStorage
+      if (result.accessToken) {
+        localStorage.setItem('authToken', result.accessToken);
+      }
+  
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("Failed to login admin:", error);
+      return { success: false, message: error.message };
     }
-
-    const result = await response.json();
-    console.log(result.accessToken)
-    // Store accessToken in localStorage
-    if (result.accessToken) {
-      localStorage.setItem('authToken', result.accessToken);
-    }
-
-    return { success: true, data: result };
-  } catch (error) {
-    console.error("Failed to login user:", error);
-    return { success: false, message: error.message };
-  }
 }
 
 export async function registerUser(adminName,userData) {

@@ -24,9 +24,18 @@ const login = () => {
     };
 
     const result = await loginUser(userData);
-    if (result.success) {
-      setMessage('User Logged in successfully!');
-      console.log('User logged:', result.data);
+                
+      if (result.success) {
+          const response = result.data;
+
+          // Extract userDetails from the response
+          const userDetails = response.userDetails;
+
+          // Check if the logged-in user is an admin
+          if (userDetails.role !== 'USER') {
+              setMessage('Error: Access denied. User is not an user.');
+              return;
+          }
 
       router.push(`/user/profile/${email}`);
     } else {

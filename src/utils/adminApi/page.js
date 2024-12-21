@@ -35,7 +35,7 @@ export async function loginAdmin(userData) {
       console.error("Failed to login admin:", error);
       return { success: false, message: error.message };
     }
-  }
+}
   
   
 // export async function loginAdmin(userData) {
