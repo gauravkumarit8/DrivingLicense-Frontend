@@ -3,7 +3,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 // Login Admin
 export async function loginAdmin(userData) {
     try {
-      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+      const response = await fetch(`${BASE_URL}/api/auth/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -20,6 +20,11 @@ export async function loginAdmin(userData) {
   
       const result = await response.json();
   
+      // Check if the logged-in user is an admin
+      if (result.userDetails && result.userDetails.role !== 'ADMIN') {
+        throw new Error('Access denied. User is not an admin.');
+      }
+  
       // Store accessToken in localStorage
       if (result.accessToken) {
         localStorage.setItem('authToken', result.accessToken);
@@ -27,10 +32,42 @@ export async function loginAdmin(userData) {
   
       return { success: true, data: result };
     } catch (error) {
-      console.error("Failed to login user:", error);
+      console.error("Failed to login admin:", error);
       return { success: false, message: error.message };
     }
   }
+  
+  
+// export async function loginAdmin(userData) {
+//     try {
+//       const response = await fetch(`${BASE_URL}/api/auth/login`, {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//         },
+//         body: JSON.stringify(userData),
+//       });
+  
+//       if (!response.ok) {
+//         const errorText = await response.text();
+//         throw new Error(
+//           `HTTP error! status: ${response.status}, message: ${errorText}`
+//         );
+//       }
+  
+//       const result = await response.json();
+  
+//       // Store accessToken in localStorage
+//       if (result.accessToken) {
+//         localStorage.setItem('authToken', result.accessToken);
+//       }
+  
+//       return { success: true, data: result };
+//     } catch (error) {
+//       console.error("Failed to login user:", error);
+//       return { success: false, message: error.message };
+//     }
+//   }
 
 // Register Admin
 export async function registerAdmin(adminData){
