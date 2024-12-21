@@ -1,34 +1,35 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
 export async function loginInstructor(instructorData) {
-  try {
-    const response = await fetch(`${BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(instructorData),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(
-        `HTTP error! status: ${response.status}, message: ${errorText}`
-      );
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/instructor/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(instructorData),
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`
+        );
+      }
+  
+      const result = await response.json();
+      if (result.userDetails && result.userDetails.role !== 'INSTRUCTOR') {
+        throw new Error('Access denied. User is not an instructor.');
+      }
+  
+      if (result.accessToken) {
+        localStorage.setItem('authToken', result.accessToken);
+      }
+      return { success: true, data: result };
+    } catch (error) {
+      console.error("Failed to login instructor:", error);
+      return { success: false, message: error.message };
     }
-
-    const result = await response.json();
-
-    // Store accessToken in localStorage
-    if (result.accessToken) {
-      localStorage.setItem('authToken', result.accessToken);
-    }
-
-    return { success: true, data: result };
-  } catch (error) {
-    console.error("Failed to login user:", error);
-    return { success: false, message: error.message };
-  }
 }
 
 export async function registerInstructor(adminName,instructorData) {

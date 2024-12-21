@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import styles from './login/Login.module.css'
+import styles from './Homepage.module.css'
 
 const Admin = () => {
   return (

@@ -19,15 +19,19 @@ const Login = () => {
             password
         };
         try {
-            // Call the login function (assuming it returns a response with data)
             const result = await loginAdmin(adminData);
             
-            // Check if the login was successful
             if (result.success) {
                 const response = result.data;
     
                 // Extract userDetails from the response
                 const userDetails = response.userDetails;
+    
+                // Check if the logged-in user is an admin
+                if (userDetails.role !== 'ADMIN') {
+                    setMessage('Error: Access denied. User is not an admin.');
+                    return;
+                }
     
                 // Log success message
                 setMessage('Admin Logged in successfully!');
@@ -48,7 +52,7 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.header}>Login</h1>
+            <h1 className={styles.header}>Admin Login</h1>
             <form onSubmit={handleClick} className={styles.form}>
                 <div className={styles.formGroup}>
                     <label htmlFor="email" className={styles.formLabel}>Email:</label>
@@ -83,3 +87,4 @@ const Login = () => {
 }
 
 export default Login;
+
