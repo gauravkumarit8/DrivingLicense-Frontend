@@ -23,15 +23,14 @@ const Login = () => {
     };
 
     try {
-        // Call the login function (assuming it returns a response with data)
-        const result = await loginInstructor(instructorData);
-        
-        // Check if the login was successful
+        const result = await loginInstructor(instructorData);          
         if (result.success) {
             const response = result.data;
-
-            // Extract userDetails from the response
             const userDetails = response.userDetails;
+            if (userDetails.role !== 'INSTRUCTOR') {
+                setMessage('Error: Access denied. User is not an instructor.');
+                return;
+            }
 
             // Log success message
             setMessage('Instructor logged in successfully!');
