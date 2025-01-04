@@ -16,9 +16,11 @@ import {
 import { useEffect, useState } from "react";
 import PieChart from "./Pichart";
 import { getAdminById } from "@/utils/adminApi/page";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
-const Profile = ({ params }) => {
+const Profile = () => {
+  const params = useParams();
+  const email = params.email;
   const [userData, setUserData] = useState(null);
   const [userSessions, setUserSessions] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
