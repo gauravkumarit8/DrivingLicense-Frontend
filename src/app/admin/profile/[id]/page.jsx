@@ -1,67 +1,78 @@
-"use client";
+'use client'
 
-import { deleteUser, getAdminById, getUsersWithAvailability, logoutAdmin } from "@/utils/adminApi/page";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { Trash, User, Users, Settings, MapPin, Award, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Footer from '../../../../components/Footer/Footer';
+import { useEffect, useState } from 'react'
+import { useRouter ,useParams} from 'next/navigation'
+import Link from 'next/link'
+import { Trash, User, Users, Settings, MapPin, Award, LogOut } from 'lucide-react'
+import { deleteUser, getAdminById, getUsersWithAvailability, logoutAdmin } from '@/utils/adminApi/page'
+import Footer from '@/components/Footer/Footer'
 
-const Profile = ({ params }) => {
-  const { id } = params;
-  const [admin, setAdmin] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const router = useRouter();
+export default function AdminProfile() {
+  const params = useParams();
+  const id = params.id;
+  const [admin, setAdmin] = useState(null)
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [pageSize, setPageSize] = useState(5)
+  const router = useRouter()
 
   const fetchData = async () => {
+    setLoading(true)
     try {
-      const adminResult = await getAdminById(id);
-      const usersResult = await getUsersWithAvailability(adminResult.data.name);
-      setAdmin(adminResult.data);
-      if (Array.isArray(usersResult.data)) {
-        setUsers(usersResult.data);
+      const adminResult = await getAdminById(id)
+      const usersResult = await getUsersWithAvailability(adminResult.data.name, currentPage, pageSize)
+      setAdmin(adminResult.data)
+      if (usersResult.success && usersResult.data.users) {
+        setUsers(usersResult.data.users)
+        setCurrentPage(usersResult.data.currentPage)
+        setTotalPages(usersResult.data.totalPages)
       } else {
-        setErrorMessage(usersResult.data.message);
+        setErrorMessage(usersResult.data.message || 'No users found')
       }
     } catch (err) {
-      console.error("Failed to fetch data:", err);
-      setErrorMessage("An error occurred while fetching data.");
+      console.error('Failed to fetch data:', err)
+      setErrorMessage('An error occurred while fetching data.')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchData();
-  }, [id]);
+    fetchData()
+  }, [id, currentPage, pageSize])
 
   const handleLogout = async () => {
     try {
-      await logoutAdmin();
-      router.push(`/`);
+      await logoutAdmin()
+      router.push('/')
     } catch (error) {
-      console.error("Error occurred while logout ", error);
+      console.error('Error occurred while logout ', error)
     }
-  };
+  }
 
-  const handleDeleteUser = async (admin, userId) => {
+  const handleDeleteUser = async (adminName, userId) => {
     try {
-      await deleteUser(admin, userId);
-      setUsers(users.filter((user) => user.id !== userId));
+      await deleteUser(adminName, userId)
+      setUsers(users.filter((user) => user.id !== userId))
     } catch (err) {
-      console.error("Failed to delete user:", err);
-      alert("Failed to delete user. Please try again later.");
+      console.error('Failed to delete user:', err)
+      alert('Failed to delete user. Please try again later.')
     }
-  };
+  }
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage)
+  }
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black text-white">
         <div className="animate-pulse">Loading...</div>
       </div>
-    );
+    )
   }
 
   return (
@@ -236,11 +247,42 @@ const Profile = ({ params }) => {
               </div>
             ))
           )}
+
+          {/* Pagination Controls */}
+          {!errorMessage && (
+            <div className="mt-8 flex justify-center items-center space-x-4">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg disabled:opacity-50 transition-all duration-300 hover:bg-blue-600/30"
+              >
+                Previous
+              </button>
+              <span className="text-gray-400">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-blue-600/20 text-blue-400 rounded-lg disabled:opacity-50 transition-all duration-300 hover:bg-blue-600/30"
+              >
+                Next
+              </button>
+              <select
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+                className="bg-gray-800 text-white rounded-lg px-2 py-1 transition-all duration-300 hover:bg-gray-700"
+              >
+                <option value="5">5 per page</option>
+                <option value="10">10 per page</option>
+                <option value="20">20 per page</option>
+              </select>
+            </div>
+          )}
         </div>
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default Profile;

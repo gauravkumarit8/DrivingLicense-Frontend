@@ -169,10 +169,10 @@ export async function getUsers(adminName){
 }
 
 // Get Instructors under Admin
-export async function getInstructors(adminName){
+export async function getInstructors(adminName,page = 1, size = 5){
     const token = localStorage.getItem('authToken'); // Retrieve token
     try {
-        const response = await fetch(`${BASE_URL}/api/admins/instructors/${adminName}`, {
+        const response = await fetch(`${BASE_URL}/api/admins/instructors/${adminName}?page=${page}&size=${size}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/text',
@@ -316,10 +316,10 @@ export async function getAvailableInstructors(adminName, day){
     }
 }
 
-export async function getUsersWithAvailability(adminName){
+export async function getUsersWithAvailability(adminName,page = 1, size = 5){
     try{
         const token = localStorage.getItem('authToken'); 
-        const response=await fetch(`${BASE_URL}/api/admins/${adminName}/usersWithAvailability`,{
+        const response=await fetch(`${BASE_URL}/api/admins/${adminName}/usersWithAvailability?page=${page}&size=${size}`,{
             method:"GET",
             headers:{
                 'Authorization': `Bearer ${token}`,
