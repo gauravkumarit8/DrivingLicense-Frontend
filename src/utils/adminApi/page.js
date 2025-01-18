@@ -173,7 +173,7 @@ export async function getUsers(adminName){
 export async function getUsersByPagination(adminName,page=1,size=5){
     const token= localStorage.getItem('authToken');
     try{
-        const response=await fetch(`${BASE_URL}/api/admins/users/${adminName}?page=${page}$size=${size}`,{
+        const response=await fetch(`${BASE_URL}/api/admins/users/pagination/${adminName}?page=${page}&size=${size}`,{
             method:'GET',
             headers:{
                 'Content-Type':'application/text',
