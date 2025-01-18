@@ -1,3 +1,5 @@
+import { data } from "autoprefixer";
+
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_API_BASE_URL;
 
 // Login Admin
@@ -165,6 +167,30 @@ export async function getUsers(adminName){
     } catch (err) {
         console.error("Failed to fetch users", err);
         return { success: false, data: err.message };
+    }
+}
+
+export async function getUsersByPagination(adminName,page=1,size=5){
+    const token= localStorage.getItem('authToken');
+    try{
+        const response=await fetch(`${BASE_URL}/api/admins/users/pagination/${adminName}?page=${page}&size=${size}`,{
+            method:'GET',
+            headers:{
+                'Content-Type':'application/text',
+                'Authorization':`Bearer ${token}`,
+            }
+        });
+
+        if(!response.ok){
+            const errorTest=await response.text();
+            throw new Error(`HTTP error! status:${response.status},message:${errorTest}`);
+        }
+        const result= await response.json();
+        return {success:true,data:result};
+
+    }catch(err){
+        console.error("Failed to fetch users",err);
+        return {success:false,data:err.message};
     }
 }
 
