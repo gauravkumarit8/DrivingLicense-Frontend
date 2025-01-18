@@ -5,9 +5,11 @@ import React, { useEffect, useState } from 'react';
 import './LicenseIssuePage.css'; // Assuming you'll create this CSS file for styling
 import Link from "next/link";
 import { issueLicenseToUser } from '@/utils/licenseApi/page';
+import { useParams } from 'next/navigation';
 
-const LicenseIssuePage = ({ params }) => {
-    const { id } = params;
+const LicenseIssuePage = () => {
+    const params=useParams();
+    const id = params.id;
     const [users, setUsers] = useState([]); // Array to store user details
     const [admin, setAdmin] = useState(null);
 

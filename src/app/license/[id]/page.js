@@ -1,10 +1,12 @@
 "use client";
 
 import { issueLicenseToUser } from '@/utils/licenseApi/page';
+import { useParams } from 'next/navigation';
 import React from 'react'
 
-const issueLicense = ({params}) => {
-    const { id } = params;
+const issueLicense = () => {
+    const params=useParams();
+    const id=params.id;
 
     const assignLicense=async()=>{
         const issueLicenseToId=await issueLicenseToUser(id);

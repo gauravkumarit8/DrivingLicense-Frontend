@@ -4,10 +4,11 @@ import { getUserLicenseDetails } from '@/utils/licenseApi/page';
 import React, { useEffect, useState } from 'react';
 import './LicenseCard.css';  // Make sure to import your CSS file
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
-const ViewLicense = ({ params }) => {
-  const { id } = params;
+const ViewLicense = () => {
+  const params=useParams();
+  const id=params.id;
   const [licenseDetails, setLicenseDetails] = useState(null);
 
   const router = useRouter();
