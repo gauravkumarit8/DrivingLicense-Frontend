@@ -8,7 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 const ViewLicense = () => {
   const params=useParams();
-  const id=params.id;
+  const id=params.id; 
   const [licenseDetails, setLicenseDetails] = useState(null);
 
   const router = useRouter();

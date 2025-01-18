@@ -8,7 +8,7 @@ export default function Footer() {
       <div className={styles.footerContent}>
         <div className={styles.footerSection}>
           <h3>Resources</h3>
-          <Link href="/documentation">API Documentation</Link>
+          <Link href="https://drivinglicense-backend.onrender.com/swagger-ui/index.html#/">API Documentation</Link>
           <Link href="/tutorials">Tutorials</Link>
           <Link href="/guides">Integration Guides</Link>
           <Link href="/examples">Code Examples</Link>
@@ -41,21 +41,21 @@ export default function Footer() {
 
       <div className={styles.footerBottom}>
         <div className={styles.socialLinks}>
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/gauravkumarit8" target="_blank" rel="noopener noreferrer">
             <Github className="w-5 h-5" />
           </a>
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://x.com/GauravKuma4331?t=AXLfoUBV_EZ4y6qB2rfRtA&s=09" target="_blank" rel="noopener noreferrer">
             <Twitter className="w-5 h-5" />
           </a>
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+          <a href="https://www.linkedin.com/in/gaurav-kumar-a22b52295" target="_blank" rel="noopener noreferrer">
             <Linkedin className="w-5 h-5" />
           </a>
-          <a href="mailto:contact@example.com">
+          <a href="mailto:gaurav.kumarit8@gmail.com">
             <Mail className="w-5 h-5" />
           </a>
         </div>
         <p className={styles.copyright}>
-          © {new Date().getFullYear()} MapTracker. All rights reserved.
+          © {new Date().getFullYear()} GRV Technology. All rights reserved.
         </p>
       </div>
     </footer>
