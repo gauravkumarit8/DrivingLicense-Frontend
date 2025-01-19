@@ -178,11 +178,13 @@ export default function Profile() {
                     Update Details
                   </button>
                 </Link>
-                <Link href={`/license/user/${userData.userId}`}>
+                {userData.isLicenseProvided===true && (
+                    <Link href={`/license/user/${userData.userId}`}>
                   <button className="w-full px-4 py-2 text-sm text-white bg-green-500 rounded hover:bg-green-600 sm:text-base">
                     Get License Details
                   </button>
                 </Link>
+                )}
               </div>
             </div>
           </div>
