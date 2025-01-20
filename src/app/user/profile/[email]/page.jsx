@@ -216,8 +216,8 @@ export default function Profile() {
                       <p><strong>Instructor Email:</strong> {session.instructor?.email || 'Not Assigned'}</p>
                     </>
                   )}
-                  <p><strong>Session Date:</strong> {session.availability[0].sessionDate}</p>
-                  <p><strong>Schedule Date:</strong> {session.availability[0].scheduleDate}</p>
+                  <p><strong>Session Date:</strong> {session.sessionDate}</p>
+                  <p><strong>Schedule Date:</strong> {session.scheduleDate}</p>
                   <h3 className="mt-2 text-lg font-semibold">Availability:</h3>
                   <ul className="pl-5 mt-2 space-y-1 list-disc">
                     {session.availability.map((avail) => (
