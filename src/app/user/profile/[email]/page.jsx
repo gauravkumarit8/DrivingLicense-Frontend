@@ -222,9 +222,9 @@ export default function Profile() {
                   <ul className="pl-5 mt-2 space-y-1 list-disc">
                     {session.availability.map((avail) => (
                       <li key={avail.sessionDate}>
-                        <strong>{avail.day}</strong> ({avail.sessionDate}) 
+                        <strong>{avail.day}</strong> {/*({avail.sessionDate}) */}
                         Start Time: {avail.startTime}, 
-                        End Time: {avail.endTime}
+                         {/* End Time: {avail.startTime}  */}
                       </li>
                     ))}
                   </ul>
