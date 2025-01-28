@@ -2,50 +2,70 @@
 
 import { getAdminById, getCompletedTrainingUser, getUserById } from '@/utils/adminApi/page'; 
 import React, { useEffect, useState } from 'react';
-import './LicenseIssuePage.css'; // Assuming you'll create this CSS file for styling
+import './LicenseIssuePage.css';
 import Link from "next/link";
 import { issueLicenseToUser } from '@/utils/licenseApi/page';
 import { useParams } from 'next/navigation';
 
 const LicenseIssuePage = () => {
-    const params=useParams();
+    const params = useParams();
     const id = params.id;
     const [users, setUsers] = useState([]); // Array to store user details
     const [admin, setAdmin] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); // New loading state
 
     useEffect(() => {
         const fetchData = async () => {
-            // Fetch the admin data by ID
-            const getAdmin = await getAdminById(id);
-            setAdmin(getAdmin.data);
+            try {
+                // Fetch the admin data by ID
+                const getAdmin = await getAdminById(id);
+                setAdmin(getAdmin.data);
 
-            // Fetch the completed training users for the admin
-            const completedTrainingData = await getCompletedTrainingUser(getAdmin.data.name);
+                // Fetch the completed training users for the admin
+                const completedTrainingData = await getCompletedTrainingUser(getAdmin.data.name);
 
-            // Array to store all the user details after fetching by ID
-            const userDetailsArray = [];
+                // Array to store all the user details after fetching by ID
+                const userDetailsArray = [];
 
-            // Loop over each user ID and fetch their details
-            for (const userId of Object.keys(completedTrainingData.data)) {
-                const userResponse = await getUserById(getAdmin.data.name, userId);
-                userDetailsArray.push({
-                    ...userResponse.data,
-                    totalHours: completedTrainingData.data[userId], // Attach the training hours to the user data
-                });
+                // Loop over each user ID and fetch their details
+                for (const userId of Object.keys(completedTrainingData.data)) {
+                    const userResponse = await getUserById(getAdmin.data.name, userId);
+                    userDetailsArray.push({
+                        ...userResponse.data,
+                        totalHours: completedTrainingData.data[userId],
+                    });
+                }
+
+                setUsers(userDetailsArray);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false); // Set loading to false regardless of success or failure
             }
-
-            setUsers(userDetailsArray); // Set the fetched users
         };
 
         fetchData();
     }, [id]);
 
-    const handleGenerateLicense =async (userId) => {
-        const generateLicense= await issueLicenseToUser(userId);
-
-        console.log(generateLicense.data);
-        console.log(`Generating license for user: ${userId} `);
+    const handleGenerateLicense = async (userId) => {
+        try {
+            const generateLicense = await issueLicenseToUser(userId);
+            console.log(generateLicense.data);
+            console.log(`Generating license for user: ${userId}`);
+        } catch (error) {
+            console.error("Error generating license:", error);
+        }
     };
+
+    // Loading component
+    if (isLoading) {
+        return (
+            <div className="loading-container">
+                <div className="loading-spinner"></div>
+                <p>Loading...</p>
+            </div>
+        );
+    }
 
     return (
         <>
@@ -66,7 +86,6 @@ const LicenseIssuePage = () => {
                                 <p>Aadhaar Number: {user.aadhaarNumber}</p>
                                 <p>Total Hours: {user.totalHours}</p>
 
-                                {/* Conditional Rendering based on isLogged */}
                                 {user.isLicenseProvided ? (
                                     <Link href={`../../license/user/${user.id}`} className="generate-license-button">
                                         View License

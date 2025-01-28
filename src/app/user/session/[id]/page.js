@@ -5,10 +5,11 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import styles from '../Session.module.css';
 import { scheduleSession } from '@/utils/sessionApi/drivingSessionApi';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
-const Session = ({ params }) => {
-  const { id } = params;
+const Session = () => {
+  const params=useParams();
+  const id = params.id;
   const [session, setSession] = useState(null);
   const [selectedDays, setSelectedDays] = useState([]);
   const [dayTimes, setDayTimes] = useState({});

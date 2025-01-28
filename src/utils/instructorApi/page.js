@@ -449,25 +449,31 @@ export async function getAssignedUserDetails(instructorId) {
 export async function logoutInstructor() {
   try {
     const token = localStorage.getItem('authToken'); // Retrieve token
-      const response = await fetch(`${BASE_URL}/api/auth/logout`, {
-          method: 'POST',
-          headers: {
-              'Authorization': `Bearer ${token}`,  // Pass JWT token in the Authorization header
-              'Content-Type': 'application/json',
-          },
-      });
+    const response = await fetch(`${BASE_URL}/api/auth/logout`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Pass JWT token in the Authorization header
+        'Content-Type': 'application/json',
+      },
+    });
 
-      if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
-      }
+    const textResponse = await response.text(); // Get the raw response text
 
-      localStorage.removeItem('authToken');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}, message: ${textResponse}`);
+    }
 
-      const result = await response.json();
+    localStorage.removeItem('authToken');
+
+    try {
+      const result = JSON.parse(textResponse); // Try parsing it as JSON
       return { success: true, data: result };
+    } catch (err) {
+      throw new Error(`Failed to parse response as JSON: ${err.message}`);
+    }
+
   } catch (error) {
-      console.error("Logout failed:", error);
-      return { success: false, message: error.message };
+    console.error("Logout failed:", error);
+    return { success: false, message: error.message };
   }
 }
