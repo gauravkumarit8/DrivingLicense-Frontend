@@ -224,7 +224,7 @@ export default function Profile() {
                       <li key={avail.sessionDate}>
                         <strong>{avail.day}</strong> {/*({avail.sessionDate}) */}
                         Start Time: {avail.startTime}, 
-                         {/* End Time: {avail.startTime}  */}
+                         End Time: {avail.endTime} 
                       </li>
                     ))}
                   </ul>

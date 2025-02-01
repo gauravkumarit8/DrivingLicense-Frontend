@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';  // Import from 'next/router' instead of 'next/navigation'
 import Image from "next/image";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -21,9 +21,11 @@ import {
 } from "@/utils/instructorApi/page";
 import { getUserTotalTime } from "@/utils/userApi/page";
 
+
 const Profile = () => {
-  const router = useRouter();
-  const { id } = router.query;
+  const router = useRouter(); // Use 'useRouter' from 'next/router'
+  const params = useParams();
+  const id = params.id;
 
   const [instructor, setInstructor] = useState(null);
   const [admin, setAdmin] = useState(null);
@@ -44,12 +46,12 @@ const Profile = () => {
       setInstructor(result.data);
       setAdmin(result.data.adminName);
 
-      const totalTimeResult = await getInstructorTotalTime(result.data.adminName, id );
+      const totalTimeResult = await getInstructorTotalTime(result.data.adminName, id);
       setInstructorTotalTime(totalTimeResult.data);
 
       setAvailability(result.data.availability);
 
-      const allSessionTrainingTime = await getSessionTime(result.data.adminName, id );
+      const allSessionTrainingTime = await getSessionTime(result.data.adminName, id);
       const sessionsArray = Object.entries(allSessionTrainingTime.data).map(
         ([date, times]) => ({
           sessionDate: date,
@@ -58,7 +60,7 @@ const Profile = () => {
       );
       setAllSessionTime(sessionsArray);
 
-      const loggedSession = await getInstructorSession(result.data.adminName, id );
+      const loggedSession = await getInstructorSession(result.data.adminName, id);
       setInstructorSessions(loggedSession.data);
     } catch (err) {
       console.error("Failed to fetch data:", err);
@@ -74,7 +76,7 @@ const Profile = () => {
 
   const handleDeleteAvailability = async (day) => {
     try {
-      await deleteAvailability(admin, id , day);
+      await deleteAvailability(admin, id, day);
       setAvailability((prevAvailability) =>
         prevAvailability.filter((avail) => avail.day !== day)
       );
@@ -89,7 +91,7 @@ const Profile = () => {
 
   const handleSubmitAvailability = async (updatedAvailability) => {
     try {
-      const result = await updateAvailability(admin, id , updatedAvailability);
+      const result = await updateAvailability(admin, id, updatedAvailability);
       setAvailability(result.data.availability);
       setUpdatingAvailability(false);
     } catch (err) {
@@ -118,9 +120,9 @@ const Profile = () => {
   const handleLogout = async () => {
     try {
       await logoutInstructor();
-      router.push("/");
+      router.push("/"); // Navigate to home page after logout
     } catch (error) {
-      console.error("Error occurred while logout ", error);
+      console.error("Error occurred while logout", error);
     }
   };
 
@@ -260,4 +262,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

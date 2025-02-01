@@ -2,11 +2,12 @@
 
 import { saveAdminAddress } from '@/utils/mapApi/page';
 import React, { useState } from 'react';
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import styles from './address.module.css'
 
-const Page = ({ params }) => {
-  const { id } = params;
+const Page = () => {
+  const params=useParams();
+  const id = params.id;
   const router = useRouter();
   const [city, setCity] = useState("");
   const [state, setState] = useState("");

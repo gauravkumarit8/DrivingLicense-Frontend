@@ -4,7 +4,7 @@ import { addAvailability, getInstructorById } from "@/utils/instructorApi/page";
 import React, { useState } from "react";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 const daysOfWeek = [
   "Monday",
@@ -16,8 +16,9 @@ const daysOfWeek = [
   "Sunday",
 ];
 
-const AddAvailability = ({ params }) => {
-  const { id } = params;
+const AddAvailability = () => {
+  const params=useParams();
+  const id=params.id;
 
   const [admin,setAdmin]=useState(null)
   const [availability, setAvailability] = useState([]);

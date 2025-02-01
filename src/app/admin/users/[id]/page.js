@@ -12,7 +12,7 @@ const User = () => {
   const params = useParams();
   const id = params.id;
 
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // Ensure it's an empty array by default
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,15 +25,19 @@ const User = () => {
         const adminDetails = await getAdminById(id);
         const response = await getUsersByPagination(adminDetails.data.name, currentPage, pageSizes);
         console.log(response.data);
+        
+        // Check if users exist and is an array
         if (response.data.message === "Users not present") {
           setError(response.data.message);
+          setUsers([]);  // Ensure users is an empty array when no users are found
         } else {
-          setUsers(response.data.users);
+          setUsers(response.data.users || []);  // Default to empty array if users is undefined
           setCurrentPage(response.data.currentPage);
           setTotalPages(response.data.totalPages);
         }
       } catch (err) {
         setError('Failed to fetch data');
+        setUsers([]);  // Ensure users is an empty array on error
       } finally {
         setLoading(false);
       }
@@ -51,9 +55,10 @@ const User = () => {
   };
 
   const formatAvailability = (availability) => {
-    return availability.map(slot => {
-      return `${slot.day}: ${slot.startTime} - ${slot.endTime}`;
-    }).join(', ');
+    if (Array.isArray(availability)) {
+      return availability.map(slot => `${slot.day}: ${slot.startTime} - ${slot.endTime}`).join(', ');
+    }
+    return "No availability info";  // Fallback message when availability is missing or incorrect
   };
 
   const handlePageChange = (newPage) => {
@@ -72,24 +77,28 @@ const User = () => {
       ) : (
         <>
           <div className={styles.userList}>
-            {users.map((user) => (
-              <div key={user.id} className={styles.userCard}>
-                <h3>{user.name}</h3>
-                <p>Email: {user.email}</p>
-                <p>Phone: {user.phone}</p>
-                <p>Availability: {formatAvailability(user.availability)}</p>
-                <button
-                  type="button"
-                  className={styles.deleteButton}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDelete(user.id);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
-            ))}
+            {Array.isArray(users) && users.length > 0 ? (
+              users.map((user) => (
+                <div key={user.id} className={styles.userCard}>
+                  <h3>{user.name}</h3>
+                  <p>Email: {user.email}</p>
+                  <p>Phone: {user.phone}</p>
+                  <p>Availability: {formatAvailability(user.availability)}</p>
+                  <button
+                    type="button"
+                    className={styles.deleteButton}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(user.id);
+                    }}
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))
+            ) : (
+              <div>No users found</div>  // Handle empty users list scenario
+            )}
           </div>
           <div className={styles.pagination}>
             <button
@@ -117,4 +126,3 @@ const User = () => {
 };
 
 export default User;
-
